@@ -4,7 +4,7 @@
 
 **En tant qu'utilisateur anonyme**
 
-- Créer un compte
+- Créer un compte (nom d'utilisateur unique et mot de passe avec vérification)
 - Se loger
 - Visualiser quelques statistiques globales (nombre de chatrooms, nombre de questions, etc.) sur la page d'accueil pour donner envie
 
