@@ -1,5 +1,35 @@
 # Projet TWEB : Interactive polls
 
+## Preview
+TODO image ou gif
+
+## Prérequis
+1. Installer [Node.js](https://nodejs.org) et [MongoDB](http://www.mongodb.com)
+2. Installer Angular CLI: `npm i angular-cli -g`
+3. Depuis la racine du projet, installer toutes les dépendances: `npm i`
+
+## Exécuter en local
+*dans src/server/app.js, décommenter la ligne `mongoose.connect('mongodb://localhost:27017/test');` et commenter la ligne `mongoose.connect(process.env.MONGODB_URI);`*
+1. bash 1: `mongod`: lance le serveur MongoDB
+2. bash 2: `ng build -w`: compile le projet et se met à l'écoute des changements de fichier
+3. bash 3: `npm start`: lance le serveur Express
+4. Aller sur [localhost:3000](http://localhost:3000)
+
+## Déployer sur Heroku
+Pour le moment c'est moche mais ça marche :
+
+*Installer [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line#download-and-install)*
+
+1. dans src/server/app.js, commenter la ligne `mongoose.connect('mongodb://localhost:27017/test');` et décommenter la ligne `mongoose.connect(process.env.MONGODB_URI);` pour récupérer la config de heroku
+2. Compiler le projet `ng build -w`
+3. Autoriser le dossier `dist/` dans le .gitignore
+4. `git add .`, `git commit -m "<message>"`, `git push heroku master`
+5. `heroku open`. L'application est disponible sur [https://interactive-polls.herokuapp.com/](https://interactive-polls.herokuapp.com/)
+
+Une fois l'application déployée, rajouter le dossier `dist/` dans le .gitignore pour ne pas polluer le github
+
+Faudra faire mieux par la suite...
+
 ## Fonctionnalités
 
 **En tant qu'utilisateur anonyme**
@@ -71,8 +101,10 @@
 Damien Rochat & Sébastien Richoz
 
 
-## Credentials
+## Credentials (David Violante)
 Squelette réalisé avec Angular 2 Full Stack project [![Dependencies](https://david-dm.org/DavideViolante/Angular2-Full-Stack.svg)](https://david-dm.org/DavideViolante/Angular2-Full-Stack) [![Donate](https://img.shields.io/badge/paypal-donate-179BD7.svg)](https://www.paypal.me/dviolante) [![MIT license](http://img.shields.io/badge/license-MIT-lightgrey.svg)](http://opensource.org/licenses/MIT)
+
+* Auteur: [Davide Violante](https://github.com/DavideViolante)
 
 The front-end of this project was generated with [Angular CLI](https://github.com/angular/angular-cli).
 
@@ -85,30 +117,8 @@ This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_
 * [Bootstrap](http://www.getbootstrap.com): layout and styles
 * [Font Awesome](http://fontawesome.io): icons
 
-## Prerequisites
-1. Install [Node.js](https://nodejs.org) and [MongoDB](http://www.mongodb.com)
-2. Install Angular CLI: `npm i angular-cli -g`
-3. From project root folder install all the dependencies: `npm i`
-
-## Run
-1. Command window 1: `mongod`: run MongoDB
-2. Command window 2: `ng build -w`: build the project and keep watching the files for changes
-3. Command window 3: `npm start`: run Express server
-4. Go to [localhost:3000](http://localhost:3000)
-
 ## Production
 Run `ng build -prod` to create a production ready bundle.
-
-## Preview
-![Preview](https://raw.githubusercontent.com/DavideViolante/Angular2-Full-Stack/master/demo.gif "Preview")
-
-## Please open an issue if
-* you have any suggestion or advice to improve this project.
-* you noticed any problem or error.
-
-## To do
-* tests
-* browser autoreload on file changes
 
 ## Running unit tests (to do yet)
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
@@ -119,6 +129,3 @@ Before running the tests make sure you are serving the app via `ng serve`.
 
 ## Further help
 To get more help on the `angular-cli` use `ng --help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
-
-### Author
-* [Davide Violante](https://github.com/DavideViolante)
