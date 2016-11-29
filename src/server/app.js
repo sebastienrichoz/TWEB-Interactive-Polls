@@ -15,8 +15,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 
 var mongoose = require('mongoose');
-//mongoose.connect('mongodb://localhost:27017/test'); // in development
-mongoose.connect(process.env.MONGODB_URI); // when deploying on heroku
+mongoose.connect('mongodb://localhost:27017/test'); // in development
+//mongoose.connect(process.env.MONGODB_URI); // when deploying on heroku
 var db = mongoose.connection;
 mongoose.Promise = global.Promise;
 
