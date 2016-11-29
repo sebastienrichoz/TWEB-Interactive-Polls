@@ -3,6 +3,8 @@
 ## Preview
 TODO image ou gif
 
+![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/maquette.jpg "Maquette")
+
 ## Prérequis
 1. Installer [Node.js](https://nodejs.org) et [MongoDB](http://www.mongodb.com)
 2. Installer Angular CLI: `npm i angular-cli -g`
