@@ -36,33 +36,33 @@
 
 ## Endpoints
 
-** /auth **
+**/auth**
 
 - POST : connexion
 - DELETE : déconnexion
 
-** /users **
+**/users**
 
 - POST : création d'un compte
 
-** /chatrooms **
+**/chatrooms**
 
 - POST : création d'une chatroom
 - PATCH : clôture/réouverture d'une chatroom
 
-** /chatrooms/{id} **
+**/chatrooms/{id}**
 
 - GET : récupération d'une chatroom (avec questions)
 
-** /chatrooms/{id}/questions **
+**/chatrooms/{id}/questions**
 
 - POST : création d'une question
 
-** /chatrooms/{id}/questions/{id} **
+**/chatrooms/{id}/questions/{id}**
 
 - GET : récupération d'une question (avec réponses, attention à ce que les utilisateurs ne puisse pas voir les réponses)
 
-** /chatrooms/{id}/question/{id}/answers **
+**/chatrooms/{id}/question/{id}/answers**
 
 - POST : enregistrement d'une réponse
 
