@@ -9,7 +9,8 @@ TODO image ou gif
 3. Depuis la racine du projet, installer toutes les dépendances: `npm i`
 
 ## Exécuter en local
-*dans src/server/app.js, décommenter la ligne `mongoose.connect('mongodb://localhost:27017/test');` et commenter la ligne `mongoose.connect(process.env.MONGODB_URI);`*
+*Dans src/server/app.js, décommenter la ligne `mongoose.connect('mongodb://localhost:27017/test');` et commenter la ligne `mongoose.connect(process.env.MONGODB_URI);`*
+
 1. bash 1: `mongod`: lance le serveur MongoDB
 2. bash 2: `ng build -w`: compile le projet et se met à l'écoute des changements de fichier
 3. bash 3: `npm start`: lance le serveur Express
