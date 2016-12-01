@@ -10,24 +10,44 @@ TODO image ou gif
 2. Installer Angular CLI: `npm i angular-cli -g`
 3. Depuis la racine du projet, installer toutes les dépendances: `npm i`
 
+**Tip : MongoDB à l'aide de Docker**
+
+Lancer un serveur MongoDB: `docker run -p 27017:27017 mongo:latest`
+
+Se connecter au serveur à l'aide du client MongoDB: `docker run -it mongo:latest mongo --host 192.168.99.100` (adresse à adapter selon votre configuration Docker)
+
 ## Exécuter en local
-*Dans src/server/app.js, décommenter la ligne `mongoose.connect('mongodb://localhost:27017/test');` et commenter la ligne `mongoose.connect(process.env.MONGODB_URI);`*
+
+Créer un fichier `nodemon.json` à la racine du projet. Celui-ci sera utilsé par nodemon lors du lancement du serveur express.js afin de définir les variables propres à votre système.
+
+```json
+{
+  "env": {
+    "MONGODB_URI": "mongodb://192.168.99.100:27017/interactive-polls"
+  }
+}
+```
 
 1. bash 1: `mongod`: lance le serveur MongoDB
-2. bash 2: `ng build -w`: compile le projet et se met à l'écoute des changements de fichier
+2. bash 2: `ng build -w`: compile le projet en mode production et se met à l'écoute des changements de fichiers
 3. bash 3: `npm start`: lance le serveur Express
-4. Aller sur [localhost:3000](http://localhost:3000)
+4. Se rendre à l'adresse [localhost:3000](http://localhost:3000)
+
+## Exécuter les tests
+
+Exécuter `ng test` pour lancer les tests unitaires à l'aide de [Karma](https://karma-runner.github.io).
+
+Lancer l'application avec `npm start` si cela n'est pas déjà fait puis exécuter `ng e2e` pour lancer les tests End-to-End à l'aide de [Protractor](http://www.protractortest.org/). 
 
 ## Déployer sur Heroku
 Pour le moment c'est moche mais ça marche :
 
 *Installer [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line#download-and-install)*
 
-1. dans src/server/app.js, commenter la ligne `mongoose.connect('mongodb://localhost:27017/test');` et décommenter la ligne `mongoose.connect(process.env.MONGODB_URI);` pour récupérer la config de heroku
-2. Compiler le projet `ng build -w`
-3. Autoriser le dossier `dist/` dans le .gitignore
-4. `git add .`, `git commit -m "<message>"`, `git push heroku master`
-5. `heroku open`. L'application est disponible sur [https://interactive-polls.herokuapp.com/](https://interactive-polls.herokuapp.com/)
+1. Compiler le projet `ng build --prod` pour créer un bundle de production
+2. Autoriser le dossier `dist/` dans le .gitignore
+3. `git add .`, `git commit -m "<message>"`, `git push heroku master`
+4. `heroku open`. L'application est disponible sur [https://interactive-polls.herokuapp.com/](https://interactive-polls.herokuapp.com/)
 
 Une fois l'application déployée, rajouter le dossier `dist/` dans le .gitignore pour ne pas polluer le github
 
@@ -103,32 +123,4 @@ Faudra faire mieux par la suite...
 
 Damien Rochat & Sébastien Richoz
 
-
-## Credentials (David Violante)
 Squelette réalisé avec Angular 2 Full Stack project [![Dependencies](https://david-dm.org/DavideViolante/Angular2-Full-Stack.svg)](https://david-dm.org/DavideViolante/Angular2-Full-Stack) [![Donate](https://img.shields.io/badge/paypal-donate-179BD7.svg)](https://www.paypal.me/dviolante) [![MIT license](http://img.shields.io/badge/license-MIT-lightgrey.svg)](http://opensource.org/licenses/MIT)
-
-* Auteur: [Davide Violante](https://github.com/DavideViolante)
-
-The front-end of this project was generated with [Angular CLI](https://github.com/angular/angular-cli).
-
-This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_bundle)):
-* [**M**ongoose.js](http://www.mongoosejs.com) ([MongoDB](http://www.mongodb.com)): database
-* [**E**xpress.js](http://expressjs.com): backend framework
-* [**A**ngular 2](https://angular.io): frontend framework
-* [**N**ode.js](https://nodejs.org): runtime environment
-* [Angular CLI](https://cli.angular.io): project scaffolding
-* [Bootstrap](http://www.getbootstrap.com): layout and styles
-* [Font Awesome](http://fontawesome.io): icons
-
-## Production
-Run `ng build -prod` to create a production ready bundle.
-
-## Running unit tests (to do yet)
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests (to do yet)
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/). 
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Further help
-To get more help on the `angular-cli` use `ng --help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
