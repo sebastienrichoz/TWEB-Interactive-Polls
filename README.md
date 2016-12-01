@@ -5,8 +5,23 @@ TODO image ou gif
 
 ![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/maquette.jpg "Maquette")
 
+## Technologies, frameworks utilisés
+The front-end project was generated with [Angular CLI](https://github.com/angular/angular-cli).
+  
+This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_bundle)):
+* [**M**ongoose.js](http://www.mongoosejs.com) ([MongoDB](http://www.mongodb.com)): database
+* [**E**xpress.js](http://expressjs.com): backend framework
+* [**A**ngular 2](https://angular.io): frontend framework
+* [**N**ode.js](https://nodejs.org): runtime environment
+* [Angular CLI](https://cli.angular.io): project scaffolding
+* [Bootstrap](http://www.getbootstrap.com): layout and styles
+* [Stylish Portfolio](https://startbootstrap.com/template-overviews/stylish-portfolio/): bootstrap template
+* [Font Awesome](http://fontawesome.io): icons
+* socket.io
+* ... TODO
+
 ## Prérequis
-1. Installer [Node.js](https://nodejs.org) et [MongoDB](http://www.mongodb.com)
+1. Installer [Node.js](https://nodejs.org) (min. v 6.6.0) et [MongoDB](http://www.mongodb.com) (min. v 3.2.10)
 2. Installer Angular CLI: `npm i angular-cli -g`
 3. Depuis la racine du projet, installer toutes les dépendances: `npm i`
 
@@ -104,21 +119,10 @@ Faudra faire mieux par la suite...
 Damien Rochat & Sébastien Richoz
 
 
-## Credentials (David Violante)
-Squelette réalisé avec Angular 2 Full Stack project [![Dependencies](https://david-dm.org/DavideViolante/Angular2-Full-Stack.svg)](https://david-dm.org/DavideViolante/Angular2-Full-Stack) [![Donate](https://img.shields.io/badge/paypal-donate-179BD7.svg)](https://www.paypal.me/dviolante) [![MIT license](http://img.shields.io/badge/license-MIT-lightgrey.svg)](http://opensource.org/licenses/MIT)
+## Credentials
 
-* Auteur: [Davide Violante](https://github.com/DavideViolante)
-
-The front-end of this project was generated with [Angular CLI](https://github.com/angular/angular-cli).
-
-This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_bundle)):
-* [**M**ongoose.js](http://www.mongoosejs.com) ([MongoDB](http://www.mongodb.com)): database
-* [**E**xpress.js](http://expressjs.com): backend framework
-* [**A**ngular 2](https://angular.io): frontend framework
-* [**N**ode.js](https://nodejs.org): runtime environment
-* [Angular CLI](https://cli.angular.io): project scaffolding
-* [Bootstrap](http://www.getbootstrap.com): layout and styles
-* [Font Awesome](http://fontawesome.io): icons
+### Squelette d'application ###
+Squelette réalisé avec [Angular 2 Full Stack project](https://david-dm.org/DavideViolante/Angular2-Full-Stack), projet dont l'auteur est [Davide Violante](https://github.com/DavideViolante)
 
 ## Production
 Run `ng build -prod` to create a production ready bundle.
