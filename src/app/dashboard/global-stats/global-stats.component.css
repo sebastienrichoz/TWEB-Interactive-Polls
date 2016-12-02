@@ -1,0 +1,25 @@
+.nice-font {
+    font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.text-primary {
+    color: #fff;
+}
+
+.bg-aqua {
+    color: #cc6b6b;
+}
+
+.bg-yellow {
+    color: #e2cb3c;
+}
+
+.bg-olive {
+    color: #3d9970;
+}
+
+.bg-teal {
+    color: #5dabab;
+}
