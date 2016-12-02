@@ -8,8 +8,7 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
-        "public/assets",
-        "public/assets/favicon.ico"
+        "public/assets"
       ],
       "index": "public/index.html",
       "main": "main.ts",
@@ -24,8 +23,8 @@
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
-        "../node_modules/tether/dist/js/tether.min.js",
-        "../node_modules/bootstrap/dist/js/bootstrap.min.js"
+        "../node_modules/bootstrap/dist/js/bootstrap.min.js",
+        "../node_modules/chart.js/dist/Chart.min.js"
       ],
       "environments": {
         "source": "environments/environment.ts",
