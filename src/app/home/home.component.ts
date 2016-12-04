@@ -6,12 +6,12 @@ import {
     style,
     transition,
     animate,
-    keyframes,
-    AnimationTransitionEvent
+    ViewContainerRef
 } from '@angular/core';
 
-import { Http } from '@angular/http';
 import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms';
+import {Overlay, overlayConfigFactory} from 'angular2-modal';
+import {Modal, BSModalContext} from 'angular2-modal/plugins/bootstrap';
 
 import { ToastComponent } from '../shared/toast/toast.component';
 
@@ -65,10 +65,14 @@ export class HomeComponent implements OnInit {
     private loginName = new FormControl("", Validators.required);
     private loginPass = new FormControl("", Validators.required);
 
-    constructor(private http: Http,
-                private homeService: HomeService,
+    constructor(private homeService: HomeService,
                 private toast: ToastComponent,
-                private formBuilder: FormBuilder) { }
+                private formBuilder: FormBuilder,
+                overlay: Overlay,
+                vcRef: ViewContainerRef,
+                public modal: Modal) {
+        overlay.defaultViewContainer = vcRef;
+    }
 
     ngOnInit() {
         this.getStats();
@@ -134,6 +138,42 @@ export class HomeComponent implements OnInit {
             },
             error => console.log(error)
         );
+    }
+
+    openPollroomModal() {
+        this.modal.alert()
+            .size('lg')
+            .showClose(true)
+            //.title("<i class='fa fa-question-circle fa-fw'></i> What's a Popoll room ?!")
+            .body(require('./home.modal-pollroom.html'))
+            .open();
+    }
+
+    openQuestionsModal() {
+        this.modal.alert()
+            .size('lg')
+            .showClose(true)
+            //.title("<i class='fa fa-question-circle fa-fw'></i> What's a Popoll room ?!")
+            .body(require('./home.modal-questions.html'))
+            .open();
+    }
+
+    openAnswersModal() {
+        this.modal.alert()
+            .size('lg')
+            .showClose(true)
+            //.title("<i class='fa fa-question-circle fa-fw'></i> What's a Popoll room ?!")
+            .body(require('./home.modal-answers.html'))
+            .open();
+    }
+
+    openStatisticsModal() {
+        this.modal.alert()
+            .size('lg')
+            .showClose(true)
+            //.title("<i class='fa fa-question-circle fa-fw'></i> What's a Popoll room ?!")
+            .body(require('./home.modal-statistics.html'))
+            .open();
     }
 
     /*
