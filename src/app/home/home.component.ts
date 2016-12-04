@@ -1,21 +1,54 @@
-import { Component, OnInit } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    trigger,
+    state,
+    style,
+    transition,
+    animate,
+    keyframes,
+    AnimationTransitionEvent
+} from '@angular/core';
+
 import { Http } from '@angular/http';
 import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms';
 
 import { ToastComponent } from '../shared/toast/toast.component';
 
-import { DataService } from '../services/data.service';
+import { HomeService } from '../services/home.service';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+    styleUrls: ['./home.component.css'],
+    animations: [
+        trigger('flyInOut', [
+            state('in', style({opacity: 1, transform: 'translateX(0)'})),
+            transition('void => *', [
+                style({
+                    opacity: 0,
+                    transform: 'translateX(-100%)'
+                }),
+                animate('0.2s ease-in')
+            ]),
+            transition('* => void', [
+                animate('0.2s 10 ease-out', style({
+                    opacity: 0,
+                    transform: 'translateX(100%)'
+                }))
+            ])
+        ])
+    ]
 })
 export class HomeComponent implements OnInit {
 
+    // TODO : get these 3 stats from DB
     private nbRoomCreated = 2031;
     private nbQuestionAsked = 56378;
     private nbAnswer = 212986;
+
+    private visibleRegisterForm = false;
+    private visibleLoginForm = false;
 
     private cats = [];
     private isLoading = true;
@@ -23,34 +56,87 @@ export class HomeComponent implements OnInit {
     private cat = {};
     private isEditing = false;
 
-    private addCatForm: FormGroup;
-    private name = new FormControl("", Validators.required);
-    private age = new FormControl("", Validators.required);
-    private weight = new FormControl("", Validators.required);
+    private registerForm: FormGroup;
+    private registerName = new FormControl("", Validators.required);
+    private registerPass = new FormControl("", Validators.required);
+    private registerConfirmedPass = new FormControl("", Validators.required);
+
+    private loginForm: FormGroup;
+    private loginName = new FormControl("", Validators.required);
+    private loginPass = new FormControl("", Validators.required);
 
     constructor(private http: Http,
-                private dataService: DataService,
+                private homeService: HomeService,
                 private toast: ToastComponent,
                 private formBuilder: FormBuilder) { }
 
     ngOnInit() {
-        this.getCats();
+        this.getStats();
 
-        this.addCatForm = this.formBuilder.group({
-            name: this.name,
-            age: this.age,
-            weight: this.weight
+        this.registerForm = this.formBuilder.group({
+            registerName: this.registerName,
+            registerPass: this.registerPass,
+            registerConfirmedPass: this.registerConfirmedPass
+        });
+
+        this.loginForm = this.formBuilder.group({
+            loginName: this.loginName,
+            loginPass: this.loginPass
         });
     }
 
-    getCats() {
-        this.dataService.getCats().subscribe(
+    openRegisterForm() {
+        this.visibleRegisterForm = !this.visibleRegisterForm;
+        this.visibleLoginForm = false;
+        this.registerForm.reset();
+    }
+
+    openLoginForm() {
+        this.visibleLoginForm = !this.visibleLoginForm;
+        this.visibleRegisterForm = false;
+        this.loginForm.reset();
+    }
+
+    getStats() {
+        this.homeService.getStats().subscribe(
             data => this.cats = data,
             error => console.log(error),
             () => this.isLoading = false
         );
     }
 
+    register() {
+        console.log("register " + this.registerName.value + " " + this.registerPass.value + " " + this.registerConfirmedPass.value);
+
+        if (this.registerPass !== this.registerConfirmedPass) {
+            this.toast.setMessage("Passwords doesn't match", "danger");
+        } else {
+            this.homeService.register(this.registerForm.value).subscribe(
+                res => {
+                    var newUser = res.json();
+                    this.visibleRegisterForm = false;
+                    this.visibleLoginForm = true;
+                    this.toast.setMessage("You've been succeffully registered", "success");
+                },
+                error => console.log(error)
+            );
+        }
+    }
+
+    login() {
+        console.log("login " + this.loginName.value + " " + this.loginPass.value);
+        this.homeService.register(this.registerForm.value).subscribe(
+            res => {
+                var newUser = res.json();
+                this.visibleRegisterForm = false;
+                this.visibleLoginForm = true;
+                this.toast.setMessage("You've been succeffully registered", "success");
+            },
+            error => console.log(error)
+        );
+    }
+
+    /*
     addCat() {
         this.dataService.addCat(this.addCatForm.value).subscribe(
             res => {
@@ -62,6 +148,7 @@ export class HomeComponent implements OnInit {
             error => console.log(error)
         );
     }
+    */
 
     enableEditing(cat) {
         this.isEditing = true;
@@ -73,11 +160,11 @@ export class HomeComponent implements OnInit {
         this.cat = {};
         this.toast.setMessage("item editing cancelled.", "warning");
         // reload the cats to reset the editing
-        this.getCats();
+        //this.getCats();
     }
 
     editCat(cat) {
-        this.dataService.editCat(cat).subscribe(
+        this.homeService.editCat(cat).subscribe(
             res => {
                 this.isEditing = false;
                 this.cat = cat;
@@ -89,7 +176,7 @@ export class HomeComponent implements OnInit {
 
     deleteCat(cat) {
         if(window.confirm("Are you sure you want to permanently delete this item?")) {
-            this.dataService.deleteCat(cat).subscribe(
+            this.homeService.deleteCat(cat).subscribe(
                 res => {
                     var pos = this.cats.map(cat => { return cat._id }).indexOf(cat._id);
                     this.cats.splice(pos, 1);

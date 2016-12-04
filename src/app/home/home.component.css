@@ -1,4 +1,18 @@
 .table td, .table th {
-   text-align: center;
-   width: 25%;  
+    text-align: center;
+    width: 25%;
+}
+
+.nice-font {
+    font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.text-secondary {
+    color: #fff;
+}
+
+.bg-aqua {
+    color: #337ab7;
 }
