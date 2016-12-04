@@ -19,6 +19,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ChartsModule  } from 'ng2-charts/ng2-charts';
 import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
 
 const routing = RouterModule.forRoot([
     { path: '',      component: HomeComponent },
@@ -31,7 +32,8 @@ const routing = RouterModule.forRoot([
         AppComponent,
         HomeComponent,
         AboutComponent,
-        ToastComponent
+        ToastComponent,
+        ThousandSeparatorPipe
     ],
     imports: [
         BrowserModule,

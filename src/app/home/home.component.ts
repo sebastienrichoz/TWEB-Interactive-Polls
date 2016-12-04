@@ -6,7 +6,7 @@ import {
     style,
     transition,
     animate,
-    ViewContainerRef
+    ViewContainerRef, Input
 } from '@angular/core';
 
 import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms';
@@ -41,6 +41,8 @@ import { HomeService } from '../services/home.service';
     ]
 })
 export class HomeComponent implements OnInit {
+
+    public brandName = "Popoll";
 
     // TODO : get these 3 stats from DB
     private nbRoomCreated = 2031;
@@ -112,8 +114,10 @@ export class HomeComponent implements OnInit {
     register() {
         console.log("register " + this.registerName.value + " " + this.registerPass.value + " " + this.registerConfirmedPass.value);
 
-        if (this.registerPass !== this.registerConfirmedPass) {
+        if (this.registerPass.value !== this.registerConfirmedPass.value) {
             this.toast.setMessage("Passwords doesn't match", "danger");
+            this.registerPass.reset();
+            this.registerConfirmedPass.reset();
         } else {
             this.homeService.register(this.registerForm.value).subscribe(
                 res => {
