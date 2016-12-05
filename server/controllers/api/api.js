@@ -1,7 +1,7 @@
 var express = require('express'),
     router = express.Router(),
-    users = require('./users.api');
+    register = require('./register');
 
-router.use('/users', users);
+router.use('/register', register);
 
 module.exports = router;
