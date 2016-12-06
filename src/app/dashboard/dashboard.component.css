@@ -1,3 +1,7 @@
 .space {
     margin-bottom:10px;
 }
+
+.input-group-lg>.form-control, .input-group-lg>.input-group-addon, .input-group-lg>.input-group-btn>.btn {
+    border-radius: 0;
+}

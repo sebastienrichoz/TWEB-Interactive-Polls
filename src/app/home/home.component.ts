@@ -6,12 +6,12 @@ import {
     style,
     transition,
     animate,
-    ViewContainerRef, Input
+    ViewContainerRef
 } from '@angular/core';
 
 import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms';
-import {Overlay, overlayConfigFactory} from 'angular2-modal';
-import {Modal, BSModalContext} from 'angular2-modal/plugins/bootstrap';
+import {Overlay} from 'angular2-modal';
+import {Modal} from 'angular2-modal/plugins/bootstrap';
 
 import { ToastComponent } from '../shared/toast/toast.component';
 

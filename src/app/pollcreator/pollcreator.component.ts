@@ -30,12 +30,14 @@ import {PollElement} from "./PollElement";
 })
 export class PollcreatorComponent implements OnInit {
 
-    pollElements: PollElement[] = new Array(1);
+    pollElements: PollElement[] = [];
 
-    constructor() { }
+    constructor() {
+        this.pollElements.fill(new PollElement(), 0, 1);
+    }
 
     ngOnInit() {
-        this.pollElements.fill(new PollElement(), 0, 1);
+
     }
 
     addPollElement() {

@@ -30,12 +30,13 @@ import { Question, Answer } from './question';
 })
 export class QuestionComponent implements OnInit {
 
-    question: Question;
+    question: Question = new Question();
 
-    constructor() { }
+    constructor() {
+    }
 
     ngOnInit() {
-        this.question = new Question();
+
     }
 
     addAnswer() {

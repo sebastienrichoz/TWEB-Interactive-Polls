@@ -4,12 +4,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
+// External libraries
+import { ModalModule } from 'angular2-modal';
+import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
+
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 
 import { DataService } from './services/data.service';
 import {HomeService} from "./services/home.service";
+import {DashboardService} from "./services/dashboard.service";
 
 import { ToastComponent } from './shared/toast/toast.component';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -17,10 +23,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
 
-// External libraries
-import { ModalModule } from 'angular2-modal';
-import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
-import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { PollcreatorComponent } from './pollcreator/pollcreator.component';
 import { PollroomComponent } from './pollroom/pollroom.component';
 import { QuestionComponent } from './pollcreator/question/question.component';
@@ -61,6 +63,7 @@ const routing = RouterModule.forRoot([
     providers: [
         DataService,
         HomeService,
+        DashboardService,
         ToastComponent
     ],
     bootstrap: [AppComponent]
