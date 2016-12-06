@@ -1,13 +1,12 @@
 var express = require('express'),
     router = express.Router(),
-    User = require('../../models/user.js');
+    Room = require('../../models/room.js');
 
 
 router.post('/', function(req, res, next) {
     // TODO : mieux gérer entrées utilisateur
-    var user = new User(req.body);
-    // TODO : control mot de passe
-    user.save(function(err, obj) {
+    var room = new Room(req.body);
+    room.save(function(err, obj) {
         if (err) {
             res.status(422).json(err); // TODO : messages customs
         }

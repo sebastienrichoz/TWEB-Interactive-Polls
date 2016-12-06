@@ -1,8 +1,11 @@
 var mongoose = require('mongoose');
 
+var Schema = mongoose.Schema,
+    ObjectId = Schema.ObjectId;
+
 var RoomSchema = mongoose.Schema({
 
-    name: { type: String, required: true },
+    name: { type: String, required: true, index: { unique: true } },
     opened: { type: Boolean, default: false },
 
     questions: [{
@@ -13,8 +16,8 @@ var RoomSchema = mongoose.Schema({
         answers: [{
 
             label: { type: String, required: true },
-            correct: { type: Boolean, default: true }
 
+            respondents: [{ type: ObjectId, ref: 'User' }]
         }]
 
     }],
@@ -22,8 +25,9 @@ var RoomSchema = mongoose.Schema({
     created_at: { type: Date, default: Date.now },
     update_at: { type: Date, default: Date.now },
 
-    creator: [{ type: Schema.Types.ObjectId, ref: 'User' }], // TODO : nécessaire ?
-    auditors: [{ type: Schema.Types.ObjectId, ref: 'User' }] // TODO : nécessaire ?
+    creator: { type: ObjectId, ref: 'User' },
+    auditors: [{ type: ObjectId, ref: 'User' }]
+
 });
 
 module.exports = mongoose.model('Room', RoomSchema);
