@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div *ngFor="let element of pollElements" [@flyInOut] class="row poll-element">
         <div class="col-md-6">
             <question-creator></question-creator>
         </div><!-- /.col-lg-6 -->
@@ -16,18 +16,20 @@
             <button class="btn btn-success btn-lg" type="button"><i class="fa fa-cloud-upload fa-fw"></i> Publish</button>
             <br>
             <br>
-            <button class="btn btn-danger btn-lg" type="button"><i class="fa fa-times fa-fw"></i> Delete</button>
+            <button (click)="removePollElement(element)" class="btn btn-danger btn-lg" type="button"><i class="fa fa-times fa-fw"></i> Delete</button>
         </div>
 
-        <div class="col-md-2">
+        <div class="col-md-4">
             <h3>Pie chart here</h3>
             <pie-chart></pie-chart>
         </div>
+
+        <hr>
     </div><!-- /.row -->
 
     <div class="row">
         <div id="plus-question" class="col-sm-12 text-center">
-            <button class="btn btn-success btn-lg" type="button"><i class="fa fa-plus fa-fw"></i> New Question</button>
+            <button (click)="addPollElement()" class="btn btn-success btn-lg" type="button"><i class="fa fa-plus fa-fw"></i> New Question</button>
         </div>
     </div>
 

@@ -1,37 +1,17 @@
 <div class="input-group input-group-lg">
     <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-question fa-fw"></i></span>
-    <input type="text" class="form-control" placeholder="Write your question here" aria-describedby="sizing-addon1">
+    <input type="text" class="form-control" value="{{ question.label }}" placeholder="Write your question here">
 </div>
 
-<div *ngFor="let answer of question.answers" class="input-group answer">
+<div *ngFor="let answer of question.answers" [@flyInOut] class="input-group answer">
     <span class="input-group-addon minus">
         <button (click)="removeAnswer(answer)" class="btn btn-danger btn-sm" type="button"><i class="fa fa-minus"></i></button>
     </span>
     <span class="input-group-addon">
         <i class="fa fa-chevron-right"></i>
     </span>
-    <input type="text" class="form-control">
+    <input type="text" value="{{ answer.label }}" class="form-control">
 </div>
-
-<!--<div class="input-group answer">-->
-    <!--<span class="input-group-addon minus">-->
-        <!--<button class="btn btn-danger btn-sm" type="button"><i class="fa fa-minus"></i></button>-->
-    <!--</span>-->
-    <!--<span class="input-group-addon">-->
-        <!--<i class="fa fa-chevron-right"></i>-->
-    <!--</span>-->
-    <!--<input type="text" class="form-control">-->
-<!--</div>-->
-
-<!--<div class="input-group answer">-->
-    <!--<span class="input-group-addon minus">-->
-        <!--<button class="btn btn-danger btn-sm" type="button"><i class="fa fa-minus"></i></button>-->
-    <!--</span>-->
-    <!--<span class="input-group-addon">-->
-        <!--<i class="fa fa-chevron-right"></i>-->
-    <!--</span>-->
-    <!--<input type="text" class="form-control">-->
-<!--</div>-->
 
 <div class="col-sm-12 plus-answer">
     <button (click)="addAnswer()" class="btn btn-success btn-sm" type="button"><i class="fa fa-plus fa-fw"></i></button>
