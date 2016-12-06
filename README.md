@@ -74,28 +74,28 @@ Faudra faire mieux par la suite...
 
 - Créer un compte (nom d'utilisateur unique et mot de passe avec vérification)
 - Se loguer
-- Visualiser quelques statistiques globales (nombre de chatrooms, nombre de questions, etc.) sur la page d'accueil pour donner envie
-- (Rejoindre une chatroom anonymement)
+- Visualiser quelques statistiques globales (nombre de pollrooms, nombre de questions, etc.) sur la page d'accueil pour donner envie
+- (Rejoindre une pollroom anonymement)
 
 **En tant qu'utilisateur enregistré**
 
-- Visualiser quelques statistiques personnelles (nombre de chatrooms créées/rejointes, nombre de question posées/répondues, moyenne de participants par chatroom, etc.)
-- Créer une chatroom (avec une description, génération automatique de son identifiant)
-- Rejoindre une chatroom (avec son identifiant)
-- Retrouver son historique de chatroom créées et rejointes
-- Entrer dans une chatroom clotûrée à laquelle l'utilisateur a participé
+- Visualiser quelques statistiques personnelles (nombre de pollrooms créées/rejointes, nombre de question posées/répondues, moyenne de participants par pollroom, etc.)
+- Créer une pollroom (avec une description, génération automatique de son identifiant)
+- Rejoindre une pollroom (avec son identifiant)
+- Retrouver son historique de pollroom créées et rejointes
+- Entrer dans une pollroom clotûrée à laquelle l'utilisateur a participé
 - Se déconnecter
 - (Editer/Supprimer son compte)
 
-**En tant que créateur d'une chatroom**
+**En tant que créateur d'une pollroom**
 
-- Affichage de l'identifiant d'accès à la chatroom
+- Affichage de l'identifiant d'accès à la pollroom
 - Poser une question à l'audience (question à choix multiples en spécifiant l'énoncé, les réponses possibles et les réponses)
 - Clôturer une question
-- Clôturer la chatroom
-- (Réouvrir une chatroom clôturée)
+- Clôturer la pollroom
+- (Réouvrir une pollroom clôturée)
 
-**En tant qu'auditeur d'une chatroom**
+**En tant qu'auditeur d'une pollroom**
 
 - Visualiser les questions (liste des choix possibles dans un ordre aléatoire)
 - Répondre aux questions une seule fois (lié au compte utilisateur)
@@ -109,28 +109,28 @@ Faudra faire mieux par la suite...
 - POST : connexion
 - DELETE : déconnexion
 
-**/users**
+**/register**
 
 - POST : création d'un compte
 
-**/chatrooms**
+**/rooms**
 
-- POST : création d'une chatroom
-- PATCH : clôture/réouverture d'une chatroom
+- POST : création d'une pollroom
+- PATCH : clôture/réouverture d'une pollroom
 
-**/chatrooms/{id}**
+**/rooms/{id}**
 
-- GET : récupération d'une chatroom (avec questions)
+- GET : récupération d'une pollroom (avec questions)
 
-**/chatrooms/{id}/questions**
+**/rooms/{id}/questions**
 
 - POST : création d'une question
 
-**/chatrooms/{id}/questions/{id}**
+**/rooms/{id}/questions/{id}**
 
 - GET : récupération d'une question (avec réponses, attention à ce que les utilisateurs ne puisse pas voir les réponses)
 
-**/chatrooms/{id}/question/{id}/answers**
+**/rooms/{id}/question/{id}/answers**
 
 - POST : enregistrement d'une réponse
 
