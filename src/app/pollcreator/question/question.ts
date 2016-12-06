@@ -8,11 +8,14 @@ export class Answer {
 
 export class Question {
     label: string;
-    answers: Answer[] = new Array(2);
+    answers: Answer[] = [];
 
     constructor() {
         this.label = '';
-        this.answers.fill(new Answer(), 0, 2);
+        // Important : push 2 times. DON'T DO THIS : fill(new Answer(), 0, 2)
+        // because when user delete first answer, it will delete the second one
+        this.answers.push(new Answer());
+        this.answers.push(new Answer());
     }
 
     addAnswer(answer: Answer) {
