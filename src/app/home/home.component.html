@@ -6,10 +6,10 @@
             <app-toast [message]="toast.message"></app-toast>
             <div class="row text-center">
                 <div class="col-md-6 col-lg-offset-4">
-                    <ul class="popoll-listing">
-                        <li class="popoll-item">{{ nbRoomCreated | thousandSeparator }} <i class="fa fa-comments fa-fw"></i> polls created</li>
-                        <li class="popoll-item">{{ nbQuestionAsked | thousandSeparator}} <i class="fa fa-question-circle-o fa-fw"></i> questions asked</li>
-                        <li class="popoll-item">{{ nbAnswer | thousandSeparator}} <i class="fa fa-sign-in fa-fw"></i> polls joined</li>
+                    <ul class="poll-listing">
+                        <li class="poll-item">{{ nbRoomCreated | thousandSeparator }} <i class="fa fa-comments fa-fw"></i> polls created</li>
+                        <li class="poll-item">{{ nbQuestionAsked | thousandSeparator}} <i class="fa fa-question-circle-o fa-fw"></i> questions asked</li>
+                        <li class="poll-item">{{ nbAnswer | thousandSeparator}} <i class="fa fa-sign-in fa-fw"></i> polls joined</li>
                     </ul>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                             <h4>
                                 <strong>Pollroom</strong>
                             </h4>
-                            <p>Create a questionnary in a popollroom and invite your audience to join it.</p>
+                            <p>Create a questionnary in a pollroom and invite your audience to join it.</p>
                             <button (click)="openPollroomModal()" class="btn btn-light">Learn More</button>
                         </div>
                     </div>

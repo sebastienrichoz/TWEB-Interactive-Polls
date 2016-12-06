@@ -42,7 +42,7 @@ import { HomeService } from '../services/home.service';
 })
 export class HomeComponent implements OnInit {
 
-    public brandName = "Popoll";
+    public brandName = "Pollak";
 
     // TODO : get these 3 stats from DB
     private nbRoomCreated = 2031;

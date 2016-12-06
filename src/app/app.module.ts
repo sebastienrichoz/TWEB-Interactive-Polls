@@ -23,6 +23,8 @@ import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { PollcreatorComponent } from './pollcreator/pollcreator.component';
 import { PollroomComponent } from './pollroom/pollroom.component';
+import { QuestionComponent } from './pollcreator/question/question.component';
+import { PieChartComponent } from './shared/pie-chart/pie-chart.component';
 
 // roots
 const routing = RouterModule.forRoot([
@@ -41,7 +43,9 @@ const routing = RouterModule.forRoot([
         ToastComponent,
         ThousandSeparatorPipe,
         PollcreatorComponent,
-        PollroomComponent
+        PollroomComponent,
+        QuestionComponent,
+        PieChartComponent
     ],
     imports: [
         BrowserModule,

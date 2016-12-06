@@ -18,7 +18,7 @@
     text-transform: uppercase;
 }
 
-.popoll-listing {
+.poll-listing {
     margin: 0;
     padding: 0;
     text-align: left;
@@ -29,23 +29,23 @@
     line-height: 2.5em;
 }
 
-.popoll-item:first-child {
+.poll-item:first-child {
     margin-left: 36px;
     font-size: 3em;
 }
 
-.popoll-item:nth-child(2) {
+.poll-item:nth-child(2) {
     margin-left: 12px;
     font-size: 1.5em;
     line-height: 1em;
 }
 
-.popoll-item:nth-child(3) {
+.poll-item:nth-child(3) {
     margin-left: 4px;
     font-size: 1.5em;
     line-height: 1em;
 }
 
-.popoll-item {
+.poll-item {
 
 }
