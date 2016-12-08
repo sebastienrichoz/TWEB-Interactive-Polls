@@ -85,7 +85,7 @@ We are looking for a better way to achieve this...
 **En tant qu'utilisateur enregistré**
 
 - Visualiser quelques statistiques personnelles (nombre de pollrooms créées/rejointes, nombre de question posées/répondues, moyenne de participants par pollroom, etc.)
-- Créer une pollroom (avec un titre, génération automatique de son identifiant)
+- Créer une pollroom (avec un titre descriptif, génération automatique de son identifiant)
 - Sélectionner une pollroom créée
 - Rejoindre une pollroom (avec son identifiant)
 - Retrouver son historique de pollroom créées et rejointes
@@ -117,28 +117,28 @@ We are looking for a better way to achieve this...
 - POST : connexion
 - DELETE : déconnexion
 
-**/users**
+**/register**
 
 - POST : création d'un compte
 
-**/chatrooms**
+**/rooms**
 
-- POST : création d'une chatroom
-- PATCH : clôture/réouverture d'une chatroom
+- POST : création d'une pollroom
+- PATCH : clôture/réouverture d'une pollroom
 
-**/chatrooms/{id}**
+**/rooms/{id}**
 
-- GET : récupération d'une chatroom (avec questions)
+- GET : récupération d'une pollroom (avec questions)
 
-**/chatrooms/{id}/questions**
+**/rooms/{id}/questions**
 
 - POST : création d'une question
 
-**/chatrooms/{id}/questions/{id}**
+**/rooms/{id}/questions/{id}**
 
 - GET : récupération d'une question (avec réponses, attention à ce que les utilisateurs ne puisse pas voir les réponses)
 
-**/chatrooms/{id}/question/{id}/answers**
+**/rooms/{id}/question/{id}/answers**
 
 - POST : enregistrement d'une réponse
 
