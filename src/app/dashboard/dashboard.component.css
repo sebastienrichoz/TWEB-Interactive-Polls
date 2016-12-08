@@ -5,3 +5,8 @@
 .input-group-lg>.form-control, .input-group-lg>.input-group-addon, .input-group-lg>.input-group-btn>.btn {
     border-radius: 0;
 }
+
+.tab-btn {
+    border-radius: 0;
+    font-size: 1.5em;
+}

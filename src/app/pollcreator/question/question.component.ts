@@ -1,6 +1,6 @@
 import {
     Component, OnInit, style, animate, transition,
-    state, trigger
+    state, trigger, Input, EventEmitter, Output
 } from '@angular/core';
 
 import { Question, Answer } from './question';
@@ -30,13 +30,34 @@ import { Question, Answer } from './question';
 })
 export class QuestionComponent implements OnInit {
 
-    question: Question = new Question();
+    @Input() question: Question = new Question();
+    @Output() onDelete = new EventEmitter<Question>();
+    @Output() onPublish = new EventEmitter<Question>();
+    @Output() onClose = new EventEmitter<Question>();
+
+    private published: boolean = false;
+    private closed: boolean = false;
 
     constructor() {
     }
 
-    ngOnInit() {
+    ngOnInit() {}
 
+    close() {
+        this.closed = true;
+        // Inform parent to publish this question
+        this.onClose.emit(this.question);
+    }
+
+    publish() {
+        this.published = true;
+        // Inform parent to publish this question
+        this.onPublish.emit(this.question);
+    }
+
+    deleteQuestion() {
+        // Inform parent to remove this question from its list
+        this.onDelete.emit(this.question);
     }
 
     addAnswer() {

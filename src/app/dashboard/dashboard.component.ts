@@ -1,9 +1,10 @@
 import {Component, OnInit, AfterViewInit} from '@angular/core';
-import {FormBuilder, Validators, FormControl, FormGroup} from "@angular/forms";;
+import {FormBuilder, Validators, FormControl, FormGroup} from "@angular/forms";
 import {ToastComponent} from "../shared/toast/toast.component";
 import {DashboardService} from "../services/dashboard.service";
 
 import {single, multi} from './data';
+import {Router} from "@angular/router";
 
 declare let $: any;
 
@@ -46,7 +47,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     constructor(private dashboardService: DashboardService,
                 private toast: ToastComponent,
-                private formBuilder: FormBuilder) {
+                private formBuilder: FormBuilder,
+                private router: Router) {
                 Object.assign(this, {single, multi} );
     }
 
@@ -66,6 +68,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     createPoll() {
         console.log("Create poll " + this.pollName.value);
 
+        // TODO : for preview only
+        this.router.navigate(['./pollcreator']);
+
         if (this.pollName.value.length < 2) {
             this.toast.setMessage("Poll name must be at least 2 caracters long", "danger");
         } else {
@@ -81,6 +86,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     joinPoll() {
         console.log("Join poll room " + this.pollRoomNumber.value);
+
+        // TODO : for preview only
+        this.router.navigate(['./pollroom']);
 
         this.dashboardService.joinPoll(this.pollRoomNumber.value).subscribe(
             res => {

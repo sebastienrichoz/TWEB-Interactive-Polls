@@ -21,6 +21,7 @@
         "../node_modules/bootstrap/dist/css/bootstrap.min.css",
         "../node_modules/font-awesome/css/font-awesome.min.css",
         "../node_modules/ng2d3/release/ng2d3.css",
+        "../node_modules/ng2-toastr/bundles/ng2-toastr.min.css",
         "public/styles.css"
       ],
       "scripts": [

@@ -1,6 +1,15 @@
-.plus-answer {
+#plus-answer {
     margin-top: 10px;
-    margin-left: -6px;
+    margin-left: 8px;
+    width: 36px;
+}
+
+#question-action {
+    margin-bottom: 10px;
+}
+
+#close-button {
+    margin-right: 10px;
 }
 
 .plus-answer button {

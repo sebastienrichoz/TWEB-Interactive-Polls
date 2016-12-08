@@ -3,7 +3,6 @@
     <div class="text-vertical-center">
         <h1>Create polls with {{ brandName }}</h1>
         <div class="container">
-            <app-toast [message]="toast.message"></app-toast>
             <div class="row text-center">
                 <div class="col-md-6 col-md-offset-4">
                     <ul class="poll-listing">
@@ -147,21 +146,21 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="portfolio-item">
-                            <a href="#">
+                            <a routerLink="/pollcreator">
                                 <img class="img-portfolio img-responsive" src="../../public/assets/img/pollcreator.PNG">
                             </a>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="portfolio-item">
-                            <a href="#">
+                            <a routerLink="/dashboard">
                                 <img class="img-portfolio img-responsive" src="../../public/assets/img/dashboard.PNG">
                             </a>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="portfolio-item">
-                            <a href="#">
+                            <a routerLink="/pollroom">
                                 <img class="img-portfolio img-responsive" src="../../public/assets/img/portfolio-3.jpg">
                             </a>
                         </div>
@@ -223,11 +222,7 @@
     <a id="to-top" href="#top" class="btn btn-dark btn-lg"><i class="fa fa-chevron-up fa-fw fa-1x"></i></a>
 </footer>
 
-
-<div class="container">
-    <app-toast [message]="toast.message"></app-toast>
-</div>
-
+<!-- Example with cats (from skeleton)
 <div class="container">
 
     <div class="card" *ngIf="isLoading">
@@ -288,4 +283,4 @@
     </div>
 
 </div>
-
+-->

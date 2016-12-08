@@ -8,6 +8,8 @@ import {PollElement} from "./PollElement";
 import {FormBuilder, FormGroup, FormControl, Validators} from "@angular/forms";
 import {ToastComponent} from "../shared/toast/toast.component";
 import {PollcreatorService} from "./pollcreator.service";
+import {Question} from "./question/question";
+import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 @Component({
     selector: 'pollcreator',
@@ -41,24 +43,44 @@ export class PollcreatorComponent implements OnInit {
     // pie chart options
     single: any[];
     view: any[] = [550, 200];
-    // options
     gradient = false;
     showLegend = false;
     colorScheme = {
         domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
     };
-    // pie
     showLabels = false;
     explodeSlices = false;
     doughnut = false;
 
+    // A poll element contains a question, buttons, and a pie chart
     pollElements: PollElement[] = [];
+
+    question: Question;
 
     constructor(private pollcreatorService: PollcreatorService,
                 private toast: ToastComponent,
-                private formBuilder: FormBuilder) {
-        this.pollElements.fill(new PollElement(), 0, 1);
+                private formBuilder: FormBuilder,
+                public toastr: ToastsManager) {
+        this.pollElements.push(new PollElement());
         Object.assign(this, {single, multi});
+    }
+
+    onPublish(question: Question) {
+        // TODO : Publish this question (socket.io + mongoDB)
+        this.toastr.success(question.label, 'Question published!');
+    }
+
+    onDelete(question: Question) {
+        // TODO : Remove question from mongoDB
+
+        // Find question and remove it
+        let element: PollElement;
+        element = this.pollElements.find(el => el.question === question);
+        this.removePollElement(element);
+    }
+
+    onClose(question: Question) {
+        this.toastr.success(question.label, 'Question closed!');
     }
 
     ngOnInit() {
@@ -83,5 +105,17 @@ export class PollcreatorComponent implements OnInit {
 
     createPoll() {
         console.log("Creating poll " + this.pollName.value);
+    }
+
+    saveChanges() {
+        console.log("Saved");
+        let date: Date = new Date();
+        this.toastr.success(date.toLocaleDateString() + " at " + date.toLocaleTimeString(), 'Changes saved!');
+    }
+
+    publish(element: PollElement) {
+        console.log("Published question: " + element.question.label);
+        console.log(element);
+        this.toast.setMessage("Published question: " + element.question.label, "success");
     }
 }

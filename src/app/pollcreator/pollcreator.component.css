@@ -3,6 +3,10 @@
     margin-bottom: 40px;
 }
 
+#pollcreator-title {
+    margin-bottom: 20px;
+}
+
 input {
     border-color: #e2e2e2;
     border-radius: 0;
@@ -19,9 +23,14 @@ button {
 }
 
 .poll-creator-header {
-    margin-bottom: 20px;
+    margin-bottom: 50px;
 }
 
 .input-group-lg>.form-control, .input-group-lg>.input-group-addon, .input-group-lg>.input-group-btn>.btn {
+    border-radius: 0;
+}
+
+.input-group-addon {
+    border: 0;
     border-radius: 0;
 }

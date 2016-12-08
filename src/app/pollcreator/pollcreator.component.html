@@ -39,26 +39,42 @@
         </div>
     </div><!-- /.row -->
 
-    <div class="row">
+    <div class="row" id="pollcreator-title">
         <div class="col-sm-6">
-            <h3>Poll about food quality in HEIG-vd</h3>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-info-circle"></i> Poll name</span>
+                <input type="text" class="form-control" value="Food quality in HEIG-VD">
+            </div>
         </div>
-        <div class="col-sm-6">
-            <h3>Pollroom number: 182496</h3>
+        <div class="col-sm-4">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-unlock-alt"></i> Poll identifier</span>
+                <input type="text" class="form-control" value="182496" disabled>
+            </div>
+        </div>
+        <div class="col-sm-2 text-right">
+            <button (click)="saveChanges()" class="btn btn-success"><i class="fa fa-save"></i> Save changes</button>
         </div>
     </div>
 
-    <div *ngFor="let element of pollElements" [@flyInOut] class="row poll-element">
-        <div class="col-md-6">
-            <question-creator></question-creator>
+    <div class="row poll-element"
+         *ngFor="let element of pollElements"
+         [@flyInOut]>
+
+        <div class="col-md-8">
+            <question-creator
+                    [question]="element.question"
+                    (onDelete)="onDelete($event)"
+                    (onPublish)="onPublish($event)"
+                    (onClose)="onClose($event)"></question-creator>
         </div><!-- /.col-lg-6 -->
 
-        <div class="col-md-2 status-question text-center">
-            <button class="btn btn-success btn-lg" type="button"><i class="fa fa-cloud-upload fa-fw"></i> Publish</button>
-            <br>
-            <br>
-            <button (click)="removePollElement(element)" class="btn btn-danger btn-lg" type="button"><i class="fa fa-times fa-fw"></i> Delete</button>
-        </div>
+        <!--<div class="col-md-2 status-question text-center">-->
+            <!--<button (click)="publish(element)" class="btn btn-success btn-lg" type="button"><i class="fa fa-cloud-upload fa-fw"></i> Publish</button>-->
+            <!--<br>-->
+            <!--<br>-->
+            <!--<button (click)="removePollElement(element)" class="btn btn-danger btn-lg" type="button"><i class="fa fa-times fa-fw"></i> Delete</button>-->
+        <!--</div>-->
 
         <div class="col-md-4">
             <advanced-pie-chart

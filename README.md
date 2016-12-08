@@ -23,6 +23,7 @@ This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_
 * [Stylish Portfolio](https://startbootstrap.com/template-overviews/stylish-portfolio/): bootstrap template
 * [Font Awesome](http://fontawesome.io): icons
 * [ng2d3](https://swimlane.gitbooks.io/ng2d3/content/): angular2 + D3.js framework for charts
+* [ng2-toastr](https://www.npmjs.com/package/ng2-toastr): angular2 Toaster
 * socket.io (in a future release)
 
 ## Prerequisites

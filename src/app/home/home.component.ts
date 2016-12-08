@@ -13,9 +13,9 @@ import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms
 import {Overlay} from 'angular2-modal';
 import {Modal} from 'angular2-modal/plugins/bootstrap';
 
-import { ToastComponent } from '../shared/toast/toast.component';
-
 import { HomeService } from '../services/home.service';
+import {ToastsManager} from "ng2-toastr";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-home',
@@ -68,16 +68,17 @@ export class HomeComponent implements OnInit {
     private loginPass = new FormControl("", Validators.required);
 
     constructor(private homeService: HomeService,
-                private toast: ToastComponent,
+                public toastr: ToastsManager,
                 private formBuilder: FormBuilder,
                 overlay: Overlay,
                 vcRef: ViewContainerRef,
-                public modal: Modal) {
+                public modal: Modal,
+                private router: Router) {
         overlay.defaultViewContainer = vcRef;
     }
 
     ngOnInit() {
-        this.getStats();
+        // this.getStats();
 
         this.registerForm = this.formBuilder.group({
             registerName: this.registerName,
@@ -103,28 +104,30 @@ export class HomeComponent implements OnInit {
         this.loginForm.reset();
     }
 
-    getStats() {
-        this.homeService.getStats().subscribe(
-            data => this.cats = data,
-            error => console.log(error),
-            () => this.isLoading = false
-        );
-    }
+    // getStats() {
+    //     this.homeService.getStats().subscribe(
+    //         data => this.cats = data,
+    //         error => console.log(error),
+    //         () => this.isLoading = false
+    //     );
+    // }
 
     register() {
         console.log("register " + this.registerName.value + " " + this.registerPass.value + " " + this.registerConfirmedPass.value);
 
         if (this.registerPass.value !== this.registerConfirmedPass.value) {
-            this.toast.setMessage("Passwords doesn't match", "danger");
+            this.toastr.error("Passwords don't match", "Register failed");
+
             this.registerPass.reset();
             this.registerConfirmedPass.reset();
         } else {
+            this.toastr.success("Please login now", "Register succeed");
             this.homeService.register(this.registerForm.value).subscribe(
                 res => {
                     var newUser = res.json();
                     this.visibleRegisterForm = false;
                     this.visibleLoginForm = true;
-                    this.toast.setMessage("You've been succeffully registered", "success");
+                    this.toastr.success("Please login now", "Register succeed");
                 },
                 error => console.log(error)
             );
@@ -133,12 +136,16 @@ export class HomeComponent implements OnInit {
 
     login() {
         console.log("login " + this.loginName.value + " " + this.loginPass.value);
+        this.toastr.success("Redirecting to dashboard", "Login succeed");
+        // TODO : for preview only
+        this.router.navigate(['./dashboard']);
+
         this.homeService.register(this.registerForm.value).subscribe(
             res => {
                 var newUser = res.json();
                 this.visibleRegisterForm = false;
                 this.visibleLoginForm = true;
-                this.toast.setMessage("You've been succeffully registered", "success");
+                this.toastr.success("Redirecting to dashboard", "Login succeed");
             },
             error => console.log(error)
         );
@@ -148,7 +155,6 @@ export class HomeComponent implements OnInit {
         this.modal.alert()
             .size('lg')
             .showClose(true)
-            //.title("<i class='fa fa-question-circle fa-fw'></i> What's a Popoll room ?!")
             .body(require('./home.modal-pollroom.html'))
             .open();
     }
@@ -157,7 +163,6 @@ export class HomeComponent implements OnInit {
         this.modal.alert()
             .size('lg')
             .showClose(true)
-            //.title("<i class='fa fa-question-circle fa-fw'></i> What's a Popoll room ?!")
             .body(require('./home.modal-questions.html'))
             .open();
     }
@@ -166,7 +171,6 @@ export class HomeComponent implements OnInit {
         this.modal.alert()
             .size('lg')
             .showClose(true)
-            //.title("<i class='fa fa-question-circle fa-fw'></i> What's a Popoll room ?!")
             .body(require('./home.modal-answers.html'))
             .open();
     }
@@ -175,7 +179,6 @@ export class HomeComponent implements OnInit {
         this.modal.alert()
             .size('lg')
             .showClose(true)
-            //.title("<i class='fa fa-question-circle fa-fw'></i> What's a Popoll room ?!")
             .body(require('./home.modal-statistics.html'))
             .open();
     }
@@ -202,7 +205,7 @@ export class HomeComponent implements OnInit {
     cancelEditing() {
         this.isEditing = false;
         this.cat = {};
-        this.toast.setMessage("item editing cancelled.", "warning");
+        // this.toast.setMessage("item editing cancelled.", "warning");
         // reload the cats to reset the editing
         //this.getCats();
     }
@@ -212,7 +215,7 @@ export class HomeComponent implements OnInit {
             res => {
                 this.isEditing = false;
                 this.cat = cat;
-                this.toast.setMessage("item edited successfully.", "success");
+                // this.toast.setMessage("item edited successfully.", "success");
             },
             error => console.log(error)
         );
@@ -224,7 +227,7 @@ export class HomeComponent implements OnInit {
                 res => {
                     var pos = this.cats.map(cat => { return cat._id }).indexOf(cat._id);
                     this.cats.splice(pos, 1);
-                    this.toast.setMessage("item deleted successfully.", "success");
+                    // this.toast.setMessage("item deleted successfully.", "success");
                 },
                 error => console.log(error)
             );

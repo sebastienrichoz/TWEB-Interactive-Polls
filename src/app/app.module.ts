@@ -9,6 +9,7 @@ import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { NG2D3Module } from 'ng2d3';
+import { ToastModule } from 'ng2-toastr/ng2-toastr';
 
 // Components
 import { AppComponent } from './app.component';
@@ -61,6 +62,7 @@ const routing = RouterModule.forRoot([
         BootstrapModalModule,
         ChartsModule,
         NG2D3Module,
+        ToastModule,
         routing
     ],
     providers: [

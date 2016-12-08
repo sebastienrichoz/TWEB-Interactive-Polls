@@ -40,16 +40,16 @@
 
         <div class="row">
             <div class="col-sm-6 text-center">
-                <button class="btn btn-default btn-block" (click)="openPollsCreated()">Polls created</button>
+                <button class="btn btn-default btn-block tab-btn" (click)="openPollsCreated()">Polls created</button>
             </div>
             <div class="col-sm-6 text-center">
-                <button class="btn btn-default btn-block" (click)="openPollsJoined()">Polls joined</button>
+                <button class="btn btn-default btn-block tab-btn" (click)="openPollsJoined()">Polls joined</button>
             </div>
         </div>
 
         <div class="row">
             <div *ngIf="displayPollsCreated">
-                <p>Polls created</p>
+                <h2>Polls created</h2>
                 <bar-vertical
                         [view]="view"
                         [scheme]="colorScheme"
@@ -67,7 +67,7 @@
             </div>
 
             <div *ngIf="displayPollsJoined">
-                <p>Polls joined</p>
+                <h2>Polls joined</h2>
                 <bar-vertical
                         [view]="view"
                         [scheme]="colorScheme"

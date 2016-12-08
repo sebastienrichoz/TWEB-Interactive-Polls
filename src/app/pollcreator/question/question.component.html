@@ -1,18 +1,31 @@
-<div class="input-group input-group-lg">
-    <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-question fa-fw"></i></span>
-    <input type="text" class="form-control" value="{{ question.label }}" placeholder="Write your question here">
+<div class="row" id="question-action">
+    <div class="col-sm-6">
+        <button (click)="deleteQuestion()" class="btn btn-danger" type="button"><i class="fa fa-times fa-fw"></i> Delete</button>
+    </div>
+
+    <div class="col-sm-6 text-right">
+        <button id="close-button" (click)="close()" class="btn btn-warning" type="button" [disabled]="!published || closed"><i class="fa fa-lock fa-fw"></i> Close</button>
+        <button (click)="publish()" class="btn btn-success" type="button" [disabled]="published"><i class="fa fa-cloud-upload fa-fw"></i> Publish</button>
+    </div>
 </div>
 
-<div *ngFor="let answer of question.answers" [@flyInOut] class="input-group answer">
-    <span class="input-group-addon minus">
-        <button (click)="removeAnswer(answer)" class="btn btn-danger btn-sm" type="button"><i class="fa fa-minus"></i></button>
-    </span>
-    <span class="input-group-addon">
-        <i class="fa fa-chevron-right"></i>
-    </span>
-    <input type="text" value="{{ answer.label }}" class="form-control">
-</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="input-group input-group-lg">
+            <span class="input-group-addon" id="sizing-addon1"><i class="fa fa-question fa-fw"></i></span>
+            <input [(ngModel)]="question.label" type="text" class="form-control" value="{{ question.label }}" placeholder="Write your question here">
+        </div>
 
-<div class="col-sm-12 plus-answer">
-    <button (click)="addAnswer()" class="btn btn-success btn-sm" type="button"><i class="fa fa-plus fa-fw"></i></button>
+        <div *ngFor="let answer of question.answers" [@flyInOut] class="input-group answer">
+        <span class="input-group-addon minus">
+            <button (click)="removeAnswer(answer)" class="btn btn-danger btn-sm" type="button"><i class="fa fa-minus"></i></button>
+        </span>
+            <span class="input-group-addon">
+            <i class="fa fa-chevron-right"></i>
+        </span>
+            <input [(ngModel)]="answer.label" type="text" value="{{ answer.label }}" class="form-control">
+        </div>
+
+        <button id="plus-answer" (click)="addAnswer()" class="btn btn-success btn-sm" type="button"><i class="fa fa-plus fa-fw"></i></button>
+    </div>
 </div>
