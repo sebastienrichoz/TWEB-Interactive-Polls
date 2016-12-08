@@ -8,25 +8,28 @@ import { RouterModule } from '@angular/router';
 import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { NG2D3Module } from 'ng2d3';
 
+// Components
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
-
-import { DataService } from './services/data.service';
-import {HomeService} from "./services/home.service";
-import {DashboardService} from "./services/dashboard.service";
+import { PollcreatorComponent } from './pollcreator/pollcreator.component';
+import { PollroomComponent } from './pollroom/pollroom.component';
+import { QuestionComponent } from './pollcreator/question/question.component';
 
 import { ToastComponent } from './shared/toast/toast.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
-import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
+// Services
+import { DataService } from './services/data.service';
+import {HomeService} from "./services/home.service";
+import {DashboardService} from "./services/dashboard.service";
+import {PollcreatorService} from "./pollcreator/pollcreator.service";
 
-import { PollcreatorComponent } from './pollcreator/pollcreator.component';
-import { PollroomComponent } from './pollroom/pollroom.component';
-import { QuestionComponent } from './pollcreator/question/question.component';
-import { PieChartComponent } from './shared/pie-chart/pie-chart.component';
+// Pipes
+import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
 
 // roots
 const routing = RouterModule.forRoot([
@@ -46,8 +49,7 @@ const routing = RouterModule.forRoot([
         ThousandSeparatorPipe,
         PollcreatorComponent,
         PollroomComponent,
-        QuestionComponent,
-        PieChartComponent
+        QuestionComponent
     ],
     imports: [
         BrowserModule,
@@ -58,12 +60,14 @@ const routing = RouterModule.forRoot([
         ModalModule.forRoot(),
         BootstrapModalModule,
         ChartsModule,
+        NG2D3Module,
         routing
     ],
     providers: [
         DataService,
         HomeService,
         DashboardService,
+        PollcreatorService,
         ToastComponent
     ],
     bootstrap: [AppComponent]

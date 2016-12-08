@@ -1,11 +1,16 @@
-# Projet TWEB : Interactive polls
+# TWEB project : Interactive polls with Pollak
+Pollak is a web application which allows you to :
+* As a "teacher", create polls with multiple choice questions, publish them and watch in live the users answer them
+* As a "student", join a poll, answer multiple choice questions and watch the results once the question is closed by the "teacher"
 
 ## Preview
-TODO image ou gif
+[**https://interactive-polls.herokuapp.com**](https://interactive-polls.herokuapp.com/) (Basic functionnalities for now, just to have an idea about how navigation works and what you can do)
 
-![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/maquette.jpg "Maquette")
+![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/dashboard.PNG "Dashboard")
+![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/pollcreator.PNG "Poll creator")
 
-## Technologies, frameworks utilisés
+
+## Techonolies and frameworks used
 The front-end project was generated with [Angular CLI](https://github.com/angular/angular-cli).
   
 This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_bundle)):
@@ -17,23 +22,23 @@ This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_
 * [Bootstrap](http://www.getbootstrap.com): layout and styles
 * [Stylish Portfolio](https://startbootstrap.com/template-overviews/stylish-portfolio/): bootstrap template
 * [Font Awesome](http://fontawesome.io): icons
-* socket.io
-* ... TODO
+* [ng2d3](https://swimlane.gitbooks.io/ng2d3/content/): angular2 + D3.js framework for charts
+* socket.io (in a future release)
 
-## Prérequis
-1. Installer [Node.js](https://nodejs.org) (min. v 6.6.0) et [MongoDB](http://www.mongodb.com) (min. v 3.2.10)
-2. Installer Angular CLI: `npm i angular-cli -g`
-3. Depuis la racine du projet, installer toutes les dépendances: `npm i`
+## Prerequisites
+1. Install [Node.js](https://nodejs.org) (min. v 6.6.0) and [MongoDB](http://www.mongodb.com) (min. v 3.2.10)
+2. Install Angular CLI: `npm i angular-cli -g`
+3. From the root project, install all the dependencies: `npm i`
 
-**Tip : MongoDB à l'aide de Docker**
+**Tip : MongoDB with Docker**
 
-Lancer un serveur MongoDB: `docker run -p 27017:27017 mongo:latest`
+Run a MongoDB server: `docker run -p 27017:27017 mongo:latest`
 
-Se connecter au serveur à l'aide du client MongoDB: `docker run -it mongo:latest mongo --host 192.168.99.100` (adresse à adapter selon votre configuration Docker)
+Connect to the server with MongoDB client: `docker run -it mongo:latest mongo --host 192.168.99.100` (adresse à adapter selon votre configuration Docker)
 
-## Exécuter en local
+## Run local
 
-Créer un fichier `nodemon.json` à la racine du projet. Celui-ci sera utilsé par nodemon lors du lancement du serveur express.js afin de définir les variables propres à votre système.
+Create a `nodemon.json` file at the root project where you define your environment variables of your system. It will be used by nodemon when the Express server starts.
 
 ```json
 {
@@ -43,64 +48,67 @@ Créer un fichier `nodemon.json` à la racine du projet. Celui-ci sera utilsé p
 }
 ```
 
-1. bash 1: `mongod`: lance le serveur MongoDB
-2. bash 2: `ng build -w`: compile le projet en mode production et se met à l'écoute des changements de fichiers
-3. bash 3: `npm start`: lance le serveur Express
-4. Se rendre à l'adresse [localhost:3000](http://localhost:3000)
+1. bash 1: `mongod`: run MongoDB server
+2. bash 2: `ng build -w`: build the angular 2 project and listens for file changes
+3. bash 3: `npm start`: run Express server
+4. Open [localhost:3000](http://localhost:3000) in your browser
 
-## Exécuter les tests
+## Run the tests
 
-Exécuter `ng test` pour lancer les tests unitaires à l'aide de [Karma](https://karma-runner.github.io).
+Execute `ng test` to run unit tests with [Karma](https://karma-runner.github.io).
 
-Lancer l'application avec `npm start` si cela n'est pas déjà fait puis exécuter `ng e2e` pour lancer les tests End-to-End à l'aide de [Protractor](http://www.protractortest.org/). 
+Run the application with `npm start` if it's not already done then execute `ng e2e` to run End-to-End tests with [Protractor](http://www.protractortest.org/). 
 
-## Déployer sur Heroku
-Pour le moment c'est moche mais ça marche :
+## Deploy on Heroku
+For the moment it's not a nice solution but it works :
 
-*Installer [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line#download-and-install)*
+*Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line#download-and-install)*
 
-1. Compiler le projet `ng build --prod` pour créer un bundle de production
-2. Autoriser le dossier `dist/` dans le .gitignore
+1. Compile project with `ng build --prod` to create a production bundle
+2. Authorize `dist/` folder in .gitignore file
 3. `git add .`, `git commit -m "<message>"`, `git push heroku master`
-4. `heroku open`. L'application est disponible sur [https://interactive-polls.herokuapp.com/](https://interactive-polls.herokuapp.com/)
+4. `heroku open`. App is available on [https://interactive-polls.herokuapp.com/](https://interactive-polls.herokuapp.com/)
 
-Une fois l'application déployée, rajouter le dossier `dist/` dans le .gitignore pour ne pas polluer le github
+Once the app is deployed, add again the `dist/` folder in .gitignore file to keep a clean github repository
 
-Faudra faire mieux par la suite...
+We are looking for a better way to achieve this...
 
-## Fonctionnalités
+## Functionnalities
 
 **En tant qu'utilisateur anonyme**
 
 - Créer un compte (nom d'utilisateur unique et mot de passe avec vérification)
 - Se loguer
-- Visualiser quelques statistiques globales (nombre de chatrooms, nombre de questions, etc.) sur la page d'accueil pour donner envie
-- (Rejoindre une chatroom anonymement)
+- Visualiser quelques statistiques globales (nombre de pollrooms, nombre de questions, etc.) sur la page d'accueil pour donner envie
+- (Rejoindre une pollroom anonymement)
 
 **En tant qu'utilisateur enregistré**
 
-- Visualiser quelques statistiques personnelles (nombre de chatrooms créées/rejointes, nombre de question posées/répondues, moyenne de participants par chatroom, etc.)
-- Créer une chatroom (avec une description, génération automatique de son identifiant)
-- Rejoindre une chatroom (avec son identifiant)
-- Retrouver son historique de chatroom créées et rejointes
-- Entrer dans une chatroom clotûrée à laquelle l'utilisateur a participé
+- Visualiser quelques statistiques personnelles (nombre de pollrooms créées/rejointes, nombre de question posées/répondues, moyenne de participants par pollroom, etc.)
+- Créer une pollroom (avec un titre, génération automatique de son identifiant)
+- Sélectionner une pollroom créée
+- Rejoindre une pollroom (avec son identifiant)
+- Retrouver son historique de pollroom créées et rejointes
+- Entrer dans une pollroom clotûrée à laquelle l'utilisateur a participé
 - Se déconnecter
 - (Editer/Supprimer son compte)
 
-**En tant que créateur d'une chatroom**
+**En tant que créateur d'une pollroom**
 
-- Affichage de l'identifiant d'accès à la chatroom
-- Poser une question à l'audience (question à choix multiples en spécifiant l'énoncé, les réponses possibles et les réponses)
+- Affichage de l'identifiant d'accès à la pollroom
+- Créer une question (question à choix multiples en spécifiant l'énoncé et les réponses possibles)
+- Publier une question pour la rendre visible à l'audience
+- Affichage des réponses de l'audience en temps réel (socket.io)
 - Clôturer une question
-- Clôturer la chatroom
-- (Réouvrir une chatroom clôturée)
+- Clôturer la pollroom
+- (Réouvrir une pollroom clôturée)
 
-**En tant qu'auditeur d'une chatroom**
+**En tant qu'auditeur d'une pollroom**
 
-- Visualiser les questions (liste des choix possibles dans un ordre aléatoire)
+- Visualiser les questions
 - Répondre aux questions une seule fois (lié au compte utilisateur)
-- Visualiser la correction automatique une fois la question clôturée
 - Visualiser quelques statistiques sur les réponses à cette question
+- Quitter la pollroom
 
 ## Endpoints
 
@@ -134,8 +142,8 @@ Faudra faire mieux par la suite...
 
 - POST : enregistrement d'une réponse
 
-## Auteurs
+## Authors
 
 Damien Rochat & Sébastien Richoz
 
-Squelette réalisé avec [Angular 2 Full Stack project](https://david-dm.org/DavideViolante/Angular2-Full-Stack), projet dont l'auteur est [Davide Violante](https://github.com/DavideViolante)
+Skeleton realised with [Angular 2 Full Stack project](https://david-dm.org/DavideViolante/Angular2-Full-Stack), project where author is [Davide Violante](https://github.com/DavideViolante)

@@ -2,8 +2,12 @@ import {
     Component, OnInit, style, animate, transition,
     state, trigger
 } from '@angular/core';
+import {single, multi} from './data';
 
 import {PollElement} from "./PollElement";
+import {FormBuilder, FormGroup, FormControl, Validators} from "@angular/forms";
+import {ToastComponent} from "../shared/toast/toast.component";
+import {PollcreatorService} from "./pollcreator.service";
 
 @Component({
     selector: 'pollcreator',
@@ -30,14 +34,37 @@ import {PollElement} from "./PollElement";
 })
 export class PollcreatorComponent implements OnInit {
 
+    // forms
+    private createPollForm: FormGroup;
+    private pollName = new FormControl("", Validators.required);
+
+    // pie chart options
+    single: any[];
+    view: any[] = [550, 200];
+    // options
+    gradient = false;
+    showLegend = false;
+    colorScheme = {
+        domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+    };
+    // pie
+    showLabels = false;
+    explodeSlices = false;
+    doughnut = false;
+
     pollElements: PollElement[] = [];
 
-    constructor() {
+    constructor(private pollcreatorService: PollcreatorService,
+                private toast: ToastComponent,
+                private formBuilder: FormBuilder) {
         this.pollElements.fill(new PollElement(), 0, 1);
+        Object.assign(this, {single, multi});
     }
 
     ngOnInit() {
-
+        this.createPollForm = this.formBuilder.group({
+            pollName: this.pollName
+        });
     }
 
     addPollElement() {
@@ -50,4 +77,11 @@ export class PollcreatorComponent implements OnInit {
             this.pollElements.splice(index, 1);
     }
 
+    clickPieChart($event) {
+        console.log($event);
+    }
+
+    createPoll() {
+        console.log("Creating poll " + this.pollName.value);
+    }
 }

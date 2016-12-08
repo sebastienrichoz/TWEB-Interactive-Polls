@@ -5,7 +5,7 @@
         <div class="container">
             <app-toast [message]="toast.message"></app-toast>
             <div class="row text-center">
-                <div class="col-md-6 col-lg-offset-4">
+                <div class="col-md-6 col-md-offset-4">
                     <ul class="poll-listing">
                         <li class="poll-item">{{ nbRoomCreated | thousandSeparator }} <i class="fa fa-comments fa-fw"></i> polls created</li>
                         <li class="poll-item">{{ nbQuestionAsked | thousandSeparator}} <i class="fa fa-question-circle-o fa-fw"></i> questions asked</li>
@@ -50,7 +50,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                <h2>{{ brandName }} is a simple solution to create polls with radio type questions</h2>
+                <h2>{{ brandName }} is a simple solution to create polls with multiple choices questions</h2>
                 <p class="lead">Create a poll, ask your questions. Or join a poll, answer the questions. It has never been so easy.</p>
             </div>
         </div>
@@ -85,12 +85,12 @@
                         <div class="service-item">
                                 <span class="fa-stack fa-4x">
                                 <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-dot-circle-o fa-stack-1x text-primary"></i>
+                                <i class="fa fa-check-square-o fa-stack-1x text-primary"></i>
                             </span>
                             <h4>
                                 <strong>Questions</strong>
                             </h4>
-                            <p>A very simple formular allows you to create and display simple choice questions.</p>
+                            <p>A very intuitive formular allows you to create and publish multiple choices questions.</p>
                             <button (click)="openQuestionsModal()" class="btn btn-light">Learn More</button>
                         </div>
                     </div>
@@ -148,14 +148,14 @@
                     <div class="col-md-6">
                         <div class="portfolio-item">
                             <a href="#">
-                                <img class="img-portfolio img-responsive" src="../../public/assets/img/portfolio-1.jpg">
+                                <img class="img-portfolio img-responsive" src="../../public/assets/img/pollcreator.PNG">
                             </a>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="portfolio-item">
                             <a href="#">
-                                <img class="img-portfolio img-responsive" src="../../public/assets/img/portfolio-2.jpg">
+                                <img class="img-portfolio img-responsive" src="../../public/assets/img/dashboard.PNG">
                             </a>
                         </div>
                     </div>

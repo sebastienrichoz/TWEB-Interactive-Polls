@@ -17,3 +17,11 @@ button {
     margin-bottom: 30px;
     border-top: 1px solid #e2e2e2;
 }
+
+.poll-creator-header {
+    margin-bottom: 20px;
+}
+
+.input-group-lg>.form-control, .input-group-lg>.input-group-addon, .input-group-lg>.input-group-btn>.btn {
+    border-radius: 0;
+}

@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-/*!
+/*/
  * Start Bootstrap - Stylish Portfolio (http://startbootstrap.com/)
  * Copyright 2013-2016 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
@@ -210,6 +210,7 @@ hr.small {
 
 .img-portfolio {
     margin: 0 auto;
+    border: 1px solid #d8d8d8
 }
 
 .img-portfolio:hover {
@@ -254,3 +255,48 @@ footer {
     bottom: 5px;
     right: 5px;
 }
+
+
+/*
+ /!! Ajouter les styles css dans public/styles.css
+ S ils sont dans barchart.component.css ils ne vont pas s'appliquer
+ sur les balises initialisées par d3
+  */
+.advanced-pie-legend .total-value {
+    font-size: 1.6em;
+    margin-right: 10px;
+    float: left;
+}
+
+.advanced-pie-legend .total-label {
+    font-size: 1.6em;
+    margin-bottom: 15px;
+}
+
+.advanced-pie-legend .legend-items-container .legend-items .legend-item .item-value {
+    margin-left: 8px;
+    font-size: 1.4em;
+}
+
+.advanced-pie-legend .legend-items-container .legend-items .legend-item .item-percent {
+    font-size: 1.6em;
+}
+
+.bar {
+    fill: #3d9970;
+}
+
+.bar:hover {
+    fill: #3d9970;
+}
+
+.axis--x path {
+    display: none;
+}
+
+.arc path {
+    stroke: #fff;
+}
+
+
+

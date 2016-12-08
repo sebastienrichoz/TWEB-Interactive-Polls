@@ -1,5 +1,12 @@
 .stats {
-    background-color: #e2cb3c;
+    color: #ffffff;
+    background-color: #3d9970;
+}
+
+#leave-pollroom {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
 ul{

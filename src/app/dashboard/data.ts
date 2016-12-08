@@ -1,19 +1,23 @@
-export let single = [
+export var single = [
     {
-        "name": "Germany",
-        "value": 8940000
+        "name": "TWEB",
+        "value": 36
     },
     {
-        "name": "USA",
-        "value": 5000000
+        "name": "AMT",
+        "value": 42
     },
     {
-        "name": "France",
-        "value": 7200000
+        "name": "MAC",
+        "value": 3
+    },
+    {
+        "name": "SYM",
+        "value": 17
     }
 ];
 
-export let multi = [
+export var multi = [
     {
         "name": "Germany",
         "series": [

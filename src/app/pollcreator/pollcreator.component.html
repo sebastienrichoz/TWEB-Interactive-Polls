@@ -7,6 +7,47 @@
         </div>
     </div>
 
+    <div class="row poll-creator-header">
+
+        <div class="space col-md-5 text-right">
+            <!-- Single button -->
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Select a poll <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a routerLink="/pollcreator">Poll 1</a></li>
+                    <li><a routerLink="/pollcreator">Poll 2</a></li>
+                    <li><a routerLink="/pollcreator">Poll 3</a></li>
+                </ul>
+            </div>
+        </div><!-- /.col-lg-6 -->
+
+        <div class="col-md-5">
+            <form [formGroup]="createPollForm" (ngSubmit)="createPoll()">
+                <div class="input-group input-group">
+                    <input type="text" class="form-control" formControlName="pollName" placeholder="Enter poll name">
+                    <span class="input-group-btn">
+                        <button class="btn btn-dark" type="submit" [disabled]="!createPollForm.valid"><i class="fa fa-plus fa-fw"></i> Create Poll</button>
+                    </span>
+                </div><!-- /input-group -->
+            </form>
+        </div><!-- /.col-lg-6 -->
+
+        <div class="col-md-2 text-right text-vertical-center">
+            <span>DamienRonchon <a href="#">Logout</a></span>
+        </div>
+    </div><!-- /.row -->
+
+    <div class="row">
+        <div class="col-sm-6">
+            <h3>Poll about food quality in HEIG-vd</h3>
+        </div>
+        <div class="col-sm-6">
+            <h3>Pollroom number: 182496</h3>
+        </div>
+    </div>
+
     <div *ngFor="let element of pollElements" [@flyInOut] class="row poll-element">
         <div class="col-md-6">
             <question-creator></question-creator>
@@ -20,11 +61,14 @@
         </div>
 
         <div class="col-md-4">
-            <h3>Pie chart here</h3>
-            <pie-chart></pie-chart>
+            <advanced-pie-chart
+                    [view]="view"
+                    [scheme]="colorScheme"
+                    [results]="single"
+                    [gradient]="gradient"
+                    (click)="clickPieChart($event)">
+            </advanced-pie-chart>
         </div>
-
-        <hr>
     </div><!-- /.row -->
 
     <div class="row">
