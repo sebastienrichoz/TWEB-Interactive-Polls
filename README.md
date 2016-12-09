@@ -4,13 +4,13 @@ Pollak is a web application which allows you to :
 * As a "student", join a poll, answer multiple choice questions and watch the results once the question is closed by the "teacher"
 
 ## Preview
-[**https://interactive-polls.herokuapp.com**](https://interactive-polls.herokuapp.com/) (Basic functionnalities for now, just to have an idea about how navigation works and what you can do)
+[**https://pollak.herokuapp.com**](https://pollak.herokuapp.com) (Basic functionalities for now, just to have an idea about how navigation works and what you can do)
 
 ![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/dashboard.PNG "Dashboard")
 ![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/pollcreator.PNG "Poll creator")
 
 
-## Techonolies and frameworks used
+## Technologies and frameworks used
 The front-end project was generated with [Angular CLI](https://github.com/angular/angular-cli).
   
 This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_bundle)):
@@ -28,53 +28,48 @@ This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_
 
 ## Prerequisites
 1. Install [Node.js](https://nodejs.org) (min. v 6.6.0) and [MongoDB](http://www.mongodb.com) (min. v 3.2.10)
-2. Install Angular CLI: `npm i angular-cli -g`
-3. From the root project, install all the dependencies: `npm i`
-
-**Tip : MongoDB with Docker**
-
-Run a MongoDB server: `docker run -p 27017:27017 mongo:latest`
-
-Connect to the server with MongoDB client: `docker run -it mongo:latest mongo --host 192.168.99.100` (adresse à adapter selon votre configuration Docker)
+2. Install Angular CLI: `npm install angular-cli -g`
+3. From the root project, install all the dependencies: `npm install`
 
 ## Run local
-
 Create a `nodemon.json` file at the root project where you define your environment variables of your system. It will be used by nodemon when the Express server starts.
 
 ```json
 {
   "env": {
-    "MONGODB_URI": "mongodb://192.168.99.100:27017/interactive-polls"
+    "MONGODB_URI": "mongodb://192.168.99.100:27017/pollak"
   }
 }
 ```
 
-1. bash 1: `mongod`: run MongoDB server
+1. bash 1: `mongod`: run MongoDB server (to use Docker, see the tip bellow)
 2. bash 2: `ng build -w`: build the angular 2 project and listens for file changes
-3. bash 3: `npm start`: run Express server
+3. bash 3: `npm start`: run Express server and serve the app
 4. Open [localhost:3000](http://localhost:3000) in your browser
 
-## Run the tests
+**Tip : MongoDB with Docker**
 
+Run a MongoDB server: `docker run -p 27017:27017 mongo:latest`
+
+Connect to the server with MongoDB client: `docker run -it mongo:latest mongo --host 192.168.99.100` (depending your Docker configuration)
+
+## Run the tests
 Execute `ng test` to run unit tests with [Karma](https://karma-runner.github.io).
 
 Run the application with `npm start` if it's not already done then execute `ng e2e` to run End-to-End tests with [Protractor](http://www.protractortest.org/). 
 
 ## Deploy on Heroku
-For the moment it's not a nice solution but it works :
 
-*Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line#download-and-install)*
+Prerequisites : add the remote git configuration with your Heroku app.
 
-1. Compile project with `ng build --prod` to create a production bundle
-2. Authorize `dist/` folder in .gitignore file
-3. `git add .`, `git commit -m "<message>"`, `git push heroku master`
-4. `heroku open`. App is available on [https://interactive-polls.herokuapp.com/](https://interactive-polls.herokuapp.com/)
+Simply push your last commits on Heroku git server. For example :
 
-Once the app is deployed, add again the `dist/` folder in .gitignore file to keep a clean github repository
+1. `git push heroku master`
+2. The app is available on [https://pollak.herokuapp.com](https://pollak.herokuapp.com) (on your Heroku application)
 
-We are looking for a better way to achieve this...
+Heroku will automatically install npm dependencies, build the app under the `dist/` folder and serve it.
 
-## Functionnalities
+## Functionalities
 
 **En tant qu'utilisateur anonyme**
 
@@ -111,37 +106,36 @@ We are looking for a better way to achieve this...
 - Visualiser quelques statistiques sur les réponses à cette question
 - Quitter la pollroom
 
-## Endpoints
+## Endpoints (for future release)
 
 **/auth**
 
-- POST : connexion
-- DELETE : déconnexion
+- POST : login
+- DELETE : logout
 
 **/register**
 
-- POST : création d'un compte
+- POST : create an account
 
 **/rooms**
 
-- POST : création d'une pollroom
-- PATCH : clôture/réouverture d'une pollroom
+- POST : create a pollroom
+- PATCH : edit a pollroom (close, reopen)
 
 **/rooms/{id}**
 
-- GET : récupération d'une pollroom (avec questions)
+- GET : get a pollroom by id (with questions)
 
 **/rooms/{id}/questions**
 
-- POST : création d'une question
+- POST : create a new question (with possible and corrects answers)
+- PATCH : edit a question (close)
 
 **/rooms/{id}/questions/{id}**
 
-- GET : récupération d'une question (avec réponses, attention à ce que les utilisateurs ne puisse pas voir les réponses)
+- GET : get a question (with possible answers)
 
-**/rooms/{id}/question/{id}/answers**
-
-- POST : enregistrement d'une réponse
+Note : be careful to don't leak correct answers
 
 ## Authors
 
