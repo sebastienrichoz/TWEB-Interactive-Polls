@@ -10,7 +10,7 @@ Pollak is a web application which allows you to :
 
 ![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/userflow.png "Pollak userflow")
 
-This userflow describe how the application would work.
+This userflow describes how the application would work.
 
 You can now have a deep previous of the different parts of the app with the following links.
 
