@@ -122,8 +122,9 @@ export class HomeComponent implements OnInit {
             this.registerConfirmedPass.reset();
         } else {
             this.toastr.success("Please login now", "Register succeed");
-            this.visibleRegisterForm = false;
-            this.visibleLoginForm = true;
+            // TODO : for preview only
+            this.router.navigate(['./dashboard']);
+
             this.homeService.register(this.registerForm.value).subscribe(
                 res => {
                     var newUser = res.json();
