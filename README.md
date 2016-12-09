@@ -1,16 +1,17 @@
 # TWEB project : Interactive polls with Pollak
+
 Pollak is a web application which allows you to :
 * As a "teacher", create polls with multiple choice questions, publish them and watch in live the users answer them
 * As a "student", join a poll, answer multiple choice questions and watch the results once the question is closed by the "teacher"
 
 ## Preview
+
 [**https://pollak.herokuapp.com**](https://pollak.herokuapp.com) (Basic functionalities for now, just to have an idea about how navigation works and what you can do)
 
-![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/dashboard.PNG "Dashboard")
-![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/pollcreator.PNG "Poll creator")
-
+![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/userflow.png "Pollak userflow")
 
 ## Technologies and frameworks used
+
 The front-end project was generated with [Angular CLI](https://github.com/angular/angular-cli).
   
 This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_bundle)):
@@ -27,11 +28,13 @@ This project uses the [MEAN stack](https://en.wikipedia.org/wiki/MEAN_(software_
 * socket.io (in a future release)
 
 ## Prerequisites
+
 1. Install [Node.js](https://nodejs.org) (min. v 6.6.0) and [MongoDB](http://www.mongodb.com) (min. v 3.2.10)
 2. Install Angular CLI: `npm install angular-cli -g`
 3. From the root project, install all the dependencies: `npm install`
 
 ## Run local
+
 Create a `nodemon.json` file at the root project where you define your environment variables of your system. It will be used by nodemon when the Express server starts.
 
 ```json
@@ -54,6 +57,7 @@ Run a MongoDB server: `docker run -p 27017:27017 mongo:latest`
 Connect to the server with MongoDB client: `docker run -it mongo:latest mongo --host 192.168.99.100` (depending your Docker configuration)
 
 ## Run the tests
+
 Execute `ng test` to run unit tests with [Karma](https://karma-runner.github.io).
 
 Run the application with `npm start` if it's not already done then execute `ng e2e` to run End-to-End tests with [Protractor](http://www.protractortest.org/). 
