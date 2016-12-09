@@ -10,6 +10,16 @@ Pollak is a web application which allows you to :
 
 ![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/userflow.png "Pollak userflow")
 
+This userflow describe how the application would work.
+
+You can now have a deep previous of the different parts of the app with the following links.
+
+* [Dashboard](https://pollak.herokuapp.com/dashboard)
+* [Pollcreator](https://pollak.herokuapp.com/pollcreator)
+* [Pollroom](https://pollak.herokuapp.com/pollroom)
+
+The frontend application is working but nothing is persisted, because the server development is in progress.
+
 ## Technologies and frameworks used
 
 The front-end project was generated with [Angular CLI](https://github.com/angular/angular-cli).
