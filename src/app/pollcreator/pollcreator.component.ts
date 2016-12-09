@@ -8,7 +8,7 @@ import {PollElement} from "./PollElement";
 import {FormBuilder, FormGroup, FormControl, Validators} from "@angular/forms";
 import {ToastComponent} from "../shared/toast/toast.component";
 import {PollcreatorService} from "./pollcreator.service";
-import {Question} from "./question/question";
+import {Question, Answer} from "./question/question";
 import { ToastsManager } from 'ng2-toastr/ng2-toastr';
 
 @Component({
@@ -61,7 +61,7 @@ export class PollcreatorComponent implements OnInit {
                 private toast: ToastComponent,
                 private formBuilder: FormBuilder,
                 public toastr: ToastsManager) {
-        this.pollElements.push(new PollElement());
+        this.pollElements.push(new PollElement(new Question(1, '', new Answer(1,''), new Answer(2,''))));
         Object.assign(this, {single, multi});
     }
 
@@ -90,7 +90,9 @@ export class PollcreatorComponent implements OnInit {
     }
 
     addPollElement() {
-        this.pollElements.push(new PollElement());
+        let size = this.pollElements.length;
+        // TODO : better id management
+        this.pollElements.push(new PollElement(new Question(size+1, '', new Answer(1,''), new Answer(2,''))));
     }
 
     removePollElement(element: PollElement) {

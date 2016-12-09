@@ -30,7 +30,7 @@ import { Question, Answer } from './question';
 })
 export class QuestionComponent implements OnInit {
 
-    @Input() question: Question = new Question();
+    @Input() question: Question = new Question(1, '');
     @Output() onDelete = new EventEmitter<Question>();
     @Output() onPublish = new EventEmitter<Question>();
     @Output() onClose = new EventEmitter<Question>();
@@ -61,7 +61,8 @@ export class QuestionComponent implements OnInit {
     }
 
     addAnswer() {
-        this.question.addAnswer(new Answer());
+        let size = this.question.answers.length;
+        this.question.addAnswer(new Answer(size+1, ''));
     }
 
     removeAnswer(answer: Answer) {

@@ -122,6 +122,8 @@ export class HomeComponent implements OnInit {
             this.registerConfirmedPass.reset();
         } else {
             this.toastr.success("Please login now", "Register succeed");
+            this.visibleRegisterForm = false;
+            this.visibleLoginForm = true;
             this.homeService.register(this.registerForm.value).subscribe(
                 res => {
                     var newUser = res.json();
@@ -136,7 +138,7 @@ export class HomeComponent implements OnInit {
 
     login() {
         console.log("login " + this.loginName.value + " " + this.loginPass.value);
-        this.toastr.success("Redirecting to dashboard", "Login succeed");
+        this.toastr.success("Welcome DamienRonchon !", "Login succeed");
         // TODO : for preview only
         this.router.navigate(['./dashboard']);
 

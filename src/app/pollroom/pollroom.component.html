@@ -9,6 +9,22 @@
     <!--</div>-->
 
     <div class="row">
+        <div class="col-sm-12 text-center">
+            <h1>Your completion</h1>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success" role="progressbar"
+                     [attr.aria-valuenow]="nbAnswers / nbTotalAnswers * 100"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     [ngStyle]="{'width': (nbAnswers < nbTotalAnswers ? nbAnswers : nbTotalAnswers) / nbTotalAnswers * 100 + '%'}">
+                    {{nbAnswers / nbTotalAnswers * 100 | number:'.0-0' }}%
+                </div>
+            </div>
+            <hr class="small">
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-2 stats">
             <h3>PollRoom <br> <i class="fa fa-sign-in fa-fw"></i> <b>182496</b></h3>
             <hr class="small">
@@ -20,113 +36,36 @@
 
         <div class="col-md-10">
 
-            <div class="row">
+            <div class="row" *ngFor="let question of questions">
 
-                <div class="col-md-7">
-                    <h3>Quelle est la capitale de l'Allemagne ? <span class="label label-success"><i class="fa fa-unlock"></i> Open</span></h3>
+                <div class="col-md-6">
+                    <h3>{{ question.label }} <span class="label label-success"><i class="fa fa-unlock"></i> Open</span></h3>
                     <ul>
-                        <li>
-                            <input type="checkbox" id="f-option" name="selector1">
-                            <label for="f-option">Pizza</label>
+                        <li *ngFor="let answer of question.answers">
+                            <input (change)="onChecked($event, question.id, answer.id)" type="checkbox" id="{{answer.id}}" name="selector-{{question.id}}">
+                            <label (click)="answerGiven(question, answer)" [attr.for]="answer.id">{{ answer.label }}</label>
 
                             <div class="check"></div>
-                        </li>
-
-                        <li>
-                            <input type="checkbox" id="s-option" name="selector1">
-                            <label for="s-option">Boyfriend</label>
-
-                            <div class="check"><div class="inside"></div></div>
-                        </li>
-
-                        <li>
-                            <input type="checkbox" id="t-option" name="selector1">
-                            <label for="t-option">Cats</label>
-
-                            <div class="check"><div class="inside"></div></div>
                         </li>
                     </ul>
                 </div>
 
-                <div class="col-md-5">
-                    <h3>Pie chart here</h3>
+                <div class="col-md-6">
+
+                    <advanced-pie-chart
+                            [view]="view"
+                            [scheme]="colorScheme"
+                            [results]="single"
+                            [gradient]="gradient"
+                            (click)="clickPieChart($event)">
+                    </advanced-pie-chart>
                 </div>
+
+                <hr>
 
             </div>
 
-            <hr>
 
-            <div class="row">
-
-                <div class="col-md-7">
-                    <h3>Quelle est la capitale de l'Allemagne ? <span class="label label-success"><i class="fa fa-unlock"></i> Open</span></h3>
-                    <ul>
-                        <li>
-                            <input type="checkbox" id="1-option" name="selector">
-                            <label for="1-option">Pizza</label>
-
-                            <div class="check"></div>
-                        </li>
-
-                        <li>
-                            <input type="checkbox" id="2-option" name="selector">
-                            <label for="2-option">Boyfriend</label>
-
-                            <div class="check"><div class="inside"></div></div>
-                        </li>
-
-                        <li>
-                            <input type="checkbox" id="3-option" name="selector">
-                            <label for="3-option">Cats</label>
-
-                            <div class="check"><div class="inside"></div></div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="col-md-5">
-                    <h3>Pie chart here</h3>
-                </div>
-
-            </div>
-
-            <hr>
-
-            <div class="row">
-
-                <div class="col-md-7">
-                    <h3>Quelle est la capitale de l'Allemagne ? <span class="label label-danger"><i class="fa fa-lock"></i> Close</span></h3>
-                    <ul>
-                        <li>
-                            <input type="checkbox" id="4-option" name="selector2" disabled>
-                            <label for="4-option">Pizza</label>
-
-                            <div class="check"></div>
-                        </li>
-
-                        <li>
-                            <input type="checkbox" id="5-option" name="selector2" checked disabled>
-                            <label for="5-option">Boyfriend</label>
-
-                            <div class="check"><div class="inside"></div></div>
-                        </li>
-
-                        <li>
-                            <input type="checkbox" id="6-option" name="selector2" disabled>
-                            <label for="6-option">Cats</label>
-
-                            <div class="check"><div class="inside"></div></div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="col-md-5">
-                    <h3>Pie chart here</h3>
-                </div>
-
-            </div>
-
-            <hr>
 
         </div>
     </div>

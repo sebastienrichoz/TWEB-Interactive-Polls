@@ -1,21 +1,28 @@
 export class Answer {
+    id: number;
     label: string;
 
-    constructor() {
-        this.label = '';
+    constructor(id: number, label: string) {
+        this.id = id;
+        this.label = label;
+    }
+
+    getId() {
+        return this.id;
     }
 }
 
 export class Question {
+    id: number;
     label: string;
     answers: Answer[] = [];
 
-    constructor() {
-        this.label = '';
+    constructor(id: number, label: string, ...answers: Answer[]) {
+        this.id = id;
+        this.label = label;
         // Important : push 2 times. DON'T DO THIS : fill(new Answer(), 0, 2)
         // because when user delete first answer, it will delete the second one
-        this.answers.push(new Answer());
-        this.answers.push(new Answer());
+        answers.forEach(a => this.answers.push(a));
     }
 
     addAnswer(answer: Answer) {

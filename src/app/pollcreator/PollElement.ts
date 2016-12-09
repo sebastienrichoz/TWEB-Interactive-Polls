@@ -4,7 +4,7 @@ export class PollElement {
     question: Question;
     // TODO : pie chart
 
-    constructor() {
-        this.question = new Question();
+    constructor(question: Question) {
+        this.question = question;
     }
 }
