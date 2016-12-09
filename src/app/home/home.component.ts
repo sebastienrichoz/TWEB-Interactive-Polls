@@ -121,7 +121,7 @@ export class HomeComponent implements OnInit {
             this.registerPass.reset();
             this.registerConfirmedPass.reset();
         } else {
-            this.toastr.success("Please login now", "Register succeed");
+            this.toastr.success("Welcome DamienRonchon !", "Register succeed");
             // TODO : for preview only
             this.router.navigate(['./dashboard']);
 
@@ -130,7 +130,7 @@ export class HomeComponent implements OnInit {
                     var newUser = res.json();
                     this.visibleRegisterForm = false;
                     this.visibleLoginForm = true;
-                    this.toastr.success("Please login now", "Register succeed");
+                    this.toastr.success("Welcome DamienRonchon !", "Register succeed");
                 },
                 error => console.log(error)
             );
@@ -148,7 +148,7 @@ export class HomeComponent implements OnInit {
                 var newUser = res.json();
                 this.visibleRegisterForm = false;
                 this.visibleLoginForm = true;
-                this.toastr.success("Redirecting to dashboard", "Login succeed");
+                this.toastr.success("Welcome DamienRonchon !", "Login succeed");
             },
             error => console.log(error)
         );
