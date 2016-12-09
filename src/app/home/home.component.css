@@ -1,3 +1,24 @@
+.pollak-style {
+    color: #ffffff;
+    text-shadow: 3px 3px 3px #351114;
+}
+
+.bg-primary {
+    background-color: #de1018;
+}
+
+a {
+    color: #de1018;
+}
+
+a:hover {
+    color: #b90e14;
+}
+
+.text-primary {
+    color: #de1018;
+}
+
 .table td, .table th {
     text-align: center;
     width: 25%;
@@ -26,6 +47,7 @@
     text-transform: uppercase;
     font-weight: bold;
     color: #fff;
+    text-shadow: 3px 3px 3px #351114;
     line-height: 2.5em;
 }
 

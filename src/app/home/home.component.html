@@ -1,7 +1,7 @@
 <!-- Header -->
 <header id="top" class="header">
     <div class="text-vertical-center">
-        <h1>Create polls with {{ brandName }}</h1>
+        <h1 class="pollak-style">Create polls with {{ brandName }}</h1>
         <div class="container">
             <div class="row text-center">
                 <div class="col-md-6 col-md-offset-4">
@@ -26,7 +26,7 @@
             <div class="form-group">
                 <input class="form-control" type="password" name="confirmedPass" formControlName="registerConfirmedPass" placeholder="Confirm Password">
             </div>
-            <button class="btn btn-dark btn-sm" type="submit" [disabled]="!registerForm.valid"><i class="fa fa-floppy-o"></i> Register</button>
+            <button class="btn btn-light btn-sm" type="submit" [disabled]="!registerForm.valid"><i class="fa fa-floppy-o"></i> Register</button>
         </form>
         <br>
         <br>
