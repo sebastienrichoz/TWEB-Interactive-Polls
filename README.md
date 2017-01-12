@@ -85,40 +85,67 @@ Heroku will automatically install npm dependencies, build the app under the `dis
 
 ## Functionalities
 
-**En tant qu'utilisateur anonyme**
+*All question are multiple choice questions.*
 
-- Créer un compte (nom d'utilisateur unique et mot de passe avec vérification)
-- Se loguer
-- Visualiser quelques statistiques globales (nombre de pollrooms, nombre de questions, etc.) sur la page d'accueil pour donner envie
-- (Rejoindre une pollroom anonymement)
+**As a user connecting on the landing page**
 
-**En tant qu'utilisateur enregistré**
+- Watch some statistics about the app
+- Join a pollroom by entering its identifier (like a number of 6 digits)
+- Join a previously joined pollroom by selecting it in a list
+- Create a poll by entering its name
+- Join a created poll by selecting it in a list
 
-- Visualiser quelques statistiques personnelles (nombre de pollrooms créées/rejointes, nombre de question posées/répondues, moyenne de participants par pollroom, etc.)
-- Créer une pollroom (avec un titre descriptif, génération automatique de son identifiant)
-- Sélectionner une pollroom créée
-- Rejoindre une pollroom (avec son identifiant)
-- Retrouver son historique de pollroom créées et rejointes
-- Entrer dans une pollroom clotûrée à laquelle l'utilisateur a participé
-- Se déconnecter
-- (Editer/Supprimer son compte)
+Creating or joining any poll makes the user immediately redirecting him to the pollroom
 
-**En tant que créateur d'une pollroom**
+**As a pollroom joiner**
 
-- Affichage de l'identifiant d'accès à la pollroom
-- Créer une question (question à choix multiples en spécifiant l'énoncé et les réponses possibles)
-- Publier une question pour la rendre visible à l'audience
-- Affichage des réponses de l'audience en temps réel (socket.io)
-- Clôturer une question
-- Clôturer la pollroom
-- (Réouvrir une pollroom clôturée)
+- Watch all questions of the current pollroom
+- Watch in-live which answers are selected by other joiners
+- Watch some stats of the current pollroom
+    - identifier of the room
+    - number of participants
+    - number of questions
+    - (optional) the currently most liked question
+- Watch his current completion of the questions (a progress bar `<nb_question_answered>/<nb_question>`)
+- Create question (creating it implies publishing it) with associated responses
+- Answer questions once except those created by himself
+- Vote questions (like or dislike) except thos created by himself
+- Watch stats summarizing the poll when it closes
+- Leave the current pollroom
 
-**En tant qu'auditeur d'une pollroom**
+**As a pollroom creator**
 
-- Visualiser les questions
-- Répondre aux questions une seule fois (lié au compte utilisateur)
-- Visualiser quelques statistiques sur les réponses à cette question
-- Quitter la pollroom
+- Same as a pollroom joiner
+- Close the poll
+- (optionnal) Close a question : a closed question can't be answered anymore
+
+**How a question looks like**
+
+- When the question was created
+- Title of question
+- multiple choices
+- progress bar of answers for each choice
+- number of answer for each choice in brackets
+- number of total answers
+- Like
+- Dislike
+
+**When a pollroom is closed**
+
+- Display all questions, answers and votes
+- Questions can't be answered anymore
+- Questions can't be created anymore
+- Questions can't be voted anymore
+- A pollroom can still be joined by entering its identifier
+- (optional) Display a graph showing a summary of the poll:
+    - graphe one (bar or line chart):
+        - axe x: the questions ordered by the most liked to the most disliked
+        - axe y: the number of like
+    - graphe two (bar chart):
+        - axe x : the questions
+        - axe y : the participation for the question
+        - display the total number of participant as a line in the graph (on axe y)
+    - When hovering the graph, show the question with its choices. For each choice, show the number of answer.
 
 ## Endpoints (for future release)
 
