@@ -16,6 +16,7 @@ import {Modal} from 'angular2-modal/plugins/bootstrap';
 import { HomeService } from '../services/home.service';
 import {ToastsManager} from "ng2-toastr";
 import {Router} from "@angular/router";
+import {ToastComponent} from "../shared/toast/toast.component";
 
 @Component({
     selector: 'app-home',
@@ -49,6 +50,7 @@ export class HomeComponent implements OnInit {
     private nbQuestionAsked = 56378;
     private nbAnswer = 212986;
 
+
     private visibleRegisterForm = false;
     private visibleLoginForm = false;
 
@@ -57,6 +59,13 @@ export class HomeComponent implements OnInit {
 
     private cat = {};
     private isEditing = false;
+
+    // forms
+    private newPollForm: FormGroup;
+    private pollName = new FormControl("", Validators.required);
+
+    private joinPollForm: FormGroup;
+    private pollRoomNumber = new FormControl("", Validators.required);
 
     private registerForm: FormGroup;
     private registerName = new FormControl("", Validators.required);
@@ -73,12 +82,20 @@ export class HomeComponent implements OnInit {
                 overlay: Overlay,
                 vcRef: ViewContainerRef,
                 public modal: Modal,
-                private router: Router) {
+                private router: Router,
+                private toast: ToastComponent,) {
         overlay.defaultViewContainer = vcRef;
     }
 
     ngOnInit() {
         // this.getStats();
+        this.newPollForm = this.formBuilder.group({
+            pollName: this.pollName
+        });
+
+        this.joinPollForm = this.formBuilder.group({
+            pollRoomNumber: this.pollRoomNumber
+        });
 
         this.registerForm = this.formBuilder.group({
             registerName: this.registerName,
@@ -90,6 +107,38 @@ export class HomeComponent implements OnInit {
             loginName: this.loginName,
             loginPass: this.loginPass
         });
+    }
+
+    joinPoll() {
+        console.log("Join poll room " + this.pollRoomNumber.value);
+
+        /*
+        this.homeService.joinPoll(this.pollRoomNumber.value).subscribe(
+            res => {
+                this.toast.setMessage("Poll room " + this.pollRoomNumber.value + " successfully joined!", "success");
+                // TODO : redirect to Poll Room with appropriate pollroom number
+            },
+            error => this.toast.setMessage(error, "danger")
+        )
+        */
+    }
+
+    createPoll() {
+        console.log("Create poll " + this.pollName.value);
+
+        /*
+        if (this.pollName.value.length < 2) {
+            this.toast.setMessage("Poll name must be at least 2 caracters long", "danger");
+        } else {
+            this.homeService.addPoll(this.pollName.value).then(
+                res => {
+                    this.toast.setMessage("Poll successfully created!", "success");
+                    // TODO : redirect to Poll Creator with pollname value
+                },
+                error => this.toast.setMessage(error, "danger")
+            );
+        }
+        */
     }
 
     openRegisterForm() {

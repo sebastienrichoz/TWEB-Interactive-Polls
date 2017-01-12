@@ -9,26 +9,9 @@
 
                 <div class="row">
 
-                    <div class="space col-md-6">
-                        <form [formGroup]="newPollForm" (ngSubmit)="createPoll()">
-                            <div class="input-group input-group-lg">
-                            <span class="input-group-btn">
-                                <button class="btn btn-dark" type="submit" [disabled]="!newPollForm.valid"><i class="fa fa-plus fa-fw"></i> Create Poll</button>
-                            </span>
-                                <input type="text" class="form-control" formControlName="pollName" placeholder="Enter poll name">
-                            </div><!-- /input-group -->
-                        </form>
-                    </div><!-- /.col-lg-6 -->
 
                     <div class="col-md-6">
-                        <form [formGroup]="joinPollForm" (ngSubmit)="joinPoll()">
-                            <div class="input-group input-group-lg">
-                            <span class="input-group-btn">
-                                <button class="btn btn-dark" type="submit" [disabled]="!joinPollForm.valid"><i class="fa fa-sign-in fa-fw"></i> Join Poll</button>
-                            </span>
-                                <input type="text" class="form-control" formControlName="pollRoomNumber" placeholder="Enter pollroom's number">
-                            </div><!-- /input-group -->
-                        </form>
+
                     </div><!-- /.col-lg-6 -->
                 </div><!-- /.row -->
             </div>

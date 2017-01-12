@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import {Subject} from 'rxjs';
 
 import 'rxjs/add/operator/map';
 
@@ -19,6 +20,17 @@ export class HomeService {
     getStats() {
         // TODO
         return this.http.get('/stats').map(res => res.json());
+    }
+
+    addPoll(pollName: string): Promise<any> {
+        // TODO : post a poll accordingly to the connected user
+        return this.http.post("/poll", JSON.stringify(pollName), this.options)
+            .toPromise();
+    }
+
+    joinPoll(pollRoomNumber: string) {
+        // TODO : socket.io join a pollroom number
+        return this.http.post("/pollroom", JSON.stringify(pollRoomNumber), this.options);
     }
 
     getCats() {

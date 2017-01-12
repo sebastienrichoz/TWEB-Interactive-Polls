@@ -71,3 +71,25 @@ a:hover {
 .poll-item {
 
 }
+
+#title-info {
+}
+
+#title-manage {
+    margin-top: 100px;
+    margin-bottom: -100px;
+}
+
+#pollak-join {
+    border-right: 1px solid #ffffff;
+    padding-bottom: 20px;
+}
+
+h5 {
+    text-align: left;
+}
+form select {
+    border-radius: 0;
+    color: #555;
+    width: 100%;
+}

@@ -298,5 +298,15 @@ footer {
     stroke: #fff;
 }
 
+form input {
+    border-radius: 0 !important;
+}
 
+form button {
+    border-radius: 0 !important;
+    background-color: rgba(222, 16, 24, 0.7) !important;
+}
 
+form button:active, form button:hover {
+    background-color: rgba(222, 16, 24, 0.9) !important;
+}

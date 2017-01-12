@@ -1,47 +1,77 @@
 <!-- Header -->
 <header id="top" class="header">
     <div class="text-vertical-center">
-        <h1 class="pollak-style">Create interactive polls with {{ brandName }}</h1>
-        <div class="container">
-            <div class="row text-center">
-                <div class="col-md-6 col-md-offset-4">
-                    <ul class="poll-listing">
-                        <li class="poll-item">{{ nbRoomCreated | thousandSeparator }} <i class="fa fa-comments fa-fw"></i> polls created</li>
-                        <li class="poll-item">{{ nbQuestionAsked | thousandSeparator}} <i class="fa fa-question-circle-o fa-fw"></i> questions asked</li>
-                        <li class="poll-item">{{ nbAnswer | thousandSeparator}} <i class="fa fa-sign-in fa-fw"></i> polls joined</li>
-                    </ul>
+        <div class="container" id="title-info">
+            <h1 class="pollak-style">{{ brandName }} - Interactive polls</h1>
+            <div class="col-xs-4">
+                <h3 class="pollak-style">{{ nbRoomCreated | thousandSeparator }} <i class="fa fa-comments fa-fw"></i> <br> polls created</h3>
+            </div>
+            <div class="col-xs-4">
+                <h3 class="pollak-style">{{ nbQuestionAsked | thousandSeparator }} <i class="fa fa-question-circle-o fa-fw"></i> <br> questions asked</h3>
+            </div>
+            <div class="col-xs-4">
+                <h3 class="pollak-style">{{ nbAnswer | thousandSeparator }} <i class="fa fa-sign-in fa-fw"></i> <br> polls created</h3>
+            </div>
+        </div>
+
+        <div class="container" id="title-manage">
+            <div class="row text-center pollak-style">
+                <div class="col-sm-6" id="pollak-join">
+                    <h3>Join</h3>
+
+
+                    <form [formGroup]="joinPollForm" (ngSubmit)="joinPoll()">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-btn">
+                                <button class="btn btn-dark" type="submit" [disabled]="!joinPollForm.valid"><i class="fa fa-sign-in fa-fw"></i></button>
+                            </span>
+                            <input type="text" class="form-control btn-lg" formControlName="pollRoomNumber" placeholder="Room number">
+                        </div><!-- /input-group -->
+                    </form>
+
+                    <br>
+
+                    <h5>Joined polls</h5>
+                    <form id="joinPoll">
+                        <select name="carlist" form="joinPoll" class="btn">
+                            <option value="Choose to join..." selected="selected">Choose to join...</option>
+                            <option value="volvo">Volvo</option>
+                            <option value="saab">Saab</option>
+                            <option value="opel">Opel</option>
+                            <option value="audi">Audi</option>
+                        </select>
+                    </form>
+
+                </div>
+                <div class="col-sm-6">
+                    <h3>Create</h3>
+                    <form [formGroup]="newPollForm" (ngSubmit)="createPoll()">
+                        <div class="input-group input-group-lg">
+                            <input type="text" class="form-control" formControlName="pollName" placeholder="Poll name">
+                            <span class="input-group-btn">
+                                <button class="btn btn-dark" type="submit" [disabled]="!newPollForm.valid"><i class="fa fa-plus fa-fw"></i></button>
+                            </span>
+                        </div><!-- /input-group -->
+                    </form>
+
+                    <br>
+
+                    <h5>Created polls</h5>
+                    <form id="joinCreatedPoll">
+                        <select name="carlist" form="joinCreatedPoll" class="btn">
+                            <option value="Choose to join..." selected="selected">Choose to join...</option>
+                            <option value="volvo">Volvo</option>
+                            <option value="saab">Saab</option>
+                            <option value="opel">Opel</option>
+                            <option value="audi">Audi</option>
+                        </select>
+                    </form>
                 </div>
             </div>
         </div>
-        <br>
-        <button (click)='openRegisterForm()' class="btn btn-dark btn-lg">Register Now !</button>
-        <form class="form-inline" *ngIf="visibleRegisterForm" [@flyInOut] [formGroup]="registerForm" (ngSubmit)="register()">
-            <br>
-            <div class="form-group">
-                <input class="form-control" type="text" name="name" formControlName="registerName" placeholder="Username">
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="password" name="pass" formControlName="registerPass" placeholder="Password">
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="password" name="confirmedPass" formControlName="registerConfirmedPass" placeholder="Confirm Password">
-            </div>
-            <button class="btn btn-light btn-sm" type="submit" [disabled]="!registerForm.valid"><i class="fa fa-floppy-o"></i> Register</button>
-        </form>
-        <br>
-        <br>
-        <button (click)='openLoginForm()' class="btn btn-light">Login</button>
-        <form class="form-inline" *ngIf="visibleLoginForm" [@flyInOut] [formGroup]="loginForm" (ngSubmit)="login()" style="text-align:center">
-            <br>
-            <div class="form-group">
-                <input class="form-control" type="text" name="name" formControlName="loginName" placeholder="Username">
-            </div>
-            <div class="form-group">
-                <input class="form-control" type="password" name="pass" formControlName="loginPass" placeholder="Password">
-            </div>
-            <button class="btn btn-light btn-sm" type="submit" [disabled]="!loginForm.valid"><i class="fa fa-refresh"></i> Login</button>
-        </form>
+
     </div>
+
 </header>
 
 <!-- About -->
