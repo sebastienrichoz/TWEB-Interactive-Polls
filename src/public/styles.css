@@ -30,6 +30,11 @@ body {
     font-weight: 700;
 }
 
+#pollroom {
+    background: url(assets/img/bg-pollroom.jpg) no-repeat scroll;
+    background-size: cover;
+}
+
 /* Custom Button Styles */
 
 .btn-dark {
@@ -262,25 +267,6 @@ footer {
  S ils sont dans barchart.component.css ils ne vont pas s'appliquer
  sur les balises initialisées par d3
   */
-.advanced-pie-legend .total-value {
-    font-size: 1.6em;
-    margin-right: 10px;
-    float: left;
-}
-
-.advanced-pie-legend .total-label {
-    font-size: 1.6em;
-    margin-bottom: 15px;
-}
-
-.advanced-pie-legend .legend-items-container .legend-items .legend-item .item-value {
-    margin-left: 8px;
-    font-size: 1.4em;
-}
-
-.advanced-pie-legend .legend-items-container .legend-items .legend-item .item-percent {
-    font-size: 1.6em;
-}
 
 .bar {
     fill: #3d9970;
@@ -300,6 +286,7 @@ footer {
 
 form input {
     border-radius: 0 !important;
+    background-color: #e4e4e4 !important;
 }
 
 form button {

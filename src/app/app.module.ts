@@ -15,9 +15,9 @@ import { ToastModule } from 'ng2-toastr/ng2-toastr';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
-import { PollcreatorComponent } from './pollcreator/pollcreator.component';
 import { PollroomComponent } from './pollroom/pollroom.component';
-import { QuestionComponent } from './pollcreator/question/question.component';
+import { QuestionCreatorComponent } from './pollroom/question-creator/question-creator.component';
+import { QuestionViewComponent } from './pollroom/question-view/question-view.component';
 
 import { ToastComponent } from './shared/toast/toast.component';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -27,7 +27,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DataService } from './services/data.service';
 import {HomeService} from "./services/home.service";
 import {DashboardService} from "./services/dashboard.service";
-import {PollcreatorService} from "./pollcreator/pollcreator.service";
 
 // Pipes
 import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
@@ -37,7 +36,6 @@ const routing = RouterModule.forRoot([
     { path: '',      component: HomeComponent },
     { path: 'about', component: AboutComponent },
     { path: 'dashboard', component: DashboardComponent },
-    { path: 'pollcreator', component: PollcreatorComponent },
     { path: 'pollroom', component: PollroomComponent }
 ]);
 
@@ -48,9 +46,9 @@ const routing = RouterModule.forRoot([
         AboutComponent,
         ToastComponent,
         ThousandSeparatorPipe,
-        PollcreatorComponent,
         PollroomComponent,
-        QuestionComponent
+        QuestionCreatorComponent,
+        QuestionViewComponent
     ],
     imports: [
         BrowserModule,
@@ -69,7 +67,6 @@ const routing = RouterModule.forRoot([
         DataService,
         HomeService,
         DashboardService,
-        PollcreatorService,
         ToastComponent
     ],
     bootstrap: [AppComponent]

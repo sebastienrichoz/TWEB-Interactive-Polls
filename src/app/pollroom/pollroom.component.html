@@ -1,73 +1,52 @@
-<div class="container">
+<div id="pollroom">
 
-    <!--<div class="row">-->
-        <!--<div class="col-sm-12 text-center">-->
-            <!--<h1>Welcome, DamienRonchon</h1>-->
+    <div class="container">
 
-            <!--<hr class="small">-->
-        <!--</div>-->
-    <!--</div>-->
+        <div class="row">
 
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <h1>Your completion</h1>
-            <div class="progress">
-                <div class="progress-bar progress-bar-success" role="progressbar"
-                     [attr.aria-valuenow]="nbAnswers / nbTotalAnswers * 100"
-                     aria-valuemin="0"
-                     aria-valuemax="100"
-                     [ngStyle]="{'width': (nbAnswers < nbTotalAnswers ? nbAnswers : nbTotalAnswers) / nbTotalAnswers * 100 + '%'}">
-                    {{nbAnswers / nbTotalAnswers * 100 | number:'.0-0' }}%
+            <div class="col-md-2 stats">
+                <h3>PollRoom <br> <i class="fa fa-sign-in fa-fw"></i> <b>182496</b></h3>
+                <hr class="small">
+                <h3>20 <i class="fa fa-child fa-fw"></i> participants </h3>
+                <h3>14 <i class="fa fa-question-circle fa-fw"></i> questions</h3>
+
+                <hr class="small">
+
+                <h5>Completion</h5>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success" role="progressbar"
+                         [attr.aria-valuenow]="nbAnswers / nbTotalAnswers * 100"
+                         aria-valuemin="0"
+                         aria-valuemax="100"
+                         [ngStyle]="{'width': (nbAnswers < nbTotalAnswers ? nbAnswers : nbTotalAnswers) / nbTotalAnswers * 100 + '%'}">
+                        {{nbAnswers / nbTotalAnswers * 100 | number:'.0-0' }}%
+                    </div>
                 </div>
+
+                <a routerLink="/dashboard" id="leave-pollroom" class="btn btn-default">Leave <i class="fa fa-sign-out fa-fw"></i></a>
             </div>
-            <hr class="small">
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-2 stats">
-            <h3>PollRoom <br> <i class="fa fa-sign-in fa-fw"></i> <b>182496</b></h3>
-            <hr class="small">
-            <h3>20 <i class="fa fa-child fa-fw"></i> participants </h3>
-            <h3>14 <i class="fa fa-question-circle fa-fw"></i> questions</h3>
+            <div class="col-md-8">
 
-            <a routerLink="/dashboard" id="leave-pollroom" class="btn btn-default">Leave <i class="fa fa-sign-out fa-fw"></i></a>
-        </div>
+                    <div *ngFor="let question of questions">
 
-        <div class="col-md-10">
+                        <question-view
+                                [question]="question"
+                                (onChecked)="onChecked($event)"></question-view>
 
-            <div class="row" *ngFor="let question of questions">
-
-                <div class="col-md-6">
-                    <h3>{{ question.label }} <span class="label label-success"><i class="fa fa-unlock"></i> Open</span></h3>
-                    <ul>
-                        <li *ngFor="let answer of question.answers">
-                            <input (change)="onChecked($event, question.id, answer.id)" type="checkbox" id="{{answer.id}}" name="selector-{{question.id}}">
-                            <label (click)="answerGiven(question, answer)" [attr.for]="answer.id">{{ answer.label }}</label>
-
-                            <div class="check"></div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="col-md-6">
-
-                    <advanced-pie-chart
-                            [view]="view"
-                            [scheme]="colorScheme"
-                            [results]="single"
-                            [gradient]="gradient"
-                            (click)="clickPieChart($event)">
-                    </advanced-pie-chart>
-                </div>
-
-                <hr>
+                    </div>
 
             </div>
 
-
-
         </div>
-    </div>
 
-</div><!-- /.container -->
+    </div><!-- /.container -->
+
+    <div id="sticky-footer">
+        <div class="footer">
+            <question-creator
+                    (onPublish)="onPublish($event)">
+            </question-creator>
+        </div>
+    </div><!-- /.col-lg-6 -->
+</div>

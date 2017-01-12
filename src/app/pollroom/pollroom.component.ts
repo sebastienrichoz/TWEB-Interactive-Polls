@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Question, Answer} from "../pollcreator/question/question";
-import {single, multi} from "../pollcreator/data";
+import {Question, Answer} from "./question";
 
 @Component({
     selector: 'app-pollroom',
@@ -14,20 +13,7 @@ export class PollroomComponent implements OnInit {
     private nbTotalAnswers: number;
     private questionsChecked: Map<number, number> = new Map();
 
-    // pie chart options
-    single: any[];
-    view: any[] = [550, 200];
-    gradient = false;
-    showLegend = false;
-    colorScheme = {
-        domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
-    };
-    showLabels = false;
-    explodeSlices = false;
-    doughnut = false;
-
     constructor() {
-        Object.assign(this, {single, multi});
 
         let r11 = new Answer(1, 'A framework');
         let r12 = new Answer(2, 'A node package');
@@ -60,8 +46,11 @@ export class PollroomComponent implements OnInit {
         console.log(question.label + " " + answer.label);
     }
 
-    onChecked(e, questionId, answerId) {
-        console.log("id: " + questionId + " " + answerId);
+    onChecked(event) {
+        let e = event.e;
+        let questionId = e.questionId;
+        let answerId = e.answerId;
+        console.log("question id: " + questionId + ", answer id: " + answerId);
         let nbAnswers = this.questionsChecked.get(questionId);
         if(e.target.checked) {
             if (nbAnswers === undefined || nbAnswers === 0) {
@@ -78,10 +67,6 @@ export class PollroomComponent implements OnInit {
                 this.questionsChecked.set(questionId, nbAnswers - 1);
             }
         }
-    }
-
-    clickPieChart($event) {
-        console.log($event);
     }
 
 }
