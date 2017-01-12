@@ -121,7 +121,7 @@ Creating or joining any poll makes the user immediately redirecting him to the p
 
 **How a question looks like**
 
-![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/question-look.png "Mockup of a created question in a pollroom")
+![alt text](https://github.com/damienrochat/TWEB-Interactive-Polls/blob/master/src/public/assets/img/question-look.jpg "Mockup of a created question in a pollroom")
 
 - When the question was created
 - Title of question
