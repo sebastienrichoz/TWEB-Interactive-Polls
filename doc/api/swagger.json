@@ -1,0 +1,126 @@
+swagger: '2.0'
+info:
+  title: Pollak API
+  description: This is the API used by the Pollak application
+  version: 1.0.0
+host: pollak.herokuapp.com
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+basePath: /api/v1
+paths:
+
+  /pollrooms/:
+  
+    post:
+      description: Allow to create a new pollroom.
+      parameters:
+        - name: pollroom
+          in: body
+          description: The new pollroom informations.
+          required: true
+          schema:
+            properties:
+              name:
+                type: string
+      responses:
+        201:
+          description: The pollroom has been created, return it.
+          schema:
+            $ref: '#/definitions/Pollroom'
+        400:
+          $ref: '#/responses/GeneralError'
+        422:
+          $ref: '#/responses/IllegalInput'
+
+  /pollrooms/{pollroom-id}/:
+  
+    get:
+      description: Allow to retrieve an existing pollroom.
+      parameters:
+        - $ref: '#/parameters/PollroomID'
+      responses:
+        200:
+          description: Return the pollroom.
+          schema:
+            $ref: '#/definitions/Pollroom'
+        400:
+          $ref: '#/responses/GeneralError'
+        404:
+          $ref: '#/responses/NotFound'
+
+    patch:
+      description: Allow to update an existing pollroom.
+      parameters:
+        - $ref: '#/parameters/PollroomID'
+        - name: status
+          in: body
+          description: The status of the pollroom.
+          required: false
+          schema:
+            properties:
+              status:
+                type: string
+                enum: 
+                  - open
+                  - closed
+
+      responses:
+        200:
+          description: Return the pollroom.
+          schema:
+            $ref: '#/definitions/Pollroom'
+        400:
+          $ref: '#/responses/GeneralError'
+        404:
+          $ref: '#/responses/NotFound'
+        422:
+          $ref: '#/responses/IllegalInput'
+
+definitions:
+
+  Pollroom:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+        enum: 
+          - open
+          - closed
+
+  IllegalInputMessage:
+    type: array
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+        error:
+          type: string
+
+parameters:
+  
+  PollroomID:
+    name: pollroom-id
+    in: path
+    description: The ID of the pollroom.
+    required: true
+    type: integer
+
+responses:
+
+  NotFound:
+    description: Entity not found.
+
+  IllegalInput:
+    description: Illegal input for this operation, see the received message for details.
+    schema:
+      $ref: '#/definitions/IllegalInputMessage'
+
+  GeneralError:
+    description: Unexpected error.
