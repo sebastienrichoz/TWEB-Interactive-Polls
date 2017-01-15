@@ -2,8 +2,9 @@ var express = require('express'),
     path = require('path'),
     morgan = require('morgan'), // logger
     bodyParser = require('body-parser'),
+    expressValidator = require('express-validator'),
     mongoose = require('mongoose'),
-    api = require('./controllers/api/api');
+    pollrooms = require('./pollrooms/controller');
 
 
 var app = express();
@@ -14,7 +15,7 @@ app.use(morgan('dev')); // log requests to the console
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
+//app.use(expressValidator()); // TODO
 
 app.use('/', express.static(__dirname + '/../dist'));
 
@@ -28,8 +29,7 @@ db.once('open', function() {
 
 
     // controllers
-    app.use('/api', api);
-
+    app.use('/api/v1/pollrooms/', pollrooms);
 
     // all other controllers are handled by Angular
     app.get('/*', function(req, res) {

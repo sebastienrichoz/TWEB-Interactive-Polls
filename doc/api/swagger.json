@@ -14,7 +14,7 @@ basePath: /api/v1
 paths:
 
   /pollrooms/:
-  
+
     post:
       description: Allow to create a new pollroom. On creation, the pollroom status will be "open".
       parameters:
@@ -38,7 +38,7 @@ paths:
           $ref: '#/responses/IllegalInput'
 
   /pollrooms/{pollroom-id}/:
-  
+
     get:
       description: Allow to retrieve an existing pollroom.
       parameters:
@@ -67,7 +67,7 @@ paths:
             properties:
               status:
                 type: string
-                enum: 
+                enum:
                   - open
                   - closed
       responses:
@@ -83,7 +83,7 @@ paths:
           $ref: '#/responses/IllegalInput'
 
   /pollrooms/{pollroom-id}/questions/:
-  
+
     post:
       description: Allow to create a new question on an existing pollroom On creation, the question status will be "open".
       parameters:
@@ -113,41 +113,12 @@ paths:
         422:
           $ref: '#/responses/IllegalInput'
 
-    patch:
-      description: Allow to update an existing question.
-      parameters:
-        - $ref: '#/parameters/SessionID'
-        - $ref: '#/parameters/PollroomID'
-        - name: status
-          in: body
-          description: The status of the question.
-          required: false
-          schema:
-            properties:
-              status:
-                type: string
-                enum: 
-                  - open
-                  - closed
-      responses:
-        200:
-          description: The question has been updated, return id.
-          schema:
-            $ref: '#/definitions/Question'
-        400:
-          $ref: '#/responses/GeneralError'
-        404:
-          $ref: '#/responses/NotFound'
-        422:
-          $ref: '#/responses/IllegalInput'
+  /pollrooms/questions/{question-id}/:
 
-  /pollrooms/{pollroom-id}/questions/{question-id}/:
-  
     get:
       description: Allow to retrieve an existing question.
       parameters:
         - $ref: '#/parameters/SessionID'
-        - $ref: '#/parameters/PollroomID'
         - $ref: '#/parameters/QuestionID'
       responses:
         200:
@@ -159,14 +130,47 @@ paths:
         404:
           $ref: '#/responses/NotFound'
 
-  /pollrooms/{pollroom-id}/questions/{question-id}/answers/:
-
-    post:
-      description: Allow to add a new answer on an existing question.
+    patch:
+      description: Allow to update an existing question.
       parameters:
         - $ref: '#/parameters/SessionID'
-        - $ref: '#/parameters/PollroomID'
         - $ref: '#/parameters/QuestionID'
+        - name: question
+          in: body
+          description: The status of the question.
+          required: false
+          schema:
+            properties:
+              title:
+                type: string
+              answers:
+                type: array
+                items:
+                  type: string
+              status:
+                type: string
+                enum:
+                  - open
+                  - closed
+      responses:
+        200:
+          description: The question has been updated, return it.
+          schema:
+            $ref: '#/definitions/Question'
+        400:
+          $ref: '#/responses/GeneralError'
+        404:
+          $ref: '#/responses/NotFound'
+        422:
+          $ref: '#/responses/IllegalInput'
+
+  /pollrooms/questions/answers/{answer-id}/:
+
+    post:
+      description: Allow a user to choose an answer.
+      parameters:
+        - $ref: '#/parameters/SessionID'
+        - $ref: '#/parameters/AnswerID'
       responses:
         204:
           description: The question has been answered.
@@ -176,11 +180,10 @@ paths:
           $ref: '#/responses/NotFound'
 
     delete:
-      description: Allow to remove his answer on an existing question.
+      description: Allow a user to remove his answer.
       parameters:
         - $ref: '#/parameters/SessionID'
-        - $ref: '#/parameters/PollroomID'
-        - $ref: '#/parameters/QuestionID'
+        - $ref: '#/parameters/AnswerID'
       responses:
         204:
           description: The answer has been removed.
@@ -200,7 +203,7 @@ definitions:
         type: string
       status:
         type: string
-        enum: 
+        enum:
           - open
           - closed
       questions:
@@ -209,10 +212,12 @@ definitions:
           $ref: '#/definitions/Question'
       nb_participants:
         type: integer
-        
+
   Question:
     type: object
     properties:
+      id:
+        type: integer
       title:
         type: string
       answers:
@@ -230,7 +235,8 @@ definitions:
         type: integer
       status:
         type: string
-        enum: 
+        enum:
+          - pending
           - open
           - closed
       created_at:
@@ -240,12 +246,14 @@ definitions:
   Answer:
     type: object
     properties:
+      id:
+        type: integer
       label:
         type: string
       is_answered:
         description: True if the this answer has been selected by the user, false otherwise.
         type: boolean
-      nb_reponses:
+      nb_responses:
         description: Number of users who choose this answer.
         type: integer
 
@@ -260,21 +268,28 @@ definitions:
           type: string
 
 parameters:
-  
+
   PollroomID:
     name: pollroom-id
     in: path
     description: The ID of the pollroom.
     required: true
     type: integer
-  
+
   QuestionID:
     name: question-id
     in: path
     description: The ID of the question.
     required: true
     type: integer
-  
+
+  AnswerID:
+    name: answer-id
+    in: path
+    description: The ID of the answer.
+    required: true
+    type: integer
+
   SessionID:
     name: X-Session-ID
     in: header
