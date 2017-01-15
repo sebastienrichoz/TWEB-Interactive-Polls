@@ -16,7 +16,6 @@ import {Modal} from 'angular2-modal/plugins/bootstrap';
 import { HomeService } from '../services/home.service';
 import {ToastsManager} from "ng2-toastr";
 import {Router} from "@angular/router";
-import {ToastComponent} from "../shared/toast/toast.component";
 
 @Component({
     selector: 'app-home',
@@ -82,8 +81,7 @@ export class HomeComponent implements OnInit {
                 overlay: Overlay,
                 vcRef: ViewContainerRef,
                 public modal: Modal,
-                private router: Router,
-                private toast: ToastComponent,) {
+                private router: Router) {
         overlay.defaultViewContainer = vcRef;
     }
 
@@ -112,19 +110,25 @@ export class HomeComponent implements OnInit {
     joinPoll() {
         console.log("Join poll room " + this.pollRoomNumber.value);
 
-        /*
-        this.homeService.joinPoll(this.pollRoomNumber.value).subscribe(
-            res => {
-                this.toast.setMessage("Poll room " + this.pollRoomNumber.value + " successfully joined!", "success");
-                // TODO : redirect to Poll Room with appropriate pollroom number
-            },
-            error => this.toast.setMessage(error, "danger")
-        )
-        */
+        // TODO : for preview only
+        this.router.navigate(['./pollroom']);
+
+        //
+        // this.homeService.joinPoll(this.pollRoomNumber.value).subscribe(
+        //     res => {
+        //         this.toastr.success("Poll room " + this.pollRoomNumber.value + " successfully joined!");
+        //         // TODO : redirect to Poll Room with appropriate pollroom number
+        //
+        //     },
+        //     error => this.toastr.error(error)
+        // )
     }
 
     createPoll() {
         console.log("Create poll " + this.pollName.value);
+
+        // TODO : for preview only
+        this.router.navigate(['./pollroom']);
 
         /*
         if (this.pollName.value.length < 2) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Question, Answer} from "./question";
+import {Question, Answer} from "../models/question";
 
 @Component({
     selector: 'app-pollroom',
@@ -45,5 +45,4 @@ export class PollroomComponent implements OnInit {
         // TODO : socket.io
         console.log(question.label + " " + answer.label);
     }
-
 }

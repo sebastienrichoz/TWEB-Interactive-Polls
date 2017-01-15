@@ -1,0 +1,8 @@
+ul.progress-bars {
+    list-style: none;
+    padding: 5px;
+}
+
+.progress {
+    margin: 2px 0 2px 0;
+}

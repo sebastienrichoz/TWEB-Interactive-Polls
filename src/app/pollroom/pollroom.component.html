@@ -3,7 +3,7 @@
     <nav class="navbar navbar-default" id="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" routerLink="/">
                     <i class="fa fa-sign-out fa-fw rotate-icon-180"></i>
                 </a>
             </div>
@@ -15,7 +15,9 @@
     <div class="container">
 
             <div class="col-md-2 stats">
-                <pollroom-stats></pollroom-stats>
+                <pollroom-stats
+                        #pollroomStats
+                        [nbTotalAnswers]="nbTotalAnswers"></pollroom-stats>
             </div>
 
             <div class="col-md-8 poll">
@@ -25,7 +27,7 @@
 
                         <question-view
                                 [question]="question"
-                                (onChecked)="onChecked($event)"></question-view>
+                                (onChecked)="pollroomStats.onChecked($event)"></question-view>
 
                     </div>
                 </div>

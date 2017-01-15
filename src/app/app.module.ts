@@ -19,10 +19,6 @@ import { PollroomComponent } from './pollroom/pollroom.component';
 import { QuestionCreatorComponent } from './pollroom/question-creator/question-creator.component';
 import { QuestionViewComponent } from './pollroom/question-view/question-view.component';
 
-import { ToastComponent } from './shared/toast/toast.component';
-import { DashboardModule } from './dashboard/dashboard.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
-
 // Services
 import { DataService } from './services/data.service';
 import {HomeService} from "./services/home.service";
@@ -31,12 +27,12 @@ import {DashboardService} from "./services/dashboard.service";
 // Pipes
 import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
 import { PollroomStatsComponent } from './pollroom/pollroom-stats/pollroom-stats.component';
+import { ResponseViewComponent } from './pollroom/question-view/response-view/response-view.component';
+
 
 // roots
 const routing = RouterModule.forRoot([
     { path: '',      component: HomeComponent },
-    { path: 'about', component: AboutComponent },
-    { path: 'dashboard', component: DashboardComponent },
     { path: 'pollroom', component: PollroomComponent }
 ]);
 
@@ -45,19 +41,18 @@ const routing = RouterModule.forRoot([
         AppComponent,
         HomeComponent,
         AboutComponent,
-        ToastComponent,
         ThousandSeparatorPipe,
         PollroomComponent,
         QuestionCreatorComponent,
         QuestionViewComponent,
-        PollroomStatsComponent
+        PollroomStatsComponent,
+        ResponseViewComponent
     ],
     imports: [
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
-        DashboardModule,
         ModalModule.forRoot(),
         BootstrapModalModule,
         ChartsModule,
@@ -68,8 +63,7 @@ const routing = RouterModule.forRoot([
     providers: [
         DataService,
         HomeService,
-        DashboardService,
-        ToastComponent
+        DashboardService
     ],
     bootstrap: [AppComponent]
 })

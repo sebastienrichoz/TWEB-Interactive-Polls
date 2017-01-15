@@ -52,7 +52,7 @@
 
 @media screen and (min-width: 770px) and (max-width: 992px) {
     #sticky-footer {
-        width: 490px;
+        width: 505px;
     }
 
     .stats {

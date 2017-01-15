@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { GlobalStatsComponent } from './global-stats.component';
+import { ResponseViewComponent } from './response-view.component';
 
-describe('GlobalStatsComponent', () => {
-  let component: GlobalStatsComponent;
-  let fixture: ComponentFixture<GlobalStatsComponent>;
+describe('ResponseViewComponent', () => {
+  let component: ResponseViewComponent;
+  let fixture: ComponentFixture<ResponseViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GlobalStatsComponent ]
+      declarations: [ ResponseViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GlobalStatsComponent);
+    fixture = TestBed.createComponent(ResponseViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

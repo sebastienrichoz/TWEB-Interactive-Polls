@@ -1,0 +1,34 @@
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="input-group input-group-lg">
+            <span class="input-group-btn">
+                <button  class="btn btn-success" type="button" style="border: none; background-color: #7e2a39;" (click)="displayOrHideFullQuestion()">
+                    <i *ngIf="!isFocus" [@comeInOut] class="fa fa-question fa-fw" style="color: #ffffff;"></i>
+                    <i *ngIf="isFocus" [@comeInOut] class="fa fa-times fa-fw" style="color: #ffffff;"></i>
+                </button>
+            </span>
+
+            <input (focus)="displayFullQuestion()" [(ngModel)]="question.label" type="text" class="form-control" value="{{ question.label }}" placeholder="Title of your mutliple choice question">
+
+
+            <span class="input-group-btn">
+                <button (click)="publish()" class="btn btn-success" type="button" [disabled]="published" style="border: none; background-color: #7e2a39;"><i class="fa fa-cloud-upload fa-fw"></i></button>
+            </span>
+        </div>
+    </div>
+</div>
+
+<div class="col-xs-12" [hidden]="!isFocus" style="margin-bottom: 20px;">
+    <div *ngFor="let answer of question.answers" [@flyInOut] class="input-group answer">
+        <span class="input-group-addon minus" style="background-color: #7e2a39">
+            <button (click)="removeAnswer(answer)" class="btn btn-danger btn-sm my-button-remove" tabindex="-1"><i class="fa fa-minus"></i></button>
+        </span>
+        <span class="input-group-addon">
+            <i class="fa fa-chevron-right"></i>
+        </span>
+        <input [(ngModel)]="answer.label" type="text" value="{{ answer.label }}" class="form-control">
+    </div>
+
+    <button id="plus-answer" (click)="addAnswer()" class="btn btn-success btn-sm my-button-add" style="border: none;" type="button"><i class="fa fa-plus fa-fw"></i></button>
+</div>
