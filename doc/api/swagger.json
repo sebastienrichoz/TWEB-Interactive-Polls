@@ -1,0 +1,311 @@
+swagger: '2.0'
+info:
+  title: Pollak API
+  description: This is the API used by the Pollak application
+  version: 1.0.0
+host: pollak.herokuapp.com
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+basePath: /api/v1
+paths:
+
+  /pollrooms/:
+
+    post:
+      description: Allow to create a new pollroom. On creation, the pollroom status will be "open".
+      parameters:
+        - $ref: '#/parameters/SessionID'
+        - name: pollroom
+          in: body
+          description: The new pollroom informations.
+          required: true
+          schema:
+            properties:
+              name:
+                type: string
+      responses:
+        201:
+          description: The pollroom has been created, return it.
+          schema:
+            $ref: '#/definitions/Pollroom'
+        400:
+          $ref: '#/responses/GeneralError'
+        422:
+          $ref: '#/responses/IllegalInput'
+
+  /pollrooms/{pollroom-id}/:
+
+    get:
+      description: Allow to retrieve an existing pollroom.
+      parameters:
+        - $ref: '#/parameters/SessionID'
+        - $ref: '#/parameters/PollroomID'
+      responses:
+        200:
+          description: Return the pollroom.
+          schema:
+            $ref: '#/definitions/Pollroom'
+        400:
+          $ref: '#/responses/GeneralError'
+        404:
+          $ref: '#/responses/NotFound'
+
+    patch:
+      description: Allow to update an existing pollroom.
+      parameters:
+        - $ref: '#/parameters/SessionID'
+        - $ref: '#/parameters/PollroomID'
+        - name: status
+          in: body
+          description: The status of the pollroom.
+          required: false
+          schema:
+            properties:
+              status:
+                type: string
+                enum:
+                  - open
+                  - closed
+      responses:
+        200:
+          description: The pollroom has been updated, return id.
+          schema:
+            $ref: '#/definitions/Pollroom'
+        400:
+          $ref: '#/responses/GeneralError'
+        404:
+          $ref: '#/responses/NotFound'
+        422:
+          $ref: '#/responses/IllegalInput'
+
+  /pollrooms/{pollroom-id}/questions/:
+
+    post:
+      description: Allow to create a new question on an existing pollroom On creation, the question status will be "open".
+      parameters:
+        - $ref: '#/parameters/SessionID'
+        - $ref: '#/parameters/PollroomID'
+        - name: question
+          in: body
+          description: The new question informations.
+          required: true
+          schema:
+            properties:
+              title:
+                type: string
+              answers:
+                type: array
+                items:
+                  type: string
+      responses:
+        201:
+          description: The question has been created, return it.
+          schema:
+            $ref: '#/definitions/Question'
+        400:
+          $ref: '#/responses/GeneralError'
+        404:
+          $ref: '#/responses/NotFound'
+        422:
+          $ref: '#/responses/IllegalInput'
+
+  /pollrooms/questions/{question-id}/:
+
+    get:
+      description: Allow to retrieve an existing question.
+      parameters:
+        - $ref: '#/parameters/SessionID'
+        - $ref: '#/parameters/QuestionID'
+      responses:
+        200:
+          description: Return the question.
+          schema:
+            $ref: '#/definitions/Question'
+        400:
+          $ref: '#/responses/GeneralError'
+        404:
+          $ref: '#/responses/NotFound'
+
+    patch:
+      description: Allow to update an existing question.
+      parameters:
+        - $ref: '#/parameters/SessionID'
+        - $ref: '#/parameters/QuestionID'
+        - name: question
+          in: body
+          description: The status of the question.
+          required: false
+          schema:
+            properties:
+              title:
+                type: string
+              answers:
+                type: array
+                items:
+                  type: string
+              status:
+                type: string
+                enum:
+                  - open
+                  - closed
+      responses:
+        200:
+          description: The question has been updated, return it.
+          schema:
+            $ref: '#/definitions/Question'
+        400:
+          $ref: '#/responses/GeneralError'
+        404:
+          $ref: '#/responses/NotFound'
+        422:
+          $ref: '#/responses/IllegalInput'
+
+  /pollrooms/questions/answers/{answer-id}/:
+
+    post:
+      description: Allow a user to choose an answer.
+      parameters:
+        - $ref: '#/parameters/SessionID'
+        - $ref: '#/parameters/AnswerID'
+      responses:
+        204:
+          description: The question has been answered.
+        400:
+          $ref: '#/responses/GeneralError'
+        404:
+          $ref: '#/responses/NotFound'
+
+    delete:
+      description: Allow a user to remove his answer.
+      parameters:
+        - $ref: '#/parameters/SessionID'
+        - $ref: '#/parameters/AnswerID'
+      responses:
+        204:
+          description: The answer has been removed.
+        400:
+          $ref: '#/responses/GeneralError'
+        404:
+          $ref: '#/responses/NotFound'
+
+definitions:
+
+  Pollroom:
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      status:
+        type: string
+        enum:
+          - open
+          - closed
+      questions:
+        type: array
+        items:
+          $ref: '#/definitions/Question'
+      nb_participants:
+        type: integer
+
+  Question:
+    type: object
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+      answers:
+        type: array
+        items:
+          $ref: '#/definitions/Answer'
+      nb_positive_votes:
+        description: Number of positives votes for this question.
+        type: integer
+      nb_negatives_votes:
+        description: Number of negatives votes for this question.
+        type: integer
+      nb_responses:
+        description: Number of users who answered to this question.
+        type: integer
+      status:
+        type: string
+        enum:
+          - pending
+          - open
+          - closed
+      created_at:
+        type: string
+        format: date-time
+
+  Answer:
+    type: object
+    properties:
+      id:
+        type: integer
+      label:
+        type: string
+      is_answered:
+        description: True if the this answer has been selected by the user, false otherwise.
+        type: boolean
+      nb_responses:
+        description: Number of users who choose this answer.
+        type: integer
+
+  IllegalInputMessage:
+    type: array
+    items:
+      type: object
+      properties:
+        field:
+          type: string
+        error:
+          type: string
+
+parameters:
+
+  PollroomID:
+    name: pollroom-id
+    in: path
+    description: The ID of the pollroom.
+    required: true
+    type: integer
+
+  QuestionID:
+    name: question-id
+    in: path
+    description: The ID of the question.
+    required: true
+    type: integer
+
+  AnswerID:
+    name: answer-id
+    in: path
+    description: The ID of the answer.
+    required: true
+    type: integer
+
+  SessionID:
+    name: X-Session-ID
+    in: header
+    description: An unique ID to identify the user session.
+    required: true
+    type: string
+
+responses:
+
+  NotFound:
+    description: Entity not found.
+
+  IllegalInput:
+    description: Illegal input for this operation, see the received message for details.
+    schema:
+      $ref: '#/definitions/IllegalInputMessage'
+
+  GeneralError:
+    description: Unexpected error.

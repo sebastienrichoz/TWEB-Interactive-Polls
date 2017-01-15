@@ -4,7 +4,7 @@
   "angular-cli": {},
   "main": "server/app.js",
   "scripts": {
-    "start": "nodemon server/app.js",
+    "start": "nodemon server/server.js",
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test --watch=false",
     "pree2e": "webdriver-manager update",
