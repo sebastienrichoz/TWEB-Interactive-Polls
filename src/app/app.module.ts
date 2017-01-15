@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import {HttpModule, XSRFStrategy, Request} from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 // External libraries
@@ -10,6 +10,7 @@ import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { NG2D3Module } from 'ng2d3';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
+import { UUID } from 'angular2-uuid';
 
 // Components
 import { AppComponent } from './app.component';
@@ -20,15 +21,24 @@ import { QuestionCreatorComponent } from './pollroom/question-creator/question-c
 import { QuestionViewComponent } from './pollroom/question-view/question-view.component';
 
 // Services
-import { DataService } from './services/data.service';
 import {HomeService} from "./services/home.service";
-import {DashboardService} from "./services/dashboard.service";
+import {PollroomService} from "./services/pollroom.service";
+
 
 // Pipes
 import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
 import { PollroomStatsComponent } from './pollroom/pollroom-stats/pollroom-stats.component';
 import { ResponseViewComponent } from './pollroom/question-view/response-view/response-view.component';
+import { TimeAgoPipe } from './pipes/time-ago.pipe';
+import {UtilityService} from "./services/utility-service";
+import { NegativeSignPipe } from './pipes/negative-sign.pipe';
 
+export class MyXSRFStrategy {
+    configureRequest(req: Request) {
+        if (!req.headers.has('X-Session-ID'))
+            req.headers.append('X-Session-ID', localStorage.getItem("pollak_sessionid"));
+    }
+}
 
 // roots
 const routing = RouterModule.forRoot([
@@ -46,7 +56,9 @@ const routing = RouterModule.forRoot([
         QuestionCreatorComponent,
         QuestionViewComponent,
         PollroomStatsComponent,
-        ResponseViewComponent
+        ResponseViewComponent,
+        TimeAgoPipe,
+        NegativeSignPipe
     ],
     imports: [
         BrowserModule,
@@ -61,9 +73,10 @@ const routing = RouterModule.forRoot([
         routing
     ],
     providers: [
-        DataService,
         HomeService,
-        DashboardService
+        UtilityService,
+        PollroomService,
+        { provide: XSRFStrategy, useFactory: () => new MyXSRFStrategy() }
     ],
     bootstrap: [AppComponent]
 })

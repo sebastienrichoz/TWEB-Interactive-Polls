@@ -1,4 +1,4 @@
-<ul class="progress-bars" *ngIf="questionIsClosed">
+<ul class="progress-bars" *ngIf="question.status === 'closed'">
   <li *ngFor="let answer of question.answers; let last = last;">
     <div class="row">
 
@@ -12,14 +12,14 @@
                aria-valuenow="30"
                aria-valuemin="0"
                aria-valuemax="100"
-               [ngStyle]="{'width': (nbAnswers < nbTotalAnswers ? nbAnswers : nbTotalAnswers) / nbTotalAnswers * 100 + '%'}">
-            {{nbAnswers / nbTotalAnswers * 100 | number:'.0-0' }}%
+               [ngStyle]="{'width': (answer.nb_responses < question.nb_responses ? answer.nb_responses : question.nb_responses) / question.nb_responses * 100 + '%'}">
+            {{answer.nb_responses / question.nb_responses * 100 | number:'.0-0' }}%
           </div>
         </div>
       </div>
 
       <div class="col-xs-1">
-        <span style="float: right;">(0)</span>
+        <span style="float: right;">{{ answer.nb_responses }}</span>
       </div>
 
     </div>

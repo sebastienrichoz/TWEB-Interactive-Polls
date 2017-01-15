@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {Question, Answer} from "../models/question";
+import {Subscription} from "rxjs";
+import {HomeService} from "../services/home.service";
+import {Pollroom} from "../models/pollroom";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-pollroom',
@@ -8,12 +12,16 @@ import {Question, Answer} from "../models/question";
 })
 export class PollroomComponent implements OnInit {
 
-    private questions: Question[] = [];
     private nbAnswers: number;
     private nbTotalAnswers: number;
+    private pollroom: Pollroom = new Pollroom();
+    private editingQuestion: Question;
+
+    private subscription = new Subscription();
 
 
-    constructor() {
+    constructor(private homeService: HomeService,
+                private router: Router) {
 
         let r11 = new Answer(1, 'A framework');
         let r12 = new Answer(2, 'A node package');
@@ -30,19 +38,52 @@ export class PollroomComponent implements OnInit {
         let r33 = new Answer(10, 'None of them !');
         let q3 = new Question(3, "Do you prefer Angular1 or Angular2 ?", r31, r32, r33);
 
-        this.questions.push(q1);
-        this.questions.push(q2);
-        this.questions.push(q3);
+        this.pollroom.questions.push(q1);
+        this.pollroom.questions.push(q2);
+        this.pollroom.questions.push(q3);
 
         this.nbAnswers = 0;
-        this.nbTotalAnswers = this.questions.length;
+        this.nbTotalAnswers = this.pollroom.questions.length;
     }
 
     ngOnInit() {
+        if (localStorage.getItem("pollak_sessionid") === null)
+            this.router.navigate(['./']);
+
+        // Listen for pollroom join
+        this.subscription = this.homeService.pollroomSelected$.subscribe(
+            pollroom => {
+                this.pollroom = pollroom;
+            }
+        );
     }
 
     answerGiven(question: Question, answer: Answer) {
         // TODO : socket.io
-        console.log(question.label + " " + answer.label);
+        console.log(question.title + " " + answer.label);
+    }
+
+    onQuestionPublished(question: Question) {
+        this.pollroom.questions.unshift(question);
+    }
+
+    editQuestion(question: Question) {
+        for (let q of this.pollroom.questions)
+            if (q.id !== question.id && q.status === 'pending')
+                q.status = 'opened';
+
+        this.editingQuestion = question;
+    }
+
+    updateQuestion(question: Question) {
+        for (let q of this.pollroom.questions)
+            if (question.id === q.id)
+                q = question;
+    }
+
+    cancelEditing(question: Question) {
+        for (let q of this.pollroom.questions)
+            if (question.id === q.id)
+                q.status = 'open';
     }
 }

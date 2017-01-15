@@ -1,39 +1,50 @@
 <div class="question">
-    <span style="float: left; color: #000000; font-weight: 100; padding-left: 5px;">3 hours ago</span>
-    <span style="float: right;">
+    <span style="float: left; color: #000000; font-weight: 100; padding-left: 5px;">{{ questionCreationDate | timeAgo }}</span>
+    <span *ngIf="question.status === 'open'" style="float: right">
         <span *ngIf="displayCloseHint" style="color: #555555; padding-right: 3px; font-weight: 100;">On click, display results and lock question</span>
-        <span *ngIf="displayOpenHint" style="color: #555555; padding-right: 3px; font-weight: 100">On click, hide results and unlock question</span>
-        <span *ngIf="!questionIsClosed" [@comeInOut] class="icon-status" style="background-color: #5cb85c"><i class="fa fa-unlock fa-fw" style="color: #ffffff"></i></span>
-        <a *ngIf="!questionIsClosed" (click)="closeQuestion()" (mouseover)="displayCloseHint = true" (mouseleave)="displayCloseHint = false" style="cursor: pointer">Close</a>
-        <span *ngIf="questionIsClosed" [@comeInOut] class="icon-status" style="background-color: #d9534f"><i class="fa fa-lock fa-fw" style="color: #ffffff"></i></span>
-        <a *ngIf="questionIsClosed" (click)="openQuestion()" (mouseover)="displayOpenHint = true" (mouseleave)="displayOpenHint = false" style="cursor: pointer">Open</a>
+        <span [@comeInOut] class="icon-status" style="background-color: #5cb85c"><i class="fa fa-unlock fa-fw" style="color: #ffffff"></i></span>
+        <a (click)="closeQuestion()" (mouseover)="displayCloseHint = true" (mouseleave)="displayCloseHint = false" style="cursor: pointer">Close</a>
     </span>
-    <h3 style="margin-top: 30px;">{{ question.label }}</h3>
+    <span *ngIf="question.status === 'closed'" style="float: right">
+        <span *ngIf="displayOpenHint" style="color: #555555; padding-right: 3px; font-weight: 100">On click, hide results and unlock question</span>
+        <span *ngIf="question.status === 'closed'" [@comeInOut] class="icon-status" style="background-color: #d9534f"><i class="fa fa-lock fa-fw" style="color: #ffffff"></i></span>
+        <a *ngIf="question.status === 'closed'" (click)="openQuestion()" (mouseover)="displayOpenHint = true" (mouseleave)="displayOpenHint = false" style="cursor: pointer">Open</a>
+    </span>
+    <span *ngIf="question.status === 'pending'" style="float: right;">
+        <span style="color: #555555; padding-right: 3px; font-weight: 100;">You are editing this question</span>
+        <span [@comeInOut]><img style="width: 30px;" src="../../../public/assets/img/typing.gif"></span>
+    </span>
+
+    <h3 style="margin-top: 30px;">
+        <span>
+            <button (click)="editQuestion(question)" class="btn btn-sm btn-warning" style="padding: 2px 5px;"><i class="fa fa-pencil fa-fw" style="color: #ffffff;"></i></button>
+        </span>
+        {{ question.title }}
+    </h3>
     <div class="ck-button" *ngFor="let answer of question.answers">
         <label>
-            <input (change)="check($event, question.id, answer.id)" type="checkbox" id="{{answer.id}}{{answer.letter}}" name="selector-{{question.id}}">
+            <input [checked]="answer.is_answered" (change)="check($event, question.id, answer.id)" [disabled]="question.status !== 'open'" type="checkbox" id="{{answer.id}}-{{answer.letter}}" name="selector-{{question.id}}">
             <span style="padding-right: 10px; padding-left: 15px; float: left; width: 45px">({{ answer.letter }}) </span>
             <span style="float: left; width: calc(100% - 45px)">{{ answer.label }}</span>
         </label>
     </div>
 
     <response-view
-            [question]="question"
-            [questionIsClosed]="questionIsClosed"></response-view>
+            [question]="question"></response-view>
 
     <div class="row">
         <div class="col-xs-2 vote-up" style="margin-top: 20px;">
             <a (click)="voteUp()"><i class="fa fa-thumbs-up fa-3x" [style.color]="getVoteUpStyle()"></i></a>
-            <span>1</span>
+            <span>{{ question.nb_positive_votes }}</span>
         </div>
 
         <div class="col-xs-8 text-center" style="padding: 6px; margin-top: 20px; font-size: 1.5em; font-weight: 100;">
-            X / 20 answers
+            {{ question.nb_responses }} / {{ nbParticipants }} {{ question.nb_responses > 1 ? 'answers' : 'answer' }}
         </div>
 
         <div class="col-sm-2 vote-down" style="margin-top: 20px;">
             <a (click)="voteDown()"><i class="fa fa-thumbs-up fa-3x rotate-icon-180" [style.color]="getVoteDownStyle()"></i></a>
-            <span>-1</span>
+            <span>{{ question.nb_negative_votes | negativeSign }}</span>
         </div>
     </div>
 </div>

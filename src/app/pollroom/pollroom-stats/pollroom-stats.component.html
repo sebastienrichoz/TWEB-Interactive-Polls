@@ -1,21 +1,30 @@
 <div class="text-center">
-    <h4><i class="fa fa-key fa-fw"></i> Room <b>182496</b></h4>
+    <h4><i class="fa fa-key fa-fw"></i> Room <b>{{ pollroom.id }}</b></h4>
 
-    <a routerLink="/" id="leave-pollroom" class="btn btn-default"><i class="fa fa-sign-out fa-fw rotate-icon-180"></i> Leave</a>
+    <a *ngIf="pollroom.status === 'open'" (click)="patchRoom('closed')" class="btn btn-danger pollroom-status"
+        (mouseover)="displayCloseRoomInfo = true" (mouseout)="displayCloseRoomInfo = false">
+        <i class="fa fa-lock fa-fw"></i> Close the room
+    </a>
+    <a *ngIf="pollroom.status === 'closed'" (click)="patchRoom('open')" class="btn btn-success pollroom-status"
+       (mouseover)="displayOpenRoomInfo = true" (mouseout)="displayOpenRoomInfo = false">
+        <i class="fa fa-unlock fa-fw"></i> Open the room
+    </a>
+    <p *ngIf="displayCloseRoomInfo" class="small" style="margin-top: 10px;">Opened questions will close,<br> new questions couldn't be created anymore.<br>Room can still be joined.</p>
+    <p *ngIf="displayOpenRoomInfo" class="small" style="margin-top: 10px;">new questions could be created</p>
     <hr class="small">
 </div>
 
 <div class="row">
     <div class="col-xs-4 room-stats">
-        <h4>20 <i class="fa fa-child fa-fw"></i> participants </h4>
+        <h4>{{ pollroom.nb_participants }} <i class="fa fa-child fa-fw"></i> participant{{ pollroom.nb_participants > 1 ? 's' : '' }} </h4>
     </div>
 
     <div class="col-xs-4 room-stats">
-        <h4>14 <i class="fa fa-question-circle fa-fw"></i> questions</h4>
+        <h4>{{ pollroom.questions.length }} <i class="fa fa-question-circle fa-fw"></i> question{{ pollroom.questions.length > 1 ? 's' : '' }}</h4>
     </div>
 
     <div class="col-xs-4 room-stats">
-        <h4>48 <i class="fa fa-lightbulb-o fa-fw"></i> answers</h4>
+        <h4>{{ pollroomTotalAnswers }} <i class="fa fa-lightbulb-o fa-fw"></i> answer{{ pollroomTotalAnswers > 1 ? 's' : '' }}</h4>
     </div>
 </div>
 

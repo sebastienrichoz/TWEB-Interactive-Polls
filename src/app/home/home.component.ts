@@ -12,10 +12,13 @@ import {
 import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms';
 import {Overlay} from 'angular2-modal';
 import {Modal} from 'angular2-modal/plugins/bootstrap';
+import { UUID } from 'angular2-uuid';
 
 import { HomeService } from '../services/home.service';
 import {ToastsManager} from "ng2-toastr";
 import {Router} from "@angular/router";
+import {PollroomCreationDTO} from "../models/pollroom-creation-dto";
+import {Pollroom} from "../models/pollroom";
 
 @Component({
     selector: 'app-home',
@@ -53,27 +56,12 @@ export class HomeComponent implements OnInit {
     private visibleRegisterForm = false;
     private visibleLoginForm = false;
 
-    private cats = [];
-    private isLoading = true;
-
-    private cat = {};
-    private isEditing = false;
-
     // forms
     private newPollForm: FormGroup;
     private pollName = new FormControl("", Validators.required);
 
     private joinPollForm: FormGroup;
     private pollRoomNumber = new FormControl("", Validators.required);
-
-    private registerForm: FormGroup;
-    private registerName = new FormControl("", Validators.required);
-    private registerPass = new FormControl("", Validators.required);
-    private registerConfirmedPass = new FormControl("", Validators.required);
-
-    private loginForm: FormGroup;
-    private loginName = new FormControl("", Validators.required);
-    private loginPass = new FormControl("", Validators.required);
 
     constructor(private homeService: HomeService,
                 public toastr: ToastsManager,
@@ -86,6 +74,10 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
+        if (localStorage.getItem("pollak_sessionid") === null) {
+            let uuid = UUID.UUID();
+            localStorage.setItem("pollak_sessionid", uuid);
+        }
         // this.getStats();
         this.newPollForm = this.formBuilder.group({
             pollName: this.pollName
@@ -94,67 +86,45 @@ export class HomeComponent implements OnInit {
         this.joinPollForm = this.formBuilder.group({
             pollRoomNumber: this.pollRoomNumber
         });
-
-        this.registerForm = this.formBuilder.group({
-            registerName: this.registerName,
-            registerPass: this.registerPass,
-            registerConfirmedPass: this.registerConfirmedPass
-        });
-
-        this.loginForm = this.formBuilder.group({
-            loginName: this.loginName,
-            loginPass: this.loginPass
-        });
     }
 
-    joinPoll() {
-        console.log("Join poll room " + this.pollRoomNumber.value);
+    joinPollroom() {
+        this.homeService.joinPollroom(this.pollRoomNumber.value).then(
+            pollroom => {
+                let joinedPollroom: Pollroom = pollroom;
+                this.toastr.success("Pollroom '" + joinedPollroom.id + "' joined");
 
-        // TODO : for preview only
-        this.router.navigate(['./pollroom']);
+                // Announce the current pollroom
+                this.homeService.selectPollroom(joinedPollroom);
 
-        //
-        // this.homeService.joinPoll(this.pollRoomNumber.value).subscribe(
-        //     res => {
-        //         this.toastr.success("Poll room " + this.pollRoomNumber.value + " successfully joined!");
-        //         // TODO : redirect to Poll Room with appropriate pollroom number
-        //
-        //     },
-        //     error => this.toastr.error(error)
-        // )
+                // Navigate to pollroom
+                this.router.navigate(['./pollroom']);
+            },
+            error => this.toastr.error(error)
+        )
     }
 
-    createPoll() {
-        console.log("Create poll " + this.pollName.value);
+    createPollroom() {
+        let pollroomName = this.pollName.value.trim();
+        if (pollroomName) {
+            let pollroomCreationDTO = new PollroomCreationDTO(pollroomName);
+            this.homeService.createPollroom(pollroomCreationDTO).then(
+                pollroom => {
+                    console.log(pollroom);
+                    let currentPollroom: Pollroom = pollroom;
+                    this.toastr.success("Pollroom '" + currentPollroom.id + "'created");
 
-        // TODO : for preview only
-        this.router.navigate(['./pollroom']);
+                    // Announce the current pollroom
+                    this.homeService.selectPollroom(currentPollroom);
 
-        /*
-        if (this.pollName.value.length < 2) {
-            this.toast.setMessage("Poll name must be at least 2 caracters long", "danger");
-        } else {
-            this.homeService.addPoll(this.pollName.value).then(
-                res => {
-                    this.toast.setMessage("Poll successfully created!", "success");
-                    // TODO : redirect to Poll Creator with pollname value
+                    // Navigate to pollroom
+                    this.router.navigate(['./pollroom']);
                 },
-                error => this.toast.setMessage(error, "danger")
+                error => this.toastr.error(error, "Error")
             );
+        } else {
+            this.toastr.error("Blank pollroom name");
         }
-        */
-    }
-
-    openRegisterForm() {
-        this.visibleRegisterForm = !this.visibleRegisterForm;
-        this.visibleLoginForm = false;
-        this.registerForm.reset();
-    }
-
-    openLoginForm() {
-        this.visibleLoginForm = !this.visibleLoginForm;
-        this.visibleRegisterForm = false;
-        this.loginForm.reset();
     }
 
     // getStats() {
@@ -164,48 +134,6 @@ export class HomeComponent implements OnInit {
     //         () => this.isLoading = false
     //     );
     // }
-
-    register() {
-        console.log("register " + this.registerName.value + " " + this.registerPass.value + " " + this.registerConfirmedPass.value);
-
-        if (this.registerPass.value !== this.registerConfirmedPass.value) {
-            this.toastr.error("Passwords don't match", "Register failed");
-
-            this.registerPass.reset();
-            this.registerConfirmedPass.reset();
-        } else {
-            this.toastr.success("Welcome DamienRonchon !", "Register succeed");
-            // TODO : for preview only
-            this.router.navigate(['./dashboard']);
-
-            this.homeService.register(this.registerForm.value).subscribe(
-                res => {
-                    var newUser = res.json();
-                    this.visibleRegisterForm = false;
-                    this.visibleLoginForm = true;
-                    this.toastr.success("Welcome DamienRonchon !", "Register succeed");
-                },
-                error => console.log(error)
-            );
-        }
-    }
-
-    login() {
-        console.log("login " + this.loginName.value + " " + this.loginPass.value);
-        this.toastr.success("Welcome DamienRonchon !", "Login succeed");
-        // TODO : for preview only
-        this.router.navigate(['./dashboard']);
-
-        this.homeService.register(this.registerForm.value).subscribe(
-            res => {
-                var newUser = res.json();
-                this.visibleRegisterForm = false;
-                this.visibleLoginForm = true;
-                this.toastr.success("Welcome DamienRonchon !", "Login succeed");
-            },
-            error => console.log(error)
-        );
-    }
 
     openPollroomModal() {
         this.modal.alert()
@@ -238,56 +166,4 @@ export class HomeComponent implements OnInit {
             .body(require('./home.modal-statistics.html'))
             .open();
     }
-
-    /*
-    addCat() {
-        this.dataService.addCat(this.addCatForm.value).subscribe(
-            res => {
-                var newCat = res.json();
-                this.cats.push(newCat);
-                this.addCatForm.reset();
-                this.toast.setMessage("item added successfully.", "success");
-            },
-            error => console.log(error)
-        );
-    }
-    */
-
-    enableEditing(cat) {
-        this.isEditing = true;
-        this.cat = cat;
-    }
-
-    cancelEditing() {
-        this.isEditing = false;
-        this.cat = {};
-        // this.toast.setMessage("item editing cancelled.", "warning");
-        // reload the cats to reset the editing
-        //this.getCats();
-    }
-
-    editCat(cat) {
-        this.homeService.editCat(cat).subscribe(
-            res => {
-                this.isEditing = false;
-                this.cat = cat;
-                // this.toast.setMessage("item edited successfully.", "success");
-            },
-            error => console.log(error)
-        );
-    }
-
-    deleteCat(cat) {
-        if(window.confirm("Are you sure you want to permanently delete this item?")) {
-            this.homeService.deleteCat(cat).subscribe(
-                res => {
-                    var pos = this.cats.map(cat => { return cat._id }).indexOf(cat._id);
-                    this.cats.splice(pos, 1);
-                    // this.toast.setMessage("item deleted successfully.", "success");
-                },
-                error => console.log(error)
-            );
-        }
-    }
-
 }

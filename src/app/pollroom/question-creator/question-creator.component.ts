@@ -5,6 +5,8 @@ import {
 
 import { Question, Answer } from '../../models/question';
 import {ToastsManager} from "ng2-toastr";
+import {PollroomService} from "../../services/pollroom.service";
+import {QuestionCreationDTO} from "../../models/question-creation-dto";
 
 @Component({
     selector: 'question-creator',
@@ -41,17 +43,22 @@ import {ToastsManager} from "ng2-toastr";
 })
 export class QuestionCreatorComponent implements OnInit {
 
-    question: Question;
+    @Input() question: Question;
+    originalQuestion: Question; // in case of question editing
     @Output() onPublish = new EventEmitter<Question>();
+    @Output() onUpdate = new EventEmitter<Question>();
+    @Output() onUpdateCanceled = new EventEmitter();
+    @Input() pollroomId;
 
     private published: boolean = false;
     private isFocus = false;
+    private isEditing = false;
 
     private MIN_ANSWER = 2;
     private MAX_ANSWER = 10;
 
-    constructor(public toastr: ToastsManager) {
-    }
+    constructor(public toastr: ToastsManager,
+                private pollroomService: PollroomService) { }
 
     ngOnInit() {
         this.initQuestion();
@@ -59,9 +66,49 @@ export class QuestionCreatorComponent implements OnInit {
 
     // Publish the created question
     publish() {
+        let verifications = this.questionVerifications();
+
+        if (verifications.error_message) {
+            this.toastr.error(verifications.error_message);
+        } else {
+            let questionCreationDTO = new QuestionCreationDTO(
+                this.question.title.trim(), verifications.answers);
+            this.pollroomService.addQuestion(this.pollroomId, questionCreationDTO).then(
+                question => {
+                    this.onPublish.emit(question);
+                    this.toastr.success("Question published");
+                    this.hideFullQuestion();
+                    this.initQuestion();
+                },
+                error => this.toastr.error(error, "Error")
+            );
+        }
+    }
+
+    update() {
+        let verifications = this.questionVerifications();
+
+        if (verifications.error_message) {
+            this.toastr.error(verifications.error_message);
+        } else {
+            let questionCreationDTO = new QuestionCreationDTO(
+                this.question.title.trim(), verifications.answers);
+            this.pollroomService.patchQuestion(this.pollroomId, questionCreationDTO).then(
+                question => {
+                    this.onUpdate.emit(question);
+                    this.toastr.success("Question updated");
+                    this.initQuestion();
+                    this.hideFullQuestion();
+                },
+                error => this.toastr.error(error, "Error")
+            );
+        }
+    }
+
+    questionVerifications() {
         let errorMessage: string;
 
-        let answers: Array<string> = [];
+        let answers: string[] = [];
         for (let answer of this.question.answers)
             if (answer.label && answer.label.trim())
                 answers.push(answer.label.trim());
@@ -69,21 +116,16 @@ export class QuestionCreatorComponent implements OnInit {
         if (answers.length < 2)
             errorMessage = "Min. 2 answers required";
 
-        if (!(this.question.label && this.question.label.trim()))
+        if (!(this.question.title && this.question.title.trim()))
             errorMessage = "No title for your question";
 
-        if (errorMessage) {
-            this.toastr.error(errorMessage);
-        } else {
-            // publish this question
+        return {error_message: errorMessage, answers: answers};
+    }
 
-            // (parent is listening on new questions with socket)
-
-            this.toastr.success("Question published");
-
-            this.hideFullQuestion();
-            this.initQuestion();
-        }
+    editQuestion(question: Question) {
+        this.originalQuestion = question;
+        this.question.clone(question);
+        this.displayFullQuestion();
     }
 
     addAnswer() {
@@ -112,6 +154,11 @@ export class QuestionCreatorComponent implements OnInit {
 
     displayOrHideFullQuestion() {
         this.isFocus = !this.isFocus;
+        if (this.question.status === 'pending') {
+            this.originalQuestion.status = 'open';
+            this.onUpdateCanceled.emit(this.originalQuestion);
+            this.initQuestion();
+        }
     }
 
     initQuestion() {

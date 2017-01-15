@@ -1,0 +1,17 @@
+import {Question} from "./question";
+export class Pollroom {
+    id: number;
+    name: string;
+    status: string;
+    questions: Question[] = [];
+    nb_participants: number;
+    creator: string;
+
+    constructor() {
+        this.id = 0;
+        this.name = "No name";
+        this.status = "open";
+        this.nb_participants = 1;
+        this.creator = "";
+    }
+}

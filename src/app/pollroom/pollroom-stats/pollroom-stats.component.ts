@@ -1,4 +1,8 @@
 import {Component, OnInit, Output, Input} from '@angular/core';
+import {Pollroom} from "../../models/pollroom";
+import {PollroomService} from "../../services/pollroom.service";
+import {HomeService} from "../../services/home.service";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
     selector: 'pollroom-stats',
@@ -9,12 +13,38 @@ export class PollroomStatsComponent implements OnInit {
 
     private questionsChecked: Map<number, number> = new Map();
     private nbAnswers: number;
+    private pollroomTotalAnswers: number;
+    displayCloseRoomInfo = false;
+    displayOpenRoomInfo = false;
     @Input() private nbTotalAnswers: number;
+    @Input() private pollroom: Pollroom;
 
-    constructor() { }
+    constructor(private pollroomService: PollroomService,
+                private homeService: HomeService,
+                public toastr: ToastsManager) { }
 
     ngOnInit() {
         this.nbAnswers = 0;
+        this.pollroomTotalAnswers = 0;
+    }
+
+    ngOnChanges() {
+        console.log("pollroom changes detected in PollroomStatsComponent");
+
+        for (let question of this.pollroom.questions)
+            this.pollroomTotalAnswers += question.nb_responses;
+    }
+
+    patchRoom(status: string) {
+        this.pollroomService.patchRoom(this.pollroom.id, status).then(
+            pollroom => {
+                this.displayCloseRoomInfo = status !== "closed";
+                this.displayOpenRoomInfo = !this.displayCloseRoomInfo;
+                this.homeService.selectPollroom(pollroom);
+                this.toastr.success("pollroom " + pollroom.status);
+            },
+            error => this.toastr.error(error, "Error")
+        );
     }
 
     onChecked(event) {

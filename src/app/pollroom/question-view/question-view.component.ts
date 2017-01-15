@@ -3,6 +3,9 @@ import {
     OnChanges, trigger, state, style, transition, animate
 } from '@angular/core';
 import {Question} from "../../models/question";
+import {TimeAgoPipe} from "../../pipes/time-ago.pipe";
+import {PollroomService} from "../../services/pollroom.service";
+import {ToastsManager} from "ng2-toastr";
 
 @Component({
     selector: 'question-view',
@@ -24,14 +27,22 @@ import {Question} from "../../models/question";
 export class QuestionViewComponent implements OnInit, OnChanges {
 
     @Input() question: Question;
+    @Input() nbParticipants: number;
     @Output() onChecked = new EventEmitter();
+    @Output() onQuestionEdit = new EventEmitter();
+    @Output() onQuestionEditForm = new EventEmitter();
+
+
+    questionCreationDate: Date = new Date;
     questionIsClosed = false;
     displayCloseHint = false;
     displayOpenHint = false;
     isVoteUp = false;
     isVoteDown = false;
+    isEditing = false;
 
-    constructor() { }
+    constructor(private pollroomService: PollroomService,
+                public toastr: ToastsManager) { }
 
     ngOnInit() {
     }
@@ -42,6 +53,8 @@ export class QuestionViewComponent implements OnInit, OnChanges {
             answer.letter = c;
             c = this.nextChar(c);
         }
+        this.questionCreationDate = new Date(this.question.created_at);
+        this.questionIsClosed = this.question.status === "closed";
     }
 
     answerGiven(question, answer) {
@@ -54,6 +67,17 @@ export class QuestionViewComponent implements OnInit, OnChanges {
         let newEvent = {_event: e, question_id: questionId, answer_id: answerId};
         console.log(newEvent);
         this.onChecked.emit(newEvent);
+
+        if (e.target.checked)
+            this.pollroomService.checkAnswer(answerId).then(
+                res => '',
+                error => this.toastr.error(error)
+            );
+        else
+            this.pollroomService.uncheckAnswer(answerId).then(
+                res => '',
+                error => this.toastr.error(error)
+            );
     }
 
     nextChar(c) {
@@ -62,6 +86,15 @@ export class QuestionViewComponent implements OnInit, OnChanges {
 
     clickP() {
         console.log("clickeddd");
+    }
+
+    editQuestion(question: Question) {
+        if (this.question.status === 'closed')
+            this.toastr.warning("You are editing a closed question", "Be careful");
+
+        this.question.status = 'pending';
+        this.onQuestionEdit.emit(question);
+        this.onQuestionEditForm.emit(question);
     }
 
     voteUp() {
@@ -95,11 +128,13 @@ export class QuestionViewComponent implements OnInit, OnChanges {
     }
 
     openQuestion() {
+        this.question.status = 'open';
         this.questionIsClosed = false;
         this.displayOpenHint = false;
     }
 
     closeQuestion() {
+        this.question.status = 'closed';
         this.questionIsClosed = true;
         this.displayCloseHint = false;
     }

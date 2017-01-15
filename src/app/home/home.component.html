@@ -10,7 +10,7 @@
                 <h3 class="pollak-style">{{ nbQuestionAsked | thousandSeparator }} <i class="fa fa-question-circle-o fa-fw"></i> <br> questions asked</h3>
             </div>
             <div class="col-xs-4">
-                <h3 class="pollak-style">{{ nbAnswer | thousandSeparator }} <i class="fa fa-sign-in fa-fw"></i> <br> polls created</h3>
+                <h3 class="pollak-style">{{ nbAnswer | thousandSeparator }} <i class="fa fa-lightbulb-o fa-fw"></i> <br> answers given</h3>
             </div>
         </div>
 
@@ -20,7 +20,7 @@
                     <h3>Join</h3>
 
 
-                    <form [formGroup]="joinPollForm" (ngSubmit)="joinPoll()">
+                    <form [formGroup]="joinPollForm" (ngSubmit)="joinPollroom()">
                         <div class="input-group input-group-lg">
                             <span class="input-group-btn">
                                 <button class="btn btn-dark" type="submit" [disabled]="!joinPollForm.valid"><i class="fa fa-sign-in fa-fw"></i></button>
@@ -45,9 +45,9 @@
                 </div>
                 <div class="col-sm-6">
                     <h3>Create</h3>
-                    <form [formGroup]="newPollForm" (ngSubmit)="createPoll()">
+                    <form [formGroup]="newPollForm" (ngSubmit)="createPollroom()">
                         <div class="input-group input-group-lg">
-                            <input type="text" class="form-control" formControlName="pollName" placeholder="Poll name">
+                            <input type="text" class="form-control" formControlName="pollName" placeholder="Pollroom name">
                             <span class="input-group-btn">
                                 <button class="btn btn-dark" type="submit" [disabled]="!newPollForm.valid"><i class="fa fa-plus fa-fw"></i></button>
                             </span>

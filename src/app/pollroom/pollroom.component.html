@@ -8,7 +8,7 @@
                 </a>
             </div>
 
-            <h3 class="text-center">Title of poll</h3>
+            <h3 class="text-center">{{ pollroom.name }}</h3>
         </div>
     </nav>
 
@@ -16,18 +16,24 @@
 
             <div class="col-md-2 stats">
                 <pollroom-stats
+                        [pollroom]="pollroom"
                         #pollroomStats
-                        [nbTotalAnswers]="nbTotalAnswers"></pollroom-stats>
+                        [nbTotalAnswers]="nbTotalAnswers">
+                </pollroom-stats>
             </div>
 
             <div class="col-md-8 poll">
 
                 <div class="row">
-                    <div *ngFor="let question of questions">
+                    <div *ngFor="let question of pollroom.questions">
 
                         <question-view
                                 [question]="question"
-                                (onChecked)="pollroomStats.onChecked($event)"></question-view>
+                                [nbParticipants]="pollroom.nb_participants"
+                                (onChecked)="pollroomStats.onChecked($event)"
+                                (onQuestionEdit)="editQuestion($event)"
+                                (onQuestionEditForm)="questionCreator.editQuestion($event)">
+                        </question-view>
 
                     </div>
                 </div>
@@ -35,7 +41,11 @@
                 <div class="row" id="sticky-footer">
                     <div class="footer">
                         <question-creator
-                                (onPublish)="onPublish($event)">
+                                #questionCreator
+                                [pollroomId]="pollroom.id"
+                                (onPublish)="onQuestionPublished($event)"
+                                (onUpdate)="updateQuestion($event)"
+                                (onUpdateCanceled)="updateQuestion($event)">
                         </question-creator>
                     </div>
                 </div>

@@ -9,10 +9,8 @@ import {Question} from "../../../models/question";
 export class ResponseViewComponent implements OnInit {
 
     @Input() question: Question;
-    @Input() questionIsClosed: boolean;
     constructor() { }
 
     ngOnInit() {
     }
-
 }
