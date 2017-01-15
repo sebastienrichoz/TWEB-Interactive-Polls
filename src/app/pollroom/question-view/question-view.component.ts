@@ -1,13 +1,25 @@
 import {
     Component, OnInit, Input, Output, EventEmitter,
-    OnChanges
+    OnChanges, trigger, state, style, transition, animate
 } from '@angular/core';
 import {Question} from "../../models/question";
 
 @Component({
     selector: 'question-view',
     templateUrl: 'question-view.component.html',
-    styleUrls: ['question-view.component.css']
+    styleUrls: ['question-view.component.css'],
+    animations: [
+        trigger('comeInOut', [
+            state('in', style({opacity: 1, transform: 'translateX(0)'})),
+            transition('void => *', [
+                style({
+                    opacity: 0,
+                    transform: 'translateX(0) scale(0)'
+                }),
+                animate(200)
+            ])
+        ])
+    ]
 })
 export class QuestionViewComponent implements OnInit, OnChanges {
 

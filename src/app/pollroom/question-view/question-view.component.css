@@ -10,6 +10,12 @@ h3 {
 
 }
 
+.icon-status {
+    padding: 2px;
+    margin-right: 3px;
+    border-radius: 3px;
+}
+
 .last-margin {
     margin-bottom: 20px !important;
 }
@@ -50,14 +56,15 @@ div label input {
 }
 
 .ck-button label input {
-    position:absolute;
-    top:-20px;
+    display: none;
 }
 
 .ck-button input:checked + span {
     background-color: rgb(126, 42, 57);
     color:#fff;
 }
+
+
 
 .vote-up span {
     float: left;
