@@ -30,6 +30,7 @@ import {DashboardService} from "./services/dashboard.service";
 
 // Pipes
 import { ThousandSeparatorPipe } from './pipes/thousand-separator.pipe';
+import { PollroomStatsComponent } from './pollroom/pollroom-stats/pollroom-stats.component';
 
 // roots
 const routing = RouterModule.forRoot([
@@ -48,7 +49,8 @@ const routing = RouterModule.forRoot([
         ThousandSeparatorPipe,
         PollroomComponent,
         QuestionCreatorComponent,
-        QuestionViewComponent
+        QuestionViewComponent,
+        PollroomStatsComponent
     ],
     imports: [
         BrowserModule,

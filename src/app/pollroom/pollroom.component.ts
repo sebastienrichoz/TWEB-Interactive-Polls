@@ -11,7 +11,7 @@ export class PollroomComponent implements OnInit {
     private questions: Question[] = [];
     private nbAnswers: number;
     private nbTotalAnswers: number;
-    private questionsChecked: Map<number, number> = new Map();
+
 
     constructor() {
 
@@ -44,29 +44,6 @@ export class PollroomComponent implements OnInit {
     answerGiven(question: Question, answer: Answer) {
         // TODO : socket.io
         console.log(question.label + " " + answer.label);
-    }
-
-    onChecked(event) {
-        let e = event.e;
-        let questionId = e.questionId;
-        let answerId = e.answerId;
-        console.log("question id: " + questionId + ", answer id: " + answerId);
-        let nbAnswers = this.questionsChecked.get(questionId);
-        if(e.target.checked) {
-            if (nbAnswers === undefined || nbAnswers === 0) {
-                this.nbAnswers++;
-                this.questionsChecked.set(questionId, 1);
-            } else {
-                this.questionsChecked.set(questionId, nbAnswers + 1);
-            }
-        } else {
-            if (nbAnswers === 1) {
-                this.questionsChecked.set(questionId, 0);
-                this.nbAnswers--;
-            } else {
-                this.questionsChecked.set(questionId, nbAnswers - 1);
-            }
-        }
     }
 
 }
