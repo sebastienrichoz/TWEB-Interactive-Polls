@@ -8,8 +8,6 @@ var PollroomSchema = mongoose.Schema({
 
     questions: [Question.schema],
 
-    nb_participants: { type: Number, default: 0, required: true },
-
     creator: { type: String, required: true },
     created_at: { type: Date, default: Date.now, required: true }
 });
@@ -21,7 +19,7 @@ PollroomSchema.set('toJSON', {
             name: ret.name,
             status: ret.status,
             questions: ret.questions,
-            nb_participants: ret.nb_participants,
+            nb_participants: 0,
             creator: ret.creator,
             created_at: ret.created_at
         };

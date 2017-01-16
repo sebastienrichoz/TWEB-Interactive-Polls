@@ -7,9 +7,11 @@ var QuestionSchema = mongoose.Schema({
     title: { type: String, required: true },
     status: { type: String, enum: ['pending', 'open', 'closed'], default: 'pending', required: true },
 
-    nb_positives_votes: { type: Number, default: 0, required: true },
-    nb_negatives_votes: { type: Number, default: 0, required: true },
-    nb_participants: { type: Number, default: 0, required: true },
+    votes: [{
+        voter: { type: String, required: true },
+        is_positive: { type: Boolean, required: true },
+        _id: false
+    }],
 
     answers: [Answer.schema],
 
@@ -22,11 +24,11 @@ QuestionSchema.set('toJSON', {
     transform: function(doc, ret, options) {
         return {
             id: ret._id,
-            title: ret.email,
+            title: ret.title,
             status: ret.status,
-            nb_positives_votes: ret.nb_positives_votes,
-            nb_negatives_votes: ret.nb_negatives_votes,
-            nb_participants: ret.nb_participants,
+            nb_positives_votes: 0,
+            nb_negatives_votes: 0,
+            nb_participants: 0,
             answers: ret.answers,
             creator: ret.creator,
             created_at: ret.created_at

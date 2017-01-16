@@ -87,11 +87,13 @@ router.patch('/questions/:question_id', function(req, res) {
     if (req.body.answers != undefined) {
         data.status = req.body.answers;
     }
-    Question.update(req.params.question_id, data, function(err, pollroom) {
+    Question.update(req.params.question_id, data, function(err, numAffected) {
         if (err) {
             res.send(err);
         }
-        res.json(pollroom);
+        res.json(numAffected);
+    });
+});
     });
 });
 
