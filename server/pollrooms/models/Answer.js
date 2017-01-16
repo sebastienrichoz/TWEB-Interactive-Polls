@@ -1,10 +1,8 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 
-var AnswerSchema = mongoose.Schema({
-
-    label: { type: String, required: true },
-    nb_responses: { type: Number, default: 0, required: true }
-
+var AnswerSchema = Schema({
+    label: { type: String, required: true }
 });
 
 AnswerSchema.set('toJSON', {
@@ -12,7 +10,7 @@ AnswerSchema.set('toJSON', {
         return {
             id: ret._id,
             label: ret.label,
-            nb_responses: ret.nb_responses
+            nb_responses: 0
         };
     }
 });
