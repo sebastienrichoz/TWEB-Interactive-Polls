@@ -94,7 +94,5 @@ router.patch('/questions/:question_id', function(req, res) {
         res.json(numAffected);
     });
 });
-    });
-});
 
 module.exports = router;
