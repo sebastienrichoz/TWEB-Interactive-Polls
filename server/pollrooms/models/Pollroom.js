@@ -1,15 +1,14 @@
 var mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
     Question = require('./Question');
 
-var PollroomSchema = mongoose.Schema({
-
+var PollroomSchema = Schema({
     name: { type: String, required: true },
     status: { type: String, enum: ['open', 'closed'], default: 'open', required: true },
-
-    questions: [Question.schema],
-
     creator: { type: String, required: true },
-    created_at: { type: Date, default: Date.now, required: true }
+    created_at: { type: Date, default: Date.now, required: true },
+
+    questions: [Question.schema]
 });
 
 PollroomSchema.set('toJSON', {

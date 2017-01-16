@@ -1,12 +1,8 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 
-var AnswerSchema = mongoose.Schema({
-
-    label: { type: String, required: true },
-
-    responses: [{
-        answerer: {type: String, required: true}
-    }]
+var AnswerSchema = Schema({
+    label: { type: String, required: true }
 });
 
 AnswerSchema.set('toJSON', {

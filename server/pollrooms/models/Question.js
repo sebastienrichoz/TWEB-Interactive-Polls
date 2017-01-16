@@ -1,23 +1,14 @@
 var mongoose = require('mongoose'),
-    Answer = require('./Answer'),
-    Pollroom = require('./Pollroom');
+    Schema = mongoose.Schema,
+    Answer = require('./Answer');
 
-var QuestionSchema = mongoose.Schema({
-
+var QuestionSchema = Schema({
     title: { type: String, required: true },
     status: { type: String, enum: ['pending', 'open', 'closed'], default: 'pending', required: true },
-
-    votes: [{
-        voter: { type: String, required: true },
-        is_positive: { type: Boolean, required: true },
-        _id: false
-    }],
-
-    answers: [Answer.schema],
-
     creator: { type: String, required: true },
-    created_at: { type: Date, default: Date.now, required: true }
+    created_at: { type: Date, default: Date.now, required: true },
 
+    answers: [Answer.schema]
 });
 
 QuestionSchema.set('toJSON', {
@@ -35,27 +26,5 @@ QuestionSchema.set('toJSON', {
         };
     }
 });
-
-/**
- * Return a Json object of the question, not a model instance.
- */
-QuestionSchema.statics.find = function(id, callback) {
-    this.model('Pollroom').findOne({'questions._id': id}, {'questions.$': 1}, function(err, pollroom) {
-        if (err || pollroom == null) {
-            callback(err, null);
-        }
-        else {
-            callback(null, pollroom.questions[0]); // findParentPollroom return only the question
-        }
-    });
-};
-
-QuestionSchema.statics.update = function(id, data, callback) {
-    var update = {};
-    for (var k in data) {
-        update['questions.$.' + k] = data[k];
-    }
-    this.model('Pollroom').update({'questions._id': id}, { '$set': update }, callback);
-};
 
 module.exports = mongoose.model('Question', QuestionSchema);
