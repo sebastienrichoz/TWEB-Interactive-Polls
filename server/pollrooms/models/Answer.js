@@ -1,12 +1,8 @@
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 
-var AnswerSchema = mongoose.Schema({
-
-    label: { type: String, required: true },
-
-    responses: [{
-        answerer: {type: String, required: true}
-    }]
+var AnswerSchema = Schema({
+    label: { type: String, required: true }
 });
 
 AnswerSchema.set('toJSON', {
@@ -18,31 +14,5 @@ AnswerSchema.set('toJSON', {
         };
     }
 });
-
-AnswerSchema.statics.select = function(id, answerer, callback) {
-    // this.model('Pollroom').update({
-    //     'questions.answers._id': id,
-    //     'questions.answers.$.responses.answerer': {$ne: answerer}
-    // }, {
-    //     $addToSet: {
-    //         'questions.answers.$.responses': {
-    //             'answerer': answerer
-    //         }
-    //     }
-    // }, callback);
-};
-
-AnswerSchema.statics.deselect = function(id, answerer, callback) {
-    // this.model('Pollroom').update({
-    //     'questions.answers._id': id,
-    //     'questions.answers.$.responses.answerer': answerer
-    // }, {
-    //     $pull: {
-    //         'questions.answers.$.responses': {
-    //             'answerer': answerer
-    //         }
-    //     }
-    // }, callback);
-};
 
 module.exports = mongoose.model('Answer', AnswerSchema);
