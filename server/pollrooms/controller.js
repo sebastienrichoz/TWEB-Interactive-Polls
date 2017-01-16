@@ -95,4 +95,13 @@ router.patch('/questions/:question_id', function(req, res) {
     });
 });
 
+router.delete('/questions/answers/:answer_id/', function(req, res) {
+    Answer.deselect(req.params.answer_id, req.get('X-Session-ID'), function(err, numAffected) {
+        if (err) {
+            res.send(err);
+        }
+        res.json(numAffected);
+    });
+});
+
 module.exports = router;

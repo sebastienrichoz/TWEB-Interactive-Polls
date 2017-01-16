@@ -19,4 +19,30 @@ AnswerSchema.set('toJSON', {
     }
 });
 
+AnswerSchema.statics.select = function(id, answerer, callback) {
+    // this.model('Pollroom').update({
+    //     'questions.answers._id': id,
+    //     'questions.answers.$.responses.answerer': {$ne: answerer}
+    // }, {
+    //     $addToSet: {
+    //         'questions.answers.$.responses': {
+    //             'answerer': answerer
+    //         }
+    //     }
+    // }, callback);
+};
+
+AnswerSchema.statics.deselect = function(id, answerer, callback) {
+    // this.model('Pollroom').update({
+    //     'questions.answers._id': id,
+    //     'questions.answers.$.responses.answerer': answerer
+    // }, {
+    //     $pull: {
+    //         'questions.answers.$.responses': {
+    //             'answerer': answerer
+    //         }
+    //     }
+    // }, callback);
+};
+
 module.exports = mongoose.model('Answer', AnswerSchema);
