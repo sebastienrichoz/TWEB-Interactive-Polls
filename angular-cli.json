@@ -28,7 +28,8 @@
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
         "../node_modules/d3/build/d3.min.js",
-        "../node_modules/ng2d3/release/index.min.js"
+        "../node_modules/ng2d3/release/index.min.js",
+        "../node_modules/socket.io-client/dist/socket.io.js"
       ],
       "environments": {
         "source": "environments/environment.ts",

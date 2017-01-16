@@ -75,6 +75,8 @@ export class QuestionCreatorComponent implements OnInit {
                 this.question.title.trim(), verifications.answers);
             this.pollroomService.addQuestion(this.pollroomId, questionCreationDTO).then(
                 question => {
+                    console.log("question published:");
+                    console.log(question);
                     this.onPublish.emit(question);
                     this.toastr.success("Question published");
                     this.hideFullQuestion();
@@ -93,7 +95,7 @@ export class QuestionCreatorComponent implements OnInit {
         } else {
             let questionCreationDTO = new QuestionCreationDTO(
                 this.question.title.trim(), verifications.answers);
-            this.pollroomService.patchQuestion(this.pollroomId, questionCreationDTO).then(
+            this.pollroomService.patchQuestion(questionCreationDTO).then(
                 question => {
                     this.onUpdate.emit(question);
                     this.toastr.success("Question updated");

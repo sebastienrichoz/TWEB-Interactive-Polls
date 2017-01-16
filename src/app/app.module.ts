@@ -43,7 +43,7 @@ export class MyXSRFStrategy {
 // roots
 const routing = RouterModule.forRoot([
     { path: '',      component: HomeComponent },
-    { path: 'pollroom', component: PollroomComponent }
+    { path: 'pollroom', component: PollroomComponent, data : { pollroom: 'some_pollroom'} }
 ]);
 
 @NgModule({

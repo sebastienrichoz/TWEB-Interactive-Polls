@@ -28,14 +28,14 @@ export class HomeService {
     }
 
     createPollroom(pollCreationDTO: PollroomCreationDTO): Promise<Pollroom> {
-        return this.http.post("/pollrooms/", JSON.stringify(pollCreationDTO), this.options)
+        return this.http.post("/api/v1/pollrooms/", JSON.stringify(pollCreationDTO), this.options)
             .toPromise()
             .then(this.utility.extractData)
             .catch(this.utility.handleError);
     }
 
     joinPollroom(pollroom_id: string): Promise<Pollroom> {
-        return this.http.get("/pollroom/" + pollroom_id + "/")
+        return this.http.get("/api/v1/pollrooms/" + pollroom_id + "/")
             .toPromise()
             .then(this.utility.extractData)
             .catch(this.utility.handleError);

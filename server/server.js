@@ -2,7 +2,6 @@ var express = require('express'),
     path = require('path'),
     morgan = require('morgan'), // logger
     bodyParser = require('body-parser'),
-    expressValidator = require('express-validator'),
     mongoose = require('mongoose'),
     pollrooms = require('./pollrooms/controller');
 

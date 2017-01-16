@@ -1,14 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {
+    Component, OnInit, Input, NgZone,
+    ChangeDetectorRef, ChangeDetectionStrategy
+} from '@angular/core';
 import {Question, Answer} from "../models/question";
 import {Subscription} from "rxjs";
 import {HomeService} from "../services/home.service";
 import {Pollroom} from "../models/pollroom";
-import {Router} from "@angular/router";
+import {Router, ActivatedRoute} from "@angular/router";
+import * as io from "socket.io-client";
 
 @Component({
     selector: 'app-pollroom',
     templateUrl: './pollroom.component.html',
-    styleUrls: ['./pollroom.component.css']
+    styleUrls: ['./pollroom.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollroomComponent implements OnInit {
 
@@ -43,7 +48,7 @@ export class PollroomComponent implements OnInit {
         this.pollroom.questions.push(q3);
 
         this.nbAnswers = 0;
-        this.nbTotalAnswers = this.pollroom.questions.length;
+        this.nbTotalAnswers = 0;
     }
 
     ngOnInit() {
@@ -53,8 +58,19 @@ export class PollroomComponent implements OnInit {
         // Listen for pollroom join
         this.subscription = this.homeService.pollroomSelected$.subscribe(
             pollroom => {
+                console.log(pollroom);
                 this.pollroom = pollroom;
-            }
+                this.nbTotalAnswers = this.pollroom.questions.length;
+
+                // TODO Join socket.io room
+                let socket = io('http://localhost/pollak');
+                socket.on('news', function (data) {
+                    console.log(data);
+                    socket.emit('my other event', { my: 'data' });
+                });
+
+            },
+            error => console.log(error)
         );
     }
 

@@ -21,25 +21,6 @@ export class AppComponent implements AfterViewInit {
             e.preventDefault();
             $("#sidebar-wrapper").toggleClass("active");
         });
-
-        // Scrolls to the selected menu item on the page
-        // TODO : ne marche pas et génère une erreur dans la console
-        /*
-        $(function() {
-            $('a[href*=#]:not([href=#],[data-toggle],[data-target],[data-slide])').click(function() {
-                if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') || location.hostname == this.hostname) {
-                    var target = $(this.hash);
-                    target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-                    if (target.length) {
-                        $('html,body').animate({
-                            scrollTop: target.offset().top
-                        }, 1000);
-                        return false;
-                    }
-                }
-            });
-        });
-        */
         //#to-top button appears after scrolling
         var fixed = false;
         $(document).scroll(function() {

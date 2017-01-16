@@ -52,10 +52,6 @@ export class HomeComponent implements OnInit {
     private nbQuestionAsked = 56378;
     private nbAnswer = 212986;
 
-
-    private visibleRegisterForm = false;
-    private visibleLoginForm = false;
-
     // forms
     private newPollForm: FormGroup;
     private pollName = new FormControl("", Validators.required);
@@ -89,36 +85,40 @@ export class HomeComponent implements OnInit {
     }
 
     joinPollroom() {
-        this.homeService.joinPollroom(this.pollRoomNumber.value).then(
-            pollroom => {
-                let joinedPollroom: Pollroom = pollroom;
-                this.toastr.success("Pollroom '" + joinedPollroom.id + "' joined");
+        let pollroomId = this.pollRoomNumber.value.trim();
 
-                // Announce the current pollroom
-                this.homeService.selectPollroom(joinedPollroom);
+        if (pollroomId) {
+            this.homeService.joinPollroom(pollroomId).then(
+                pollroom => {
+                    let joinedPollroom: Pollroom = pollroom;
+                    this.toastr.success("Pollroom '" + joinedPollroom.id + "' joined");
 
-                // Navigate to pollroom
-                this.router.navigate(['./pollroom']);
-            },
-            error => this.toastr.error(error)
-        )
+                    // Navigate to pollroom
+                    this.router.navigate(['./pollroom']).then(
+                        res => this.homeService.selectPollroom(joinedPollroom)
+                    );
+                },
+                error => this.toastr.error(error)
+            );
+        } else {
+            this.toastr.error("Blank pollroom number");
+        }
     }
 
     createPollroom() {
         let pollroomName = this.pollName.value.trim();
         if (pollroomName) {
             let pollroomCreationDTO = new PollroomCreationDTO(pollroomName);
+            console.log(pollroomCreationDTO);
             this.homeService.createPollroom(pollroomCreationDTO).then(
                 pollroom => {
-                    console.log(pollroom);
                     let currentPollroom: Pollroom = pollroom;
                     this.toastr.success("Pollroom '" + currentPollroom.id + "'created");
 
-                    // Announce the current pollroom
-                    this.homeService.selectPollroom(currentPollroom);
-
                     // Navigate to pollroom
-                    this.router.navigate(['./pollroom']);
+                    this.router.navigate(['./pollroom']).then(
+                        res => this.homeService.selectPollroom(currentPollroom)
+                    );
                 },
                 error => this.toastr.error(error, "Error")
             );
