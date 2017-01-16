@@ -54,9 +54,9 @@ router.post('/:pollroom_id/questions/', function(req, res) {
         title: req.body.title,
         creator: req.get('X-Session-ID')
     });
-    for (var a in req.body.answers) {
+    for (var k in req.body.answers) {
         question.answers.push(new Answer({
-            label: a
+            label: req.body.answers[k]
         }));
     }
     Pollroom.findByIdAndUpdate(req.params.pollroom_id, { $push: { 'questions': question }}, function(err, pollroom) {
