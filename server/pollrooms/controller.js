@@ -20,7 +20,11 @@ router.post('/', function(req, res) {
 });
 
 router.get('/:pollroom_id/', function(req, res) {
-    Pollroom.findById(req.params.pollroom_id).exec(function(err, pollroom) {
+    Pollroom
+        .findById(req.params.pollroom_id)
+        .populate({ path: 'questions', model: 'Question', populate: { path: 'answers', model: 'Answer' }})
+        .exec(function(err, pollroom) {
+
         if (err) {
             res.status(400).send(err);
         }
@@ -36,7 +40,12 @@ router.patch('/:pollroom_id/', function(req, res) {
     if (req.body.status != undefined) {
         data.status = req.body.status;
     }
-    Pollroom.findByIdAndUpdate(req.params.pollroom_id, { $set: data }, { new: true }, function(err, pollroom) {
+
+    Pollroom
+        .findByIdAndUpdate(req.params.pollroom_id, { $set: data }, { new: true })
+        .populate({ path: 'questions', model: 'Question', populate: { path: 'answers', model: 'Answer' }})
+        .exec(function(err, pollroom) {
+
         if (err) {
             res.status(400).send(err);
         }
@@ -68,19 +77,34 @@ router.post('/:pollroom_id/questions/', function(req, res) {
             res.status(400).send(err);
         }
     });
-    Pollroom.findByIdAndUpdate(req.params.pollroom_id, { $push: { 'questions': question }}, function(err, pollroom) {
+
+    Pollroom
+        .findByIdAndUpdate(req.params.pollroom_id, { $push: { 'questions': question }})
+        .populate({ path: 'questions', model: 'Question', populate: { path: 'answers', model: 'Answer' }})
+        .exec(function(err, pollroom) {
+
         if (err) {
             res.status(400).send(err);
         }
-        else if (pollroom == null) {
+        else if (question == null) {
             res.status(404).send(err);
         }
-        res.status(201).json(question);
+
+        Question
+            .findById(question._id)
+            .populate({ path: 'answers', model: 'Answer' })
+            .exec(function(err, question) {
+                res.status(201).json(question);
+            });
     });
 });
 
 router.get('/questions/:question_id/', function(req, res) {
-    Question.findById(req.params.question_id, function(err, question) {
+    Question
+        .findById(req.params.question_id)
+        .populate({ path: 'answers', model: 'Answer' })
+        .exec(function(err, question) {
+
         if (err) {
             res.status(400).send(err);
         }
@@ -102,7 +126,12 @@ router.patch('/questions/:question_id/', function(req, res) {
     if (req.body.answers != undefined) {
         data.answers = req.body.status;
     }
-    Question.findByIdAndUpdate(req.params.question_id, { $set: data }, { new: true }, function(err, question) {
+
+    Question
+        .findByIdAndUpdate(req.params.question_id, { $set: data }, { new: true })
+        .populate({ path: 'answers', model: 'Answer' })
+        .exec(function(err, question) {
+
         if (err) {
             res.status(400).send(err);
         }
@@ -114,13 +143,17 @@ router.patch('/questions/:question_id/', function(req, res) {
 });
 
 router.post('/answers/:answer_id/check/', function(req, res) {
-    Answer.findById(req.params.answer_id, function(err, answer) {
+    Answer
+        .findById(req.params.answer_id)
+        .exec(function(err, answer) {
+
         if (err) {
             res.status(400).send(err);
         }
         else if (answer == null) {
             res.status(404).send(err);
         }
+
         var data = {
             answer: req.params.answer_id,
             user: req.get('X-Session-ID')
@@ -135,13 +168,17 @@ router.post('/answers/:answer_id/check/', function(req, res) {
 });
 
 router.post('/answers/:answer_id/uncheck/', function(req, res) {
-    Answer.findById(req.params.answer_id, function(err, answer) {
+    Answer
+        .findById(req.params.answer_id)
+        .exec(function(err, answer) {
+
         if (err) {
             res.status(400).send(err);
         }
-        else if (pollroom == null) {
+        else if (answer == null) {
             res.status(404).send(err);
         }
+
         var data = {
             answer: req.params.answer_id,
             user: req.get('X-Session-ID')
