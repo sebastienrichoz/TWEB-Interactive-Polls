@@ -1,14 +1,13 @@
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    Answer = require('./Answer');
+    Schema = mongoose.Schema;
 
 var QuestionSchema = Schema({
     title: { type: String, required: true },
-    status: { type: String, enum: ['pending', 'open', 'closed'], default: 'pending', required: true },
+    status: { type: String, enum: ['pending', 'open', 'closed'], default: 'open', required: true },
     creator: { type: String, required: true },
     created_at: { type: Date, default: Date.now, required: true },
 
-    answers: [Answer.schema]
+    answers: [{ type: Schema.Types.ObjectId, ref: 'Answer' }]
 });
 
 QuestionSchema.set('toJSON', {
@@ -21,7 +20,6 @@ QuestionSchema.set('toJSON', {
             nb_negatives_votes: 0,
             nb_participants: 0,
             answers: ret.answers,
-            creator: ret.creator,
             created_at: ret.created_at
         };
     }

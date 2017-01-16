@@ -20,7 +20,7 @@ router.post('/', function(req, res) {
 });
 
 router.get('/:pollroom_id/', function(req, res) {
-    Pollroom.findById(req.params.pollroom_id, function(err, pollroom) {
+    Pollroom.findById(req.params.pollroom_id).exec(function(err, pollroom) {
         if (err) {
             res.status(400).send(err);
         }
@@ -53,10 +53,21 @@ router.post('/:pollroom_id/questions/', function(req, res) {
         creator: req.get('X-Session-ID')
     });
     for (var k in req.body.answers) {
-        question.answers.push(new Answer({
+        var answer = new Answer({
             label: req.body.answers[k]
-        }));
+        });
+        answer.save(function(err) {
+            if (err) {
+                res.status(400).send(err);
+            }
+        });
+        question.answers.push(answer);
     }
+    question.save(function(err) {
+        if (err) {
+            res.status(400).send(err);
+        }
+    });
     Pollroom.findByIdAndUpdate(req.params.pollroom_id, { $push: { 'questions': question }}, function(err, pollroom) {
         if (err) {
             res.status(400).send(err);
@@ -69,52 +80,52 @@ router.post('/:pollroom_id/questions/', function(req, res) {
 });
 
 router.get('/questions/:question_id/', function(req, res) {
-    Pollroom.findOne({ 'questions._id': req.params.question_id }, function(err, pollroom) {
+    Question.findById(req.params.question_id, function(err, question) {
         if (err) {
             res.status(400).send(err);
         }
-        else if (pollroom == null) {
+        else if (question == null) {
             res.status(404).send(err);
         }
-        res.json(pollroom.questions.id(req.params.question_id));
+        res.json(question);
     });
 });
 
 router.patch('/questions/:question_id/', function(req, res) {
     var data = {};
     if (req.body.status != undefined) {
-        data['questions.$.status'] = req.body.status;
+        data.status = req.body.status;
     }
     if (req.body.title != undefined) {
-        data['questions.$.title'] = req.body.title;
+        data.title = req.body.title;
     }
     if (req.body.answers != undefined) {
-        data['questions.$.answers'] = req.body.status;
+        data.answers = req.body.status;
     }
-    Pollroom.findOneAndUpdate({ 'questions._id': req.params.question_id }, { $set: data }, { new: true }, function(err, pollroom) {
+    Question.findByIdAndUpdate(req.params.question_id, { $set: data }, { new: true }, function(err, question) {
         if (err) {
             res.status(400).send(err);
         }
-        else if (pollroom == null) {
+        else if (question == null) {
             res.status(404).send(err);
         }
-        res.json(pollroom.questions.id(req.params.question_id));
+        res.json(question);
     });
 });
 
 router.post('/answers/:answer_id/check/', function(req, res) {
-    Pollroom.findOne({ 'questions.answers._id': req.params.answer_id }, function(err, pollroom) {
+    Answer.findById(req.params.answer_id, function(err, answer) {
         if (err) {
             res.status(400).send(err);
         }
-        else if (pollroom == null) {
+        else if (answer == null) {
             res.status(404).send(err);
         }
         var data = {
             answer: req.params.answer_id,
             user: req.get('X-Session-ID')
         };
-        Choice.findOneAndUpdate(data, data, { upsert: true }, function(err, choice) {
+        Choice.findOneAndUpdate(data, data, { upsert: true }, function(err) {
             if (err) {
                 res.status(400).send(err);
             }
@@ -124,7 +135,7 @@ router.post('/answers/:answer_id/check/', function(req, res) {
 });
 
 router.post('/answers/:answer_id/uncheck/', function(req, res) {
-    Pollroom.findOne({ 'questions.answers._id': req.params.answer_id }, function(err, pollroom) {
+    Answer.findById(req.params.answer_id, function(err, answer) {
         if (err) {
             res.status(400).send(err);
         }
@@ -135,7 +146,7 @@ router.post('/answers/:answer_id/uncheck/', function(req, res) {
             answer: req.params.answer_id,
             user: req.get('X-Session-ID')
         };
-        Choice.remove(data, function(err) {
+        Choice.delete(data, function(err) {
             if (err) {
                 res.status(400).send(err);
             }

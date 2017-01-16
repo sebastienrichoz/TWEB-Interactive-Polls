@@ -1,6 +1,5 @@
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    Question = require('./Question');
+    Schema = mongoose.Schema;
 
 var PollroomSchema = Schema({
     name: { type: String, required: true },
@@ -8,7 +7,7 @@ var PollroomSchema = Schema({
     creator: { type: String, required: true },
     created_at: { type: Date, default: Date.now, required: true },
 
-    questions: [Question.schema]
+    questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }]
 });
 
 PollroomSchema.set('toJSON', {
@@ -19,7 +18,6 @@ PollroomSchema.set('toJSON', {
             status: ret.status,
             questions: ret.questions,
             nb_participants: 0,
-            creator: ret.creator,
             created_at: ret.created_at
         };
     }
