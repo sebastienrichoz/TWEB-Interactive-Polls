@@ -2,7 +2,11 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
 var AnswerSchema = Schema({
-    label: { type: String, required: true }
+    label: { type: String, required: true },
+
+    question: { type: Schema.Types.ObjectId, ref: 'Question' },
+
+    nb_responses: { type: Number, default: 0 }
 });
 
 AnswerSchema.set('toJSON', {
@@ -10,7 +14,7 @@ AnswerSchema.set('toJSON', {
         return {
             id: ret._id,
             label: ret.label,
-            nb_responses: 0
+            nb_responses: ret.nb_responses
         };
     }
 });

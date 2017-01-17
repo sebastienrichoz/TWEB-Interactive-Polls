@@ -7,7 +7,11 @@ var QuestionSchema = Schema({
     creator: { type: String, required: true },
     created_at: { type: Date, default: Date.now, required: true },
 
-    answers: [{ type: Schema.Types.ObjectId, ref: 'Answer' }]
+    answers: [{ type: Schema.Types.ObjectId, ref: 'Answer' }],
+
+    nb_positives_votes: { type: Number, default: 0 },
+    nb_negatives_votes: { type: Number, default: 0 },
+    nb_participants: { type: Number, default: 0 }
 });
 
 QuestionSchema.set('toJSON', {
@@ -16,11 +20,11 @@ QuestionSchema.set('toJSON', {
             id: ret._id,
             title: ret.title,
             status: ret.status,
+            created_at: ret.created_at,
+            answers: ret.answers,
             nb_positives_votes: 0,
             nb_negatives_votes: 0,
-            nb_participants: 0,
-            answers: ret.answers,
-            created_at: ret.created_at
+            nb_participants: 0
         };
     }
 });

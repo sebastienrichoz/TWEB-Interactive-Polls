@@ -7,7 +7,9 @@ var PollroomSchema = Schema({
     creator: { type: String, required: true },
     created_at: { type: Date, default: Date.now, required: true },
 
-    questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }]
+    questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }],
+
+    nb_participants: { type: Number, default: 0 }
 });
 
 PollroomSchema.set('toJSON', {
@@ -16,9 +18,9 @@ PollroomSchema.set('toJSON', {
             id: ret._id,
             name: ret.name,
             status: ret.status,
+            created_at: ret.created_at,
             questions: ret.questions,
-            nb_participants: 0,
-            created_at: ret.created_at
+            nb_participants: 0
         };
     }
 });

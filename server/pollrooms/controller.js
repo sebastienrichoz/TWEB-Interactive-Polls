@@ -1,5 +1,6 @@
 var express = require('express'),
     router = express.Router(),
+    Promise = require('bluebird'),
     Pollroom = require('./models/Pollroom'),
     Question = require('./models/Question'),
     Answer = require('./models/Answer'),
@@ -11,28 +12,31 @@ router.post('/', function(req, res) {
         name: req.body.name,
         creator: req.get('X-Session-ID')
     });
-    pollroom.save(function(err, pollroom) {
-        if (err) {
-            res.status(400).send(err);
-        }
-        res.status(201).json(pollroom);
-    });
+
+    pollroom
+        .save()
+        .then(function(pollroom) {
+            return res.status(201).json(pollroom);
+        })
+        .catch(function(err) {
+            return res.status(400).send(err);
+        });
 });
 
 router.get('/:pollroom_id/', function(req, res) {
     Pollroom
         .findById(req.params.pollroom_id)
         .populate({ path: 'questions', model: 'Question', populate: { path: 'answers', model: 'Answer' }})
-        .exec(function(err, pollroom) {
-
-        if (err) {
-            res.status(400).send(err);
-        }
-        else if (pollroom == null) {
-            res.status(404).send(err);
-        }
-        res.json(pollroom);
-    });
+        .exec()
+        .then(function(pollroom) {
+            if (pollroom == null) {
+                return res.status(404).send();
+            }
+            return res.json(pollroom);
+        })
+        .catch(function(err) {
+            return res.status(400).send(err);
+        });
 });
 
 router.patch('/:pollroom_id/', function(req, res) {
@@ -44,16 +48,16 @@ router.patch('/:pollroom_id/', function(req, res) {
     Pollroom
         .findByIdAndUpdate(req.params.pollroom_id, { $set: data }, { new: true })
         .populate({ path: 'questions', model: 'Question', populate: { path: 'answers', model: 'Answer' }})
-        .exec(function(err, pollroom) {
-
-        if (err) {
-            res.status(400).send(err);
-        }
-        else if (pollroom == null) {
-            res.status(404).send(err);
-        }
-        res.json(pollroom);
-    });
+        .exec()
+        .then(function(pollroom) {
+            if (pollroom == null) {
+                return res.status(404).send();
+            }
+            return res.json(pollroom);
+        })
+        .catch(function(err) {
+            return res.status(400).send(err);
+        });
 });
 
 router.post('/:pollroom_id/questions/', function(req, res) {
@@ -61,58 +65,64 @@ router.post('/:pollroom_id/questions/', function(req, res) {
         title: req.body.title,
         creator: req.get('X-Session-ID')
     });
+    var answers = [];
     for (var k in req.body.answers) {
         var answer = new Answer({
-            label: req.body.answers[k]
+            label: req.body.answers[k],
+            question: question
         });
-        answer.save(function(err) {
-            if (err) {
-                res.status(400).send(err);
-            }
-        });
+        answers.push(answer);
         question.answers.push(answer);
     }
-    question.save(function(err) {
-        if (err) {
-            res.status(400).send(err);
-        }
-    });
 
-    Pollroom
-        .findByIdAndUpdate(req.params.pollroom_id, { $push: { 'questions': question }})
-        .populate({ path: 'questions', model: 'Question', populate: { path: 'answers', model: 'Answer' }})
-        .exec(function(err, pollroom) {
+    Promise
+        .each(answers, function(answer) {
+            return answer.save();
+        })
+        .then(function() {
+            return question.save();
+        })
+        .then(function(question) {
+            return Pollroom
+                .findByIdAndUpdate(req.params.pollroom_id, { $push: { 'questions': question }})
+                .populate({ path: 'questions', model: 'Question', populate: { path: 'answers', model: 'Answer' }})
+                .exec();
+        })
+        .then(function(pollroom) {
+            if (pollroom == null) {
+                throw new Error(404);
+            }
 
-        if (err) {
-            res.status(400).send(err);
-        }
-        else if (question == null) {
-            res.status(404).send(err);
-        }
-
-        Question
-            .findById(question._id)
-            .populate({ path: 'answers', model: 'Answer' })
-            .exec(function(err, question) {
-                res.status(201).json(question);
-            });
-    });
+            return Question
+                .findById(question._id)
+                .populate({ path: 'answers', model: 'Answer' })
+                .exec();
+        })
+        .then(function(question) {
+            return res.status(201).json(question);
+        })
+        .catch(function(err) {
+            if (err.message != undefined && err.message == 404) {
+                return res.status(404).send();
+            }
+            return res.status(400).send(err);
+        });
 });
 
 router.get('/questions/:question_id/', function(req, res) {
     Question
         .findById(req.params.question_id)
         .populate({ path: 'answers', model: 'Answer' })
-        .exec(function(err, question) {
-
-        if (err) {
-            res.status(400).send(err);
-        }
-        else if (question == null) {
-            res.status(404).send(err);
-        }
-        res.json(question);
-    });
+        .exec()
+        .then(function(question) {
+            if (question == null) {
+                return res.status(404).send();
+            }
+            return res.json(question);
+        })
+        .catch(function(err) {
+            return res.status(400).send(err);
+        });
 });
 
 router.patch('/questions/:question_id/', function(req, res) {
@@ -130,66 +140,111 @@ router.patch('/questions/:question_id/', function(req, res) {
     Question
         .findByIdAndUpdate(req.params.question_id, { $set: data }, { new: true })
         .populate({ path: 'answers', model: 'Answer' })
-        .exec(function(err, question) {
-
-        if (err) {
-            res.status(400).send(err);
-        }
-        else if (question == null) {
-            res.status(404).send(err);
-        }
-        res.json(question);
-    });
+        .exec()
+        .then(function(question) {
+            if (question == null) {
+                return res.status(404).send();
+            }
+            return res.json(question);
+        })
+        .catch(function(err) {
+            return res.status(400).send(err);
+        });
 });
 
 router.post('/answers/:answer_id/check/', function(req, res) {
+    var data = {
+        question: req.params.answer_id,
+        answer: req.params.answer_id,
+        user: req.get('X-Session-ID')
+    };
+
     Answer
         .findById(req.params.answer_id)
-        .exec(function(err, answer) {
-
-        if (err) {
-            res.status(400).send(err);
-        }
-        else if (answer == null) {
-            res.status(404).send(err);
-        }
-
-        var data = {
-            answer: req.params.answer_id,
-            user: req.get('X-Session-ID')
-        };
-        Choice.findOneAndUpdate(data, data, { upsert: true }, function(err) {
-            if (err) {
-                res.status(400).send(err);
+        .exec()
+        .then(function(answer) {
+            if (answer == null) {
+                throw new Error(404);
             }
-            res.status(200).send();
+
+            return Choice
+                .findOne(data)
+                .exec();
+        })
+        .then(function(choice) {
+            if (choice != null) {
+                return new Promise.resolve();
+            }
+
+            return Choice
+                .findOneAndUpdate(data, data, { upsert: true }) // create if not exist, no effect if exists
+                .exec();
+        })
+        .then(function(choice) {
+            if (choice != null) {
+                return new Promise.resolve();
+            }
+
+            return Answer
+                .findByIdAndUpdate(req.params.answer_id, { $inc: { nb_responses: 1 }})
+                .exec();
+        })
+        .then(function() {
+            return res.send();
+        })
+        .catch(function(err) {
+            if (err.message != undefined && err.message == 404) {
+                return res.status(404).send();
+            }
+            return res.status(400).send(err);
         });
-    });
 });
 
 router.post('/answers/:answer_id/uncheck/', function(req, res) {
+    var data = {
+        answer: req.params.answer_id,
+        user: req.get('X-Session-ID')
+    };
+
     Answer
         .findById(req.params.answer_id)
-        .exec(function(err, answer) {
-
-        if (err) {
-            res.status(400).send(err);
-        }
-        else if (answer == null) {
-            res.status(404).send(err);
-        }
-
-        var data = {
-            answer: req.params.answer_id,
-            user: req.get('X-Session-ID')
-        };
-        Choice.delete(data, function(err) {
-            if (err) {
-                res.status(400).send(err);
+        .exec()
+        .then(function(answer) {
+            if (answer == null) {
+                throw new Error(404);
             }
-            res.status(200).send();
+
+            return Choice
+                .findOne(data)
+                .exec();
+        })
+        .then(function(choice) {
+            if (choice != null) {
+                return new Promise.resolve();
+            }
+
+            return Choice
+                .remove(data) // remove if exists
+                .exec();
+        })
+        .then(function(choice) {
+            if (choice != null) {
+                return new Promise.resolve();
+            }
+
+            return Answer
+                .findByIdAndUpdate(req.params.answer_id, { $inc: { nb_responses: -1 }})
+                .exec();
+        })
+        .then(function() {
+            return res.send();
+        })
+        .catch(function(err) {
+            if (err.message != undefined && err.message == 404) {
+                return res.status(404).send();
+            }
+            return res.status(400).send(err);
         });
-    });
 });
 
 module.exports = router;
