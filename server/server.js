@@ -5,7 +5,8 @@ var express = require('express'),
     mongoose = require('mongoose'),
     pollrooms = require('./pollrooms/controllers/pollrooms'),
     questions = require('./pollrooms/controllers/questions'),
-    answers = require('./pollrooms/controllers/answers');
+    answers = require('./pollrooms/controllers/answers'),
+    statistics = require('./pollrooms/controllers/statistics');
 
 var app = express();
 var server = require('http').Server(app);
@@ -32,6 +33,7 @@ db.once('open', function() {
     app.use('/api/v1/pollrooms/', pollrooms);
     app.use('/api/v1/questions/', questions);
     app.use('/api/v1/answers/', answers);
+    app.use('/api/v1/statistics/', statistics);
 
     // all other controllers are handled by Angular
     app.get('/*', function(req, res) {
