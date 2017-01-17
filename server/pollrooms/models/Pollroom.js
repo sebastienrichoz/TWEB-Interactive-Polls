@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    Choice = require('./Choice');
 
 var PollroomSchema = Schema({
     name: { type: String, required: true },
@@ -24,5 +25,18 @@ PollroomSchema.set('toJSON', {
         };
     }
 });
+
+
+PollroomSchema.statics.updateParticipantsCount = function(pollroom_id) {
+    return Choice
+        .distinct('user')
+        .count({ 'pollroom': pollroom_id })
+        .exec()
+        .then(function(count) {
+            return mongoose.model('Pollroom')
+                .findByIdAndUpdate(pollroom_id, { 'nb_participants': count })
+                .exec();
+        })
+};
 
 module.exports = mongoose.model('Pollroom', PollroomSchema);

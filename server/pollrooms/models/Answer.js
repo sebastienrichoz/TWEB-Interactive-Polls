@@ -1,6 +1,8 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    Choice = require('./Choice');
+    Promise = require('bluebird'),
+    Choice = require('./Choice'),
+    Question = require('./Question');
 
 var AnswerSchema = Schema({
     label: { type: String, required: true },
@@ -20,18 +22,21 @@ AnswerSchema.set('toJSON', {
     }
 });
 
-AnswerSchema.statics.updateResponsesCount = function(question, answer) {
+AnswerSchema.statics.updateResponsesCount = function(answer_id) {
     return Choice
-        .count({
-            'question': question,
-            'answer': answer
-        })
+        .count({ 'answer': answer_id })
         .exec()
         .then(function(count) {
             return mongoose.model('Answer')
-                .findByIdAndUpdate(answer, { 'nb_responses': count })
+                .findByIdAndUpdate(answer_id, { 'nb_responses': count })
                 .exec();
         })
+        .then(function(answer) {
+            if (answer == null) {
+                return Promise.resolve();
+            }
+            return Question.updateParticipantsCount(answer.question);
+        });
 };
 
 module.exports = mongoose.model('Answer', AnswerSchema);

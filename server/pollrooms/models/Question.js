@@ -1,5 +1,7 @@
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    Choice = require('./Choice'),
+    Pollroom = require('./Pollroom');
 
 var QuestionSchema = Schema({
     title: { type: String, required: true },
@@ -8,6 +10,7 @@ var QuestionSchema = Schema({
     created_at: { type: Date, default: Date.now, required: true },
 
     answers: [{ type: Schema.Types.ObjectId, ref: 'Answer' }],
+    pollroom: { type: Schema.Types.ObjectId, ref: 'Question' },
 
     nb_positives_votes: { type: Number, default: 0 },
     nb_negatives_votes: { type: Number, default: 0 },
@@ -28,5 +31,23 @@ QuestionSchema.set('toJSON', {
         };
     }
 });
+
+QuestionSchema.statics.updateParticipantsCount = function(question_id) {
+    return Choice
+        .distinct('user')
+        .count({ 'question': question_id })
+        .exec()
+        .then(function(count) {
+            return mongoose.model('Question')
+                .findByIdAndUpdate(question_id, { 'nb_participants': count })
+                .exec();
+        })
+        .then(function(question) {
+            if (question == null) {
+                return Promise.resolve();
+            }
+            return Pollroom.updateParticipantsCount(question.pollroom);
+        });
+};
 
 module.exports = mongoose.model('Question', QuestionSchema);

@@ -65,7 +65,8 @@ router.patch('/:pollroom_id/', function(req, res) {
 router.post('/:pollroom_id/questions/', function(req, res) {
     var question = new Question({
         title: req.body.title,
-        creator: req.get('X-Session-ID')
+        creator: req.get('X-Session-ID'),
+        pollroom: req.params.pollroom_id
     });
     var answers = [];
     for (var k in req.body.answers) {
@@ -156,20 +157,23 @@ router.patch('/questions/:question_id/', function(req, res) {
 
 router.post('/answers/:answer_id/check/', function(req, res) {
     var data = {
+        pollroom: null,
         question: null,
         answer: req.params.answer_id,
         user: req.get('X-Session-ID')
     };
 
-    Question
-        .findOne({ 'answers': data.answer })
+    Answer
+        .findById(data.answer)
+        .populate({ path: 'question', model: 'Question', populate: { path: 'pollroom', model: 'Pollroom' }})
         .exec()
-        .then(function(question) {
-            if (question == null) {
+        .then(function(answer) {
+            if (answer == null) {
                 throw new Error(404);
             }
 
-            data.question = question._id;
+            data.question = answer.question._id;
+            data.pollroom = answer.question.pollroom._id;
 
             return Choice
                 .findOneAndUpdate(data, data, { upsert: true }) // create if not exist, no effect if exists
@@ -180,7 +184,7 @@ router.post('/answers/:answer_id/check/', function(req, res) {
                 return new Promise.resolve();
             }
 
-            return Answer.updateResponsesCount(data.question, data.answer);
+            return Answer.updateResponsesCount(data.answer);
         })
         .then(function() {
             return res.send();
@@ -195,19 +199,23 @@ router.post('/answers/:answer_id/check/', function(req, res) {
 
 router.post('/answers/:answer_id/uncheck/', function(req, res) {
     var data = {
+        pollroom: null,
+        question: null,
         answer: req.params.answer_id,
         user: req.get('X-Session-ID')
     };
 
-    Question
-        .findOne({ 'answers': data.answer })
+    Answer
+        .findById(data.answer)
+        .populate({ path: 'question', model: 'Question', populate: { path: 'pollroom', model: 'Pollroom' }})
         .exec()
-        .then(function(question) {
-            if (question == null) {
+        .then(function(answer) {
+            if (answer == null) {
                 throw new Error(404);
             }
 
-            data.question = question._id;
+            data.question = answer.question._id;
+            data.pollroom = answer.question.pollroom._id;
 
             return Choice
                 .remove(data) // remove if exists
@@ -218,7 +226,7 @@ router.post('/answers/:answer_id/uncheck/', function(req, res) {
                 return new Promise.resolve();
             }
 
-            return Answer.updateResponsesCount(data.question, data.answer);
+            return Answer.updateResponsesCount(data.answer);
         })
         .then(function() {
             return res.send();
