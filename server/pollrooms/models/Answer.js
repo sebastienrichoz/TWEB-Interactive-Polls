@@ -1,8 +1,8 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     Promise = require('bluebird'),
-    Choice = require('./Choice'),
-    Question = require('./Question');
+    Question = require('./Question'),
+    Choice = require('./Choice');
 
 var AnswerSchema = Schema({
     label: { type: String, required: true },
