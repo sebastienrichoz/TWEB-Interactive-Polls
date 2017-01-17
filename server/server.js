@@ -5,7 +5,8 @@ var express = require('express'),
     mongoose = require('mongoose'),
     pollrooms = require('./pollrooms/controllers/pollrooms'),
     questions = require('./pollrooms/controllers/questions'),
-    answers = require('./pollrooms/controllers/answers');
+    answers = require('./pollrooms/controllers/answers'),
+    statistics = require('./pollrooms/controllers/statistics');
 
 var app = express();
 var server = require('http').Server(app);
@@ -32,6 +33,7 @@ db.once('open', function() {
     app.use('/api/v1/pollrooms/', pollrooms);
     app.use('/api/v1/questions/', questions);
     app.use('/api/v1/answers/', answers);
+    app.use('/api/v1/statistics/', statistics);
 
     // all other controllers are handled by Angular
     app.get('/*', function(req, res) {
@@ -52,11 +54,53 @@ db.once('open', function() {
         socket.on('join', function(data) {
             console.log(data);
             socket.join(data.room);
+            io.to(data.room).emit('participantArrived');
+        });
+
+        socket.on('newQuestion', function(data) {
+            console.log('newQuestion');
+            io.to(data.room).emit('newQuestion', { question: data.question });
+        });
+
+        socket.on('editingQuestion', function(data) {
+            console.log('editingQuestion');
+            io.to(data.room).emit('editingQuestion', { question_id: data.question.id });
+        });
+
+        socket.on('updateQuestion', function(data) {
+            console.log('updateQuestion');
+            io.to(data.room).emit('updateQuestion', { question: data.question });
+        });
+
+
+        socket.on('closeQuestion', function(data) {
+            console.log('closeQuestion');
+            io.to(data.room).emit('closeQuestion', { question_id: data.question.id });
+        });
+
+        socket.on('voteUp', function(data) {
+            console.log('voteUp');
+            io.to(data.room).emit('voteUp', { question_id: data.question.id });
+        });
+
+        socket.on('voteDown', function(data) {
+            console.log('voteDown');
+            io.to(data.room).emit('voteDown', { question_id: data.question.id });
+        });
+
+        socket.on('answerChecked', function(data) {
+            io.to(data.room).emit('answerChecked', { answer_id: data.answer.id });
+        });
+
+        socket.on('answerUnchecked', function(data) {
+            console.log('answerUnchecked');
+            io.to(data.room).emit('answerUnchecked', { answer_id: data.answer.id });
         });
 
         socket.on('disconnect', function() {
-            console.log("disconnected");
-        })
+            console.log('disconnected');
+            io.to(data.room).emit('participantLeft');
+        });
     });
 
 });
