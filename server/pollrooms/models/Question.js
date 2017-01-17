@@ -1,7 +1,9 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
+    Promise = require('bluebird'),
+    Pollroom = require('./Pollroom'),
     Choice = require('./Choice'),
-    Pollroom = require('./Pollroom');
+    Vote = require('./Vote');
 
 var QuestionSchema = Schema({
     title: { type: String, required: true },
@@ -26,9 +28,9 @@ QuestionSchema.set('toJSON', {
             creator: ret.creator,
             created_at: ret.created_at,
             answers: ret.answers,
-            nb_positives_votes: 0,
-            nb_negatives_votes: 0,
-            nb_participants: 0
+            nb_positives_votes: ret.nb_positives_votes,
+            nb_negatives_votes: ret.nb_negatives_votes,
+            nb_participants: ret.nb_participants
         };
     }
 });
@@ -50,5 +52,29 @@ QuestionSchema.statics.updateParticipantsCount = function(question_id) {
             return Pollroom.updateParticipantsCount(question.pollroom);
         });
 };
+
+QuestionSchema.statics._updateVotesCount = function(question_id, up) {
+    return Vote
+        .distinct('user')
+        .count({ 'question': question_id, 'up': up })
+        .exec()
+        .then(function(count) {
+            var data = {};
+            data[up ? 'nb_positives_votes' : 'nb_negatives_votes'] = count;
+
+            return mongoose.model('Question')
+                .findByIdAndUpdate(question_id, data)
+                .exec();
+        });
+};
+
+QuestionSchema.statics.updateVotesCount = function(question_id) {
+    var model = mongoose.model('Question');
+    return Promise
+        .all([
+            model._updateVotesCount(question_id, true),
+            model._updateVotesCount(question_id, false)
+        ]);
+}
 
 module.exports = mongoose.model('Question', QuestionSchema);
