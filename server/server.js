@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/', express.static(__dirname + '/../dist'));
 
 // database
-mongoose.Promise = global.Promise;
+mongoose.Promise = require('bluebird');
 var db = mongoose.connect(process.env.MONGODB_URI).connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function() {
