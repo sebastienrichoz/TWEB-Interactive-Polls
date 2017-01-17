@@ -37,7 +37,7 @@ db.once('open', function() {
 
     // all other controllers are handled by Angular
     app.get('/*', function(req, res) {
-        res.sendFile(path.join(__dirname,'/../dist/index.html'));
+        res.sendFile(path.join(__dirname,'/../dist/public/index.html'));
     });
 
     // init express.js listening

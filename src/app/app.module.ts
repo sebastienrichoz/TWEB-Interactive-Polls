@@ -45,6 +45,10 @@ const routing = RouterModule.forRoot([
     { path: 'pollroom', component: PollroomComponent }
 ]);
 
+export function myFactory() {
+    return new MyXSRFStrategy();
+}
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -73,7 +77,7 @@ const routing = RouterModule.forRoot([
         HomeService,
         UtilityService,
         PollroomService,
-        { provide: XSRFStrategy, useFactory: () => new MyXSRFStrategy() }
+        { provide: XSRFStrategy, useFactory: myFactory }
     ],
     bootstrap: [AppComponent]
 })
