@@ -1,6 +1,38 @@
 var express = require('express'),
     router = express.Router(),
-    Pollroom = require('../models/Pollroom');
+    mongoose = require('mongoose'),
+    Pollroom = require('../models/Pollroom'),
+    Choice = require('../models/Choice');
+
+router.get('/', function(req, res) {
+    Promise
+        .all([
+            Pollroom
+                .find({ 'creator': req.get('X-Session-ID') })
+                .sort([['created_at', 'descending']])
+                .exec(),
+            Choice
+                .find({})
+                .distinct('pollroom')
+                .exec()
+                .then(function(ids) {
+                    return Pollroom
+                        .find({ _id: { '$in': ids }})
+                        .sort([['created_at', 'descending']])
+                        .exec()
+                })
+        ])
+        .then(function(values) {
+            return res.json({
+                pollrooms_created: values[0],
+                pollrooms_joined: values[1]
+            });
+        })
+        .catch(function(err) {
+            console.log(err);
+            return res.status(400).send(err);
+        });
+});
 
 router.post('/', function(req, res) {
     var identifier = Math.floor(Math.random() * 899999) + 100000;
