@@ -262,4 +262,54 @@ router.post('/answers/:answer_id/uncheck/', function(req, res) {
         });
 });
 
+function vote(question_id, user, up) {
+    var data = {
+        question: question_id,
+        user: user,
+        up: up
+    };
+
+    return Question
+        .findById(data.question)
+        .exec()
+        .then(function(question) {
+            if (question == null) {
+                throw new Error(404);
+            }
+
+            return Vote
+                .findOneAndUpdate({ 'question': data.question, 'user': data.user }, data, { upsert: true }) // create if not exist, no effect if exists
+                .exec()
+        })
+        .then(function() {
+            return Question.updateVotesCount(data.question);
+        });
+}
+
+router.post('/questions/:question_id/voteup', function(req, res) {
+    return vote(req.params.question_id, req.get('X-Session-ID'), true)
+        .then(function() {
+            return res.send();
+        })
+        .catch(function(err) {
+            if (err.message != undefined && err.message == 404) {
+                return res.status(404).send();
+            }
+            return res.status(400).send(err);
+        });
+});
+
+router.post('/questions/:question_id/votedown', function(req, res) {
+    return vote(req.params.question_id, req.get('X-Session-ID'), false)
+        .then(function() {
+            return res.send();
+        })
+        .catch(function(err) {
+            if (err.message != undefined && err.message == 404) {
+                return res.status(404).send();
+            }
+            return res.status(400).send(err);
+        });
+});
+
 module.exports = router;

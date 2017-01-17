@@ -24,7 +24,7 @@ PollroomSchema.set('toJSON', {
             creator: ret.creator,
             created_at: ret.created_at,
             questions: ret.questions,
-            nb_participants: 0
+            nb_participants: ret.nb_participants
         };
     }
 });
