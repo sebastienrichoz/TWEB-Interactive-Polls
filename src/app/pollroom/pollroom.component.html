@@ -16,6 +16,7 @@
 
             <div class="col-md-2 stats">
                 <pollroom-stats
+                        [socket]="socket"
                         [pollroom]="pollroom"
                         #pollroomStats
                         [nbTotalAnswers]="nbTotalAnswers">
@@ -28,6 +29,7 @@
                     <div *ngFor="let question of pollroom.questions">
 
                         <question-view
+                                [socket]="socket"
                                 [question]="question"
                                 [nbParticipants]="pollroom.nb_participants"
                                 (onChecked)="pollroomStats.onChecked($event)"
@@ -43,6 +45,7 @@
                         <question-creator
                                 #questionCreator
                                 [pollroomId]="pollroom.id"
+                                [socket]="socket"
                                 (onPublish)="onQuestionPublished($event)"
                                 (onUpdate)="updateQuestion($event)"
                                 (onUpdateCanceled)="updateQuestion($event)">

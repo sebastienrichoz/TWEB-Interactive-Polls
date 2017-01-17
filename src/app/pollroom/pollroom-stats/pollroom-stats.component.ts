@@ -18,6 +18,7 @@ export class PollroomStatsComponent implements OnInit {
     displayOpenRoomInfo = false;
     @Input() private nbTotalAnswers: number;
     @Input() private pollroom: Pollroom;
+    @Input() socket;
 
     constructor(private pollroomService: PollroomService,
                 private homeService: HomeService,
@@ -38,6 +39,7 @@ export class PollroomStatsComponent implements OnInit {
     patchRoom(status: string) {
         this.pollroomService.patchRoom(this.pollroom.id, status).then(
             pollroom => {
+                this.socket.emit('closePollroom', { pollroom_id: this.pollroom.id });
                 this.displayCloseRoomInfo = status !== "closed";
                 this.displayOpenRoomInfo = !this.displayCloseRoomInfo;
                 this.homeService.selectPollroom(pollroom);

@@ -49,6 +49,7 @@ export class QuestionCreatorComponent implements OnInit {
     @Output() onUpdate = new EventEmitter<Question>();
     @Output() onUpdateCanceled = new EventEmitter();
     @Input() pollroomId;
+    @Input() socket;
 
     private published: boolean = false;
     private isFocus = false;
@@ -71,16 +72,12 @@ export class QuestionCreatorComponent implements OnInit {
         if (verifications.error_message) {
             this.toastr.error(verifications.error_message);
         } else {
-            let questionCreationDTO = new QuestionCreationDTO(
+            let questionCreationDTO = new QuestionCreationDTO(this.pollroomId,
                 this.question.title.trim(), verifications.answers);
+
             this.pollroomService.addQuestion(this.pollroomId, questionCreationDTO).then(
                 question => {
-                    console.log("question published:");
-                    console.log(question);
-
-                    // TODO : socket emit
-
-                    this.onPublish.emit(question); // todo remove when socket works
+                    this.socket.emit('newQuestion', question);
 
                     this.toastr.success("Question published");
                     this.hideFullQuestion();
@@ -97,12 +94,14 @@ export class QuestionCreatorComponent implements OnInit {
         if (verifications.error_message) {
             this.toastr.error(verifications.error_message);
         } else {
-            let questionCreationDTO = new QuestionCreationDTO(
-                this.question.title.trim(), verifications.answers);
-            this.pollroomService.patchQuestion(questionCreationDTO).then(
+            let updatedQuestion = {
+                title: this.question.title.trim(),
+                answers: verifications.answers
+            };
+
+            this.pollroomService.patchQuestion(updatedQuestion).then(
                 question => {
-                    // TODO socket emit
-                    this.onUpdate.emit(question); // todo remove when socket works
+                    this.socket.emit('updateQuestion', question);
 
                     this.toastr.success("Question updated");
                     this.initQuestion();
@@ -131,8 +130,9 @@ export class QuestionCreatorComponent implements OnInit {
     }
 
     editQuestion(question: Question) {
-        this.originalQuestion = question;
-        this.question.clone(question);
+        this.socket.emit('editingQuestion', { question_id: question.id});
+        this.originalQuestion.clone(question);
+        this.question = question;
         this.displayFullQuestion();
     }
 
@@ -163,6 +163,7 @@ export class QuestionCreatorComponent implements OnInit {
     displayOrHideFullQuestion() {
         this.isFocus = !this.isFocus;
         if (this.question.status === 'pending') {
+            this.socket.emit('abortEditingQuestion', { question_id: this.question.id });
             this.originalQuestion.status = 'open';
             this.onUpdateCanceled.emit(this.originalQuestion);
             this.initQuestion();

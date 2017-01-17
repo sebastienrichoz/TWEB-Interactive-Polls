@@ -65,16 +65,109 @@ export class PollroomComponent implements OnInit {
                 this.pollroom = pollroom;
                 this.nbTotalAnswers = this.pollroom.questions.length;
 
-                this.socket.emit('connection');
-
-                this.socket.on('hello', (data) => {
-                    console.log(data);
-                    this.socket.emit('join', { room: pollroom.identifier });
-                });
+                this.manageSocket();
 
             },
             error => console.log(error)
         );
+    }
+
+    manageSocket() {
+        this.socket.emit('connection');
+
+        this.socket.on('hello', () => {
+            this.socket.emit('join', { room: this.pollroom.identifier });
+        });
+
+        this.socket.on('participantArrived', () => {
+            this.pollroom.nb_participants++;
+        });
+
+        this.socket.on('participantLeft', () => {
+            this.pollroom.nb_participants--;
+        });
+
+        this.socket.on('newQuestion', (data) => {
+            this.pollroom.questions.unshift(data.question);
+        });
+
+        this.socket.on('editingQuestion', (data) => {
+            for (let q of this.pollroom.questions)
+                if (q.id === data.question_id) {
+                    q.status = 'pending';
+                    break;
+                }
+        });
+
+        this.socket.on('updateQuestion', (data) => {
+            for (let q of this.pollroom.questions)
+                if (q.id === data.question.id) {
+                    q.clone(data.question);
+                    break;
+                }
+        });
+
+        this.socket.on('abortEditingQuestion', (data) => {
+            for (let q of this.pollroom.questions)
+                if (q.id === data.question_id) {
+                    q.status = 'open';
+                    break;
+                }
+        });
+
+        this.socket.on('closeQuestion', (data) => {
+            for (let q of this.pollroom.questions)
+                if (q.id === data.question_id) {
+                    q.status = 'closed';
+                    break;
+                }
+        });
+
+        this.socket.on('voteUp', (data) => {
+            // TODO
+            for (let q of this.pollroom.questions)
+                if (q.id === data.question_id) {
+                    q.nb_positives_votes++;
+                    break;
+                }
+        });
+
+        this.socket.on('voteDown', (data) => {
+            // TODO
+            for (let q of this.pollroom.questions)
+                if (q.id === data.question_id) {
+                    q.nb_negatives_votes++;
+                    break;
+                }
+        });
+
+        this.socket.on('answerChecked', (data) => {
+            let leave = false;
+            for (let q of this.pollroom.questions) {
+                for (let a of q.answers) {
+                    if (a.id === data.answer_id) {
+                        a.nb_responses++;
+                        leave = true;
+                        break;
+                    }
+                }
+                if (leave) break;
+            }
+        });
+
+        this.socket.on('answerUnchecked', (data) => {
+            let leave = false;
+            for (let q of this.pollroom.questions) {
+                for (let a of q.answers) {
+                    if (a.id === data.answer_id) {
+                        a.nb_responses++;
+                        leave = true;
+                        break;
+                    }
+                }
+                if (leave) break;
+            }
+        });
     }
 
     leavePollroom() {

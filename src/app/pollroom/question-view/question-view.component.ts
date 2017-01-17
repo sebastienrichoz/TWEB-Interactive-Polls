@@ -28,6 +28,7 @@ export class QuestionViewComponent implements OnInit, OnChanges {
 
     @Input() question: Question;
     @Input() nbParticipants: number;
+    @Input() socket;
     @Output() onChecked = new EventEmitter();
     @Output() onQuestionEdit = new EventEmitter();
     @Output() onQuestionEditForm = new EventEmitter();
@@ -70,12 +71,18 @@ export class QuestionViewComponent implements OnInit, OnChanges {
 
         if (e.target.checked)
             this.pollroomService.checkAnswer(answerId).then(
-                res => console.log(res),
+                res => {
+                    this.socket.emit('answerChecked', {answer_id: answerId});
+                    // console.log(res);
+                },
                 error => this.toastr.error(error)
             );
         else
             this.pollroomService.uncheckAnswer(answerId).then(
-                res => console.log(res),
+                res => {
+                    this.socket.emit('answerUnchecked', {answer_id: answerId});
+                    // console.log(res)
+                },
                 error => this.toastr.error(error)
             );
     }
@@ -99,9 +106,9 @@ export class QuestionViewComponent implements OnInit, OnChanges {
 
     voteUp() {
         if (!this.isVoteUp) {
+            this.socket.emit('voteUp', { question_id: this.question.id });
             this.isVoteUp = true;
             this.isVoteDown = false;
-            console.log("vote up");
         }
     }
 
@@ -114,9 +121,9 @@ export class QuestionViewComponent implements OnInit, OnChanges {
 
     voteDown() {
         if (!this.isVoteDown) {
+            this.socket.emit('voteDown', { question_id: this.question.id });
             this.isVoteUp = false;
             this.isVoteDown = true;
-            console.log("vote down");
         }
     }
 
@@ -128,12 +135,14 @@ export class QuestionViewComponent implements OnInit, OnChanges {
     }
 
     openQuestion() {
+        this.socket.emit('openQuestion', { question_id: this.question.id });
         this.question.status = 'open';
         this.questionIsClosed = false;
         this.displayOpenHint = false;
     }
 
     closeQuestion() {
+        this.socket.emit('closeQuestion', { question_id: this.question.id });
         this.question.status = 'closed';
         this.questionIsClosed = true;
         this.displayCloseHint = false;

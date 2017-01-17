@@ -9,7 +9,7 @@ import {QuestionCreationDTO} from "../models/question-creation-dto";
 @Injectable()
 export class PollroomService {
 
-    private base = "/api/v1/pollrooms/";
+    private base = "/api/v1/";
 
     constructor(private http: Http, private utility: UtilityService) { }
 
@@ -17,28 +17,14 @@ export class PollroomService {
     private options = new RequestOptions({ headers: this.headers });
 
     patchRoom(pollroom_id: number, status: string) {
-        return this.http.patch(this.base + pollroom_id + "/", JSON.stringify(status), this.options)
-            .toPromise()
-            .then(this.utility.extractData)
-            .catch(this.utility.handleError);
-    }
-
-    createPollroom(pollCreationDTO: PollroomCreationDTO): Promise<Pollroom> {
-        return this.http.post(this.base, JSON.stringify(pollCreationDTO), this.options)
-            .toPromise()
-            .then(this.utility.extractData)
-            .catch(this.utility.handleError);
-    }
-
-    joinPollroom(pollroom_id: string): Promise<Pollroom> {
-        return this.http.get(this.base + pollroom_id + "/")
+        return this.http.patch(this.base + "pollrooms/" + pollroom_id + "/", JSON.stringify(status), this.options)
             .toPromise()
             .then(this.utility.extractData)
             .catch(this.utility.handleError);
     }
 
     addQuestion(pollroom_id: number, question: QuestionCreationDTO): Promise<Question> {
-        return this.http.post(this.base + pollroom_id + "/questions/", JSON.stringify(question), this.options)
+        return this.http.post(this.base + "questions/", JSON.stringify(question), this.options) // todo rajouter pollroom id dans model
             .toPromise()
             .then(this.utility.extractData)
             .catch(this.utility.handleError);
@@ -63,4 +49,15 @@ export class PollroomService {
             .catch(this.utility.handleError);
     }
 
+    voteUp(question_id: number): Promise<any> {
+        return this.http.post(this.base + "questions/" + question_id + "/voteup/", {}, this.options)
+            .toPromise()
+            .catch(this.utility.handleError);
+    }
+
+    voteDown(question_id: number): Promise<any> {
+        return this.http.post(this.base + "answers/" + question_id + "/votedown/", {}, this.options)
+            .toPromise()
+            .catch(this.utility.handleError);
+    }
 }

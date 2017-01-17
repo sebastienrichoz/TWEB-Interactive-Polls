@@ -47,6 +47,8 @@ db.once('open', function() {
     server.listen((process.env.PORT_SOCKET || 3001));
     io.on('connection', function(socket){
 
+        socket.emit('hello');
+
         socket.on('join', function(data) {
             console.log(data);
             socket.join(data.room);

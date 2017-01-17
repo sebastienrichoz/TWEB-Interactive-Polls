@@ -5,10 +5,10 @@
         (mouseover)="displayCloseRoomInfo = true" (mouseout)="displayCloseRoomInfo = false">
         <i class="fa fa-lock fa-fw"></i> Close the room
     </a>
-    <a *ngIf="pollroom.status === 'closed'" (click)="patchRoom('open')" class="btn btn-success pollroom-status"
+    <button *ngIf="pollroom.status === 'closed'" class="btn bdtn-default pollroom-status" disabled
        (mouseover)="displayOpenRoomInfo = true" (mouseout)="displayOpenRoomInfo = false">
-        <i class="fa fa-unlock fa-fw"></i> Open the room
-    </a>
+        <i class="fa fa-unlock fa-fw"></i> Closed
+    </button>
     <p *ngIf="displayCloseRoomInfo" class="small" style="margin-top: 10px;">Opened questions will close,<br> new questions couldn't be created anymore.<br>Room can still be joined.</p>
     <p *ngIf="displayOpenRoomInfo" class="small" style="margin-top: 10px;">new questions could be created</p>
     <hr class="small">
