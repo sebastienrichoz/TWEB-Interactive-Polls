@@ -12,9 +12,6 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 server.listen((process.env.PORT_SOCKET || 3001));
-app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/index.html');
-});
 
 io.on('connection', function(socket){
     socket.emit('hello');
@@ -22,7 +19,12 @@ io.on('connection', function(socket){
     socket.on('join', function(data){
         console.log(data);
         socket.join(data.room);
+
+        // Inform the others of a new participant
+        io.to(data.room).emit('participantArrived');
     });
+
+
 
     socket.on('disconnect', function(){
         console.log("disconnected");

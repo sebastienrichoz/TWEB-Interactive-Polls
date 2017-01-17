@@ -56,6 +56,8 @@ export class PollroomComponent implements OnInit {
         if (localStorage.getItem("pollak_sessionid") === null)
             this.router.navigate(['./']);
 
+        this.socket = io("http://localhost:3001/");
+
         // Listen for pollroom join
         this.subscription = this.homeService.pollroomSelected$.subscribe(
             pollroom => {
@@ -63,7 +65,6 @@ export class PollroomComponent implements OnInit {
                 this.pollroom = pollroom;
                 this.nbTotalAnswers = this.pollroom.questions.length;
 
-                this.socket = io("http://localhost:3001/");
                 this.socket.emit('connection');
 
                 this.socket.on('hello', (data) => {
