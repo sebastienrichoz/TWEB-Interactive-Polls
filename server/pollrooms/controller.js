@@ -7,6 +7,8 @@ var express = require('express'),
     Choice = require('./models/Choice'),
     Vote = require('./models/Vote');
 
+
+
 router.post('/', function(req, res) {
     var pollroom = new Pollroom({
         name: req.body.name,
@@ -154,40 +156,31 @@ router.patch('/questions/:question_id/', function(req, res) {
 
 router.post('/answers/:answer_id/check/', function(req, res) {
     var data = {
-        question: req.params.answer_id,
+        question: null,
         answer: req.params.answer_id,
         user: req.get('X-Session-ID')
     };
 
-    Answer
-        .findById(req.params.answer_id)
+    Question
+        .findOne({ 'answers': data.answer })
         .exec()
-        .then(function(answer) {
-            if (answer == null) {
+        .then(function(question) {
+            if (question == null) {
                 throw new Error(404);
             }
 
-            return Choice
-                .findOne(data)
-                .exec();
-        })
-        .then(function(choice) {
-            if (choice != null) {
-                return new Promise.resolve();
-            }
+            data.question = question._id;
 
             return Choice
                 .findOneAndUpdate(data, data, { upsert: true }) // create if not exist, no effect if exists
-                .exec();
+                .exec()
         })
         .then(function(choice) {
             if (choice != null) {
                 return new Promise.resolve();
             }
 
-            return Answer
-                .findByIdAndUpdate(req.params.answer_id, { $inc: { nb_responses: 1 }})
-                .exec();
+            return Answer.updateResponsesCount(data.question, data.answer);
         })
         .then(function() {
             return res.send();
@@ -206,35 +199,26 @@ router.post('/answers/:answer_id/uncheck/', function(req, res) {
         user: req.get('X-Session-ID')
     };
 
-    Answer
-        .findById(req.params.answer_id)
+    Question
+        .findOne({ 'answers': data.answer })
         .exec()
-        .then(function(answer) {
-            if (answer == null) {
+        .then(function(question) {
+            if (question == null) {
                 throw new Error(404);
             }
 
-            return Choice
-                .findOne(data)
-                .exec();
-        })
-        .then(function(choice) {
-            if (choice != null) {
-                return new Promise.resolve();
-            }
+            data.question = question._id;
 
             return Choice
                 .remove(data) // remove if exists
-                .exec();
+                .exec()
         })
-        .then(function(choice) {
-            if (choice != null) {
+        .then(function(obj) {
+            if (obj.result.n == 0) {
                 return new Promise.resolve();
             }
 
-            return Answer
-                .findByIdAndUpdate(req.params.answer_id, { $inc: { nb_responses: -1 }})
-                .exec();
+            return Answer.updateResponsesCount(data.question, data.answer);
         })
         .then(function() {
             return res.send();

@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+    Schema = mongoose.Schema,
+    Choice = require('./Choice');
 
 var AnswerSchema = Schema({
     label: { type: String, required: true },
@@ -18,5 +19,19 @@ AnswerSchema.set('toJSON', {
         };
     }
 });
+
+AnswerSchema.statics.updateResponsesCount = function(question, answer) {
+    return Choice
+        .count({
+            'question': question,
+            'answer': answer
+        })
+        .exec()
+        .then(function(count) {
+            return mongoose.model('Answer')
+                .findByIdAndUpdate(answer, { 'nb_responses': count })
+                .exec();
+        })
+};
 
 module.exports = mongoose.model('Answer', AnswerSchema);
