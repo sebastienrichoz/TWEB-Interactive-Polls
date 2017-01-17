@@ -19,6 +19,7 @@ PollroomSchema.set('toJSON', {
             id: ret._id,
             name: ret.name,
             status: ret.status,
+            creator: ret.creator,
             created_at: ret.created_at,
             questions: ret.questions,
             nb_participants: 0

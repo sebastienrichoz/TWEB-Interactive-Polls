@@ -23,6 +23,7 @@ QuestionSchema.set('toJSON', {
             id: ret._id,
             title: ret.title,
             status: ret.status,
+            creator: ret.creator,
             created_at: ret.created_at,
             answers: ret.answers,
             nb_positives_votes: 0,
