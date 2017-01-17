@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    Question = require('./Question');
+    Choice = require('./Choice');
 
 var PollroomSchema = Schema({
     name: { type: String, required: true },
@@ -8,7 +8,9 @@ var PollroomSchema = Schema({
     creator: { type: String, required: true },
     created_at: { type: Date, default: Date.now, required: true },
 
-    questions: [Question.schema]
+    questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }],
+
+    nb_participants: { type: Number, default: 0 }
 });
 
 PollroomSchema.set('toJSON', {
@@ -17,12 +19,25 @@ PollroomSchema.set('toJSON', {
             id: ret._id,
             name: ret.name,
             status: ret.status,
-            questions: ret.questions,
-            nb_participants: 0,
             creator: ret.creator,
-            created_at: ret.created_at
+            created_at: ret.created_at,
+            questions: ret.questions,
+            nb_participants: 0
         };
     }
 });
+
+
+PollroomSchema.statics.updateParticipantsCount = function(pollroom_id) {
+    return Choice
+        .distinct('user')
+        .count({ 'pollroom': pollroom_id })
+        .exec()
+        .then(function(count) {
+            return mongoose.model('Pollroom')
+                .findByIdAndUpdate(pollroom_id, { 'nb_participants': count })
+                .exec();
+        })
+};
 
 module.exports = mongoose.model('Pollroom', PollroomSchema);
