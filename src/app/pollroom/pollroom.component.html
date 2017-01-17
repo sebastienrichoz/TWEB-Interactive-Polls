@@ -31,6 +31,7 @@
                         <question-view
                                 [socket]="socket"
                                 [question]="question"
+                                [pollroomIdentifier]="pollroom.identifier"
                                 [nbParticipants]="pollroom.nb_participants"
                                 (onChecked)="pollroomStats.onChecked($event)"
                                 (onQuestionEdit)="editQuestion($event)"
@@ -45,6 +46,7 @@
                         <question-creator
                                 #questionCreator
                                 [pollroomId]="pollroom.id"
+                                [pollroomIdentifier]="pollroom.identifier"
                                 [socket]="socket"
                                 (onPublish)="onQuestionPublished($event)"
                                 (onUpdate)="updateQuestion($event)"

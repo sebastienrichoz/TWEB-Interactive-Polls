@@ -7,8 +7,6 @@ import { RouterModule } from '@angular/router';
 // External libraries
 import { ModalModule } from 'angular2-modal';
 import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
-import { ChartsModule } from 'ng2-charts/ng2-charts';
-import { NG2D3Module } from 'ng2d3';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
 import { UUID } from 'angular2-uuid';
 
@@ -33,6 +31,7 @@ import { TimeAgoPipe } from './pipes/time-ago.pipe';
 import {UtilityService} from "./services/utility-service";
 import { NegativeSignPipe } from './pipes/negative-sign.pipe';
 
+
 export class MyXSRFStrategy {
     configureRequest(req: Request) {
         if (!req.headers.has('X-Session-ID'))
@@ -43,7 +42,7 @@ export class MyXSRFStrategy {
 // roots
 const routing = RouterModule.forRoot([
     { path: '',      component: HomeComponent },
-    { path: 'pollroom', component: PollroomComponent, data : { pollroom: 'some_pollroom'} }
+    { path: 'pollroom', component: PollroomComponent }
 ]);
 
 @NgModule({
@@ -67,8 +66,6 @@ const routing = RouterModule.forRoot([
         HttpModule,
         ModalModule.forRoot(),
         BootstrapModalModule,
-        ChartsModule,
-        NG2D3Module,
         ToastModule,
         routing
     ],

@@ -50,6 +50,7 @@ export class QuestionCreatorComponent implements OnInit {
     @Output() onUpdateCanceled = new EventEmitter();
     @Input() pollroomId;
     @Input() socket;
+    @Input() pollroomIdentifier;
 
     private published: boolean = false;
     private isFocus = false;
@@ -77,7 +78,7 @@ export class QuestionCreatorComponent implements OnInit {
 
             this.pollroomService.addQuestion(this.pollroomId, questionCreationDTO).then(
                 question => {
-                    this.socket.emit('newQuestion', question);
+                    this.socket.emit('newQuestion', { room: this.pollroomIdentifier, question: question});
 
                     this.toastr.success("Question published");
                     this.hideFullQuestion();
@@ -101,7 +102,7 @@ export class QuestionCreatorComponent implements OnInit {
 
             this.pollroomService.patchQuestion(updatedQuestion).then(
                 question => {
-                    this.socket.emit('updateQuestion', question);
+                    this.socket.emit('updateQuestion', { room: this.pollroomIdentifier, question: question});
 
                     this.toastr.success("Question updated");
                     this.initQuestion();
@@ -130,7 +131,7 @@ export class QuestionCreatorComponent implements OnInit {
     }
 
     editQuestion(question: Question) {
-        this.socket.emit('editingQuestion', { question_id: question.id});
+        this.socket.emit('editingQuestion', { room: this.pollroomIdentifier, question_id: question.id});
         this.originalQuestion.clone(question);
         this.question = question;
         this.displayFullQuestion();
@@ -163,7 +164,7 @@ export class QuestionCreatorComponent implements OnInit {
     displayOrHideFullQuestion() {
         this.isFocus = !this.isFocus;
         if (this.question.status === 'pending') {
-            this.socket.emit('abortEditingQuestion', { question_id: this.question.id });
+            this.socket.emit('abortEditingQuestion', { room: this.pollroomIdentifier, question_id: this.question.id });
             this.originalQuestion.status = 'open';
             this.onUpdateCanceled.emit(this.originalQuestion);
             this.initQuestion();

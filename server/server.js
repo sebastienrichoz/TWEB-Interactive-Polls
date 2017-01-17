@@ -64,7 +64,7 @@ db.once('open', function() {
 
         socket.on('editingQuestion', function(data) {
             console.log('editingQuestion');
-            io.to(data.room).emit('editingQuestion', { question_id: data.question.id });
+            io.to(data.room).emit('editingQuestion', { question_id: data.question_id });
         });
 
         socket.on('updateQuestion', function(data) {
@@ -75,31 +75,35 @@ db.once('open', function() {
 
         socket.on('closeQuestion', function(data) {
             console.log('closeQuestion');
-            io.to(data.room).emit('closeQuestion', { question_id: data.question.id });
+            io.to(data.room).emit('closeQuestion', { question_id: data.question_id });
         });
 
         socket.on('voteUp', function(data) {
             console.log('voteUp');
-            io.to(data.room).emit('voteUp', { question_id: data.question.id });
+            io.to(data.room).emit('voteUp', { question_id: data.question_id });
         });
 
         socket.on('voteDown', function(data) {
             console.log('voteDown');
-            io.to(data.room).emit('voteDown', { question_id: data.question.id });
+            io.to(data.room).emit('voteDown', { question_id: data.question_id });
         });
 
         socket.on('answerChecked', function(data) {
-            io.to(data.room).emit('answerChecked', { answer_id: data.answer.id });
+            io.to(data.room).emit('answerChecked', { answer_id: data.answer_id });
         });
 
         socket.on('answerUnchecked', function(data) {
             console.log('answerUnchecked');
-            io.to(data.room).emit('answerUnchecked', { answer_id: data.answer.id });
+            io.to(data.room).emit('answerUnchecked', { answer_id: data.answer_id });
+        });
+
+        socket.on('bye', function(data){
+           console.log('bye');
+           io.to(data.room).emit('participantLeft');
         });
 
         socket.on('disconnect', function() {
             console.log('disconnected');
-            io.to(data.room).emit('participantLeft');
         });
     });
 

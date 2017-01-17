@@ -39,7 +39,7 @@ export class PollroomStatsComponent implements OnInit {
     patchRoom(status: string) {
         this.pollroomService.patchRoom(this.pollroom.id, status).then(
             pollroom => {
-                this.socket.emit('closePollroom', { pollroom_id: this.pollroom.id });
+                this.socket.emit('closePollroom', { room: this.pollroom.identifier, pollroom_id: this.pollroom.id });
                 this.displayCloseRoomInfo = status !== "closed";
                 this.displayOpenRoomInfo = !this.displayCloseRoomInfo;
                 this.homeService.selectPollroom(pollroom);

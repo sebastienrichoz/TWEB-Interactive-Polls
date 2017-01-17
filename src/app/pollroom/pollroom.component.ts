@@ -1,6 +1,6 @@
 import {
     Component, OnInit, Input, NgZone,
-    ChangeDetectorRef, ChangeDetectionStrategy
+    ChangeDetectorRef, ChangeDetectionStrategy, ApplicationRef, EventEmitter
 } from '@angular/core';
 import {Question, Answer} from "../models/question";
 import {Subscription} from "rxjs";
@@ -19,16 +19,20 @@ export class PollroomComponent implements OnInit {
 
     private nbAnswers: number;
     private nbTotalAnswers: number;
-    private pollroom: Pollroom = new Pollroom();
+    private pollroom: Pollroom = new Pollroom;
     private editingQuestion: Question;
     private socket: any = undefined;
 
     private subscription = new Subscription();
 
+    private newQuestion = new EventEmitter();
 
     constructor(private homeService: HomeService,
-                private router: Router) {
+                private router: Router,
+                private ref: ChangeDetectorRef,
+                private appRef: ApplicationRef) {
 
+        /*
         let r11 = new Answer(1, 'A framework');
         let r12 = new Answer(2, 'A node package');
         let r13 = new Answer(3, 'A language');
@@ -47,6 +51,11 @@ export class PollroomComponent implements OnInit {
         this.pollroom.questions.push(q1);
         this.pollroom.questions.push(q2);
         this.pollroom.questions.push(q3);
+        */
+        this.socket = io("http://localhost:3001/");
+
+        this.manageSocket();
+
 
         this.nbAnswers = 0;
         this.nbTotalAnswers = 0;
@@ -56,8 +65,6 @@ export class PollroomComponent implements OnInit {
         if (localStorage.getItem("pollak_sessionid") === null)
             this.router.navigate(['./']);
 
-        this.socket = io("http://localhost:3001/");
-
         // Listen for pollroom join
         this.subscription = this.homeService.pollroomSelected$.subscribe(
             pollroom => {
@@ -65,7 +72,15 @@ export class PollroomComponent implements OnInit {
                 this.pollroom = pollroom;
                 this.nbTotalAnswers = this.pollroom.questions.length;
 
-                this.manageSocket();
+                // TODO : changes are not detected in the view
+                this.ref.detectChanges();
+                this.appRef.tick();
+
+                this.socket.emit('connection');
+
+                this.socket.on('hello', () => {
+                    this.socket.emit('join', { room: this.pollroom.identifier });
+                });
 
             },
             error => console.log(error)
@@ -73,11 +88,6 @@ export class PollroomComponent implements OnInit {
     }
 
     manageSocket() {
-        this.socket.emit('connection');
-
-        this.socket.on('hello', () => {
-            this.socket.emit('join', { room: this.pollroom.identifier });
-        });
 
         this.socket.on('participantArrived', () => {
             this.pollroom.nb_participants++;
@@ -88,10 +98,20 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('newQuestion', (data) => {
-            this.pollroom.questions.unshift(data.question);
+            console.log("newQuestion");
+            console.log(data);
+            let questions = [];
+            questions.push(data.question);
+            this.pollroom.questions.forEach(q => questions.push(q));
+
+            this.pollroom.questions = questions;
+            console.log(this.pollroom);
         });
 
         this.socket.on('editingQuestion', (data) => {
+
+            console.log("editingQuestion");
+            console.log(data);
             for (let q of this.pollroom.questions)
                 if (q.id === data.question_id) {
                     q.status = 'pending';
@@ -100,6 +120,8 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('updateQuestion', (data) => {
+            console.log("updateQuestion");
+            console.log(data);
             for (let q of this.pollroom.questions)
                 if (q.id === data.question.id) {
                     q.clone(data.question);
@@ -108,6 +130,8 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('abortEditingQuestion', (data) => {
+            console.log("abortEditingQuestion");
+            console.log(data);
             for (let q of this.pollroom.questions)
                 if (q.id === data.question_id) {
                     q.status = 'open';
@@ -116,6 +140,8 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('closeQuestion', (data) => {
+            console.log("closeQuestion");
+            console.log(data);
             for (let q of this.pollroom.questions)
                 if (q.id === data.question_id) {
                     q.status = 'closed';
@@ -124,6 +150,8 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('voteUp', (data) => {
+            console.log("voteUp");
+            console.log(data);
             // TODO
             for (let q of this.pollroom.questions)
                 if (q.id === data.question_id) {
@@ -133,6 +161,8 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('voteDown', (data) => {
+            console.log("voteDown");
+            console.log(data);
             // TODO
             for (let q of this.pollroom.questions)
                 if (q.id === data.question_id) {
@@ -142,6 +172,8 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('answerChecked', (data) => {
+            console.log("answerChecked");
+            console.log(data);
             let leave = false;
             for (let q of this.pollroom.questions) {
                 for (let a of q.answers) {
@@ -156,6 +188,8 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('answerUnchecked', (data) => {
+            console.log("answerUnchecked");
+            console.log(data);
             let leave = false;
             for (let q of this.pollroom.questions) {
                 for (let a of q.answers) {
@@ -172,6 +206,7 @@ export class PollroomComponent implements OnInit {
 
     leavePollroom() {
         console.log("leave pollroom");
+        this.socket.emit('bye', {room: this.pollroom.identifier});
         this.socket.disconnect();
     }
 

@@ -20,16 +20,13 @@
       "styles": [
         "../node_modules/bootstrap/dist/css/bootstrap.min.css",
         "../node_modules/font-awesome/css/font-awesome.min.css",
-        "../node_modules/ng2d3/release/ng2d3.css",
         "../node_modules/ng2-toastr/bundles/ng2-toastr.min.css",
         "public/styles.css"
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
-        "../node_modules/d3/build/d3.min.js",
-        "../node_modules/ng2d3/release/index.min.js",
-        "../node_modules/socket.io-client/dist/socket.io.js"
+        "../node_modules/socket.io-client/socket.io.min.js"
       ],
       "environments": {
         "source": "environments/environment.ts",

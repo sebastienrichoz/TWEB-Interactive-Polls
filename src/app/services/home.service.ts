@@ -13,7 +13,9 @@ export class HomeService {
     private pollroomSelectedSource = new Subject<Pollroom>();
     pollroomSelected$ = this.pollroomSelectedSource.asObservable();
 
-    constructor(private http: Http, private utility: UtilityService) { }
+    constructor(private http: Http, private utility: UtilityService) {
+        console.log("HomerService constructor");
+    }
 
     private headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' });
     private options = new RequestOptions({ headers: this.headers });
