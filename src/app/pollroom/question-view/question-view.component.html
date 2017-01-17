@@ -35,7 +35,7 @@
     <div class="row">
         <div class="col-xs-2 vote-up" style="margin-top: 20px;">
             <a (click)="voteUp()"><i class="fa fa-thumbs-up fa-3x" [style.color]="getVoteUpStyle()"></i></a>
-            <span>{{ question.nb_positive_votes }}</span>
+            <span>{{ question.nb_positives_votes }}</span>
         </div>
 
         <div class="col-xs-8 text-center" style="padding: 6px; margin-top: 20px; font-size: 1.5em; font-weight: 100;">
@@ -44,7 +44,7 @@
 
         <div class="col-sm-2 vote-down" style="margin-top: 20px;">
             <a (click)="voteDown()"><i class="fa fa-thumbs-up fa-3x rotate-icon-180" [style.color]="getVoteDownStyle()"></i></a>
-            <span>{{ question.nb_negative_votes | negativeSign }}</span>
+            <span>{{ question.nb_negatives_votes | negativeSign }}</span>
         </div>
     </div>
 </div>

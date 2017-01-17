@@ -1,5 +1,5 @@
 <div class="text-center">
-    <h4><i class="fa fa-key fa-fw"></i> Room <b>{{ pollroom.id }}</b></h4>
+    <h4><i class="fa fa-key fa-fw"></i> Room <b>{{ pollroom.identifier }}</b></h4>
 
     <a *ngIf="pollroom.status === 'open'" (click)="patchRoom('closed')" class="btn btn-danger pollroom-status"
         (mouseover)="displayCloseRoomInfo = true" (mouseout)="displayCloseRoomInfo = false">

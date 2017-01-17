@@ -13,6 +13,7 @@ import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms
 import {Overlay} from 'angular2-modal';
 import {Modal} from 'angular2-modal/plugins/bootstrap';
 import { UUID } from 'angular2-uuid';
+import * as io from "socket.io-client";
 
 import { HomeService } from '../services/home.service';
 import {ToastsManager} from "ng2-toastr";

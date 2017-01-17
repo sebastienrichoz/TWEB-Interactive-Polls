@@ -21,6 +21,7 @@ export class PollroomComponent implements OnInit {
     private nbTotalAnswers: number;
     private pollroom: Pollroom = new Pollroom();
     private editingQuestion: Question;
+    private socket: any = undefined;
 
     private subscription = new Subscription();
 
@@ -62,16 +63,22 @@ export class PollroomComponent implements OnInit {
                 this.pollroom = pollroom;
                 this.nbTotalAnswers = this.pollroom.questions.length;
 
-                // TODO Join socket.io room
-                let socket = io('http://localhost/pollak');
-                socket.on('news', function (data) {
+                this.socket = io("http://localhost:3001/");
+                this.socket.emit('connection');
+
+                this.socket.on('hello', (data) => {
                     console.log(data);
-                    socket.emit('my other event', { my: 'data' });
+                    this.socket.emit('join', { room: pollroom.identifier });
                 });
 
             },
             error => console.log(error)
         );
+    }
+
+    leavePollroom() {
+        console.log("leave pollroom");
+        this.socket.disconnect();
     }
 
     answerGiven(question: Question, answer: Answer) {

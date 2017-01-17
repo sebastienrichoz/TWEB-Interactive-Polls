@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
 
 var QuestionSchema = Schema({
     title: { type: String, required: true },
-    status: { type: String, enum: ['pending', 'open', 'closed'], default: 'pending', required: true },
+    status: { type: String, enum: ['pending', 'open', 'closed'], default: 'open', required: true },
     creator: { type: String, required: true },
     created_at: { type: Date, default: Date.now, required: true },
 

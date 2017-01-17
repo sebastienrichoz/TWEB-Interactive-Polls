@@ -5,7 +5,6 @@ var express = require('express'),
     mongoose = require('mongoose'),
     pollrooms = require('./pollrooms/controller');
 
-
 var app = express();
 
 app.set('port', (process.env.PORT || 3000));
@@ -16,7 +15,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/', express.static(__dirname + '/../dist'));
-
 
 // database
 mongoose.Promise = global.Promise;

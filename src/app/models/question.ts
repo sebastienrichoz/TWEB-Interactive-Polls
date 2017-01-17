@@ -18,8 +18,8 @@ export class Question {
     id: number;
     title: string;
     answers: Answer[] = [];
-    nb_positive_votes: number;
-    nb_negative_votes: number;
+    nb_positives_votes: number;
+    nb_negatives_votes: number;
     nb_responses: number;
     status: string;
     created_at: string;
@@ -30,8 +30,8 @@ export class Question {
         // Important : push 2 times. DON'T DO THIS : fill(new Answer(), 0, 2)
         // because when user delete first answer, it will delete the second one
         answers.forEach(a => this.answers.push(a));
-        this.nb_positive_votes = 0;
-        this.nb_negative_votes = 0;
+        this.nb_positives_votes = 0;
+        this.nb_negatives_votes = 0;
         this.nb_responses = 0;
         this.created_at = (new Date()).toISOString();
         this.status = 'open';
@@ -59,8 +59,8 @@ export class Question {
             this.answers.push(a);
         });
         this.nb_responses = q.nb_responses;
-        this.nb_positive_votes = q.nb_positive_votes;
-        this.nb_negative_votes = q.nb_negative_votes;
+        this.nb_positives_votes = q.nb_positives_votes;
+        this.nb_negatives_votes = q.nb_negatives_votes;
         this.status = q.status;
         this.created_at = q.created_at;
     }

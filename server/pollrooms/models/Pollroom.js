@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 
 var PollroomSchema = Schema({
     name: { type: String, required: true },
+    identifier: { type: Number, required: true},
     status: { type: String, enum: ['open', 'closed'], default: 'open', required: true },
     creator: { type: String, required: true },
     created_at: { type: Date, default: Date.now, required: true },
@@ -16,6 +17,7 @@ PollroomSchema.set('toJSON', {
         return {
             id: ret._id,
             name: ret.name,
+            identifier: ret.identifier,
             status: ret.status,
             questions: ret.questions,
             nb_participants: 0,

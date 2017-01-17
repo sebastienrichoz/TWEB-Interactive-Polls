@@ -70,12 +70,12 @@ export class QuestionViewComponent implements OnInit, OnChanges {
 
         if (e.target.checked)
             this.pollroomService.checkAnswer(answerId).then(
-                res => '',
+                res => console.log(res),
                 error => this.toastr.error(error)
             );
         else
             this.pollroomService.uncheckAnswer(answerId).then(
-                res => '',
+                res => console.log(res),
                 error => this.toastr.error(error)
             );
     }

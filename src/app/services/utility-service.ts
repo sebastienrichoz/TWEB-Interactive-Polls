@@ -10,11 +10,13 @@ export class UtilityService {
         let errMsg: string;
         if (error instanceof Response) {
             const body = error.json() || '';
-            errMsg = body[0];
+            const err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+            // errMsg = body[0];
         } else {
             errMsg = error.message ? error.message : error.toString();
         }
-        console.error(errMsg);
+        console.error("error: " + errMsg);
         return Promise.reject(errMsg);
     }
 }

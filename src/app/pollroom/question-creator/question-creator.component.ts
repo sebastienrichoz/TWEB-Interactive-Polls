@@ -77,7 +77,11 @@ export class QuestionCreatorComponent implements OnInit {
                 question => {
                     console.log("question published:");
                     console.log(question);
-                    this.onPublish.emit(question);
+
+                    // TODO : socket emit
+
+                    this.onPublish.emit(question); // todo remove when socket works
+
                     this.toastr.success("Question published");
                     this.hideFullQuestion();
                     this.initQuestion();
@@ -97,7 +101,9 @@ export class QuestionCreatorComponent implements OnInit {
                 this.question.title.trim(), verifications.answers);
             this.pollroomService.patchQuestion(questionCreationDTO).then(
                 question => {
-                    this.onUpdate.emit(question);
+                    // TODO socket emit
+                    this.onUpdate.emit(question); // todo remove when socket works
+
                     this.toastr.success("Question updated");
                     this.initQuestion();
                     this.hideFullQuestion();

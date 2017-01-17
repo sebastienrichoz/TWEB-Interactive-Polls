@@ -6,9 +6,34 @@ var express = require('express'),
     Choice = require('./models/Choice'),
     Vote = require('./models/Vote');
 
+// socket io things
+var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+server.listen((process.env.PORT_SOCKET || 3001));
+app.get('/', function (req, res) {
+    res.sendfile(__dirname + '/index.html');
+});
+
+io.on('connection', function(socket){
+    socket.emit('hello');
+
+    socket.on('join', function(data){
+        console.log(data);
+        socket.join(data.room);
+    });
+
+    socket.on('disconnect', function(){
+        console.log("disconnected");
+    })
+});
+
 router.post('/', function(req, res) {
+    var identifier = Math.floor(Math.random() * 899999) + 100000;
+
     var pollroom = new Pollroom({
         name: req.body.name,
+        identifier: identifier,
         creator: req.get('X-Session-ID')
     });
     pollroom.save(function(err, pollroom) {

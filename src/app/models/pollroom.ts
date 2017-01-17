@@ -2,6 +2,7 @@ import {Question} from "./question";
 export class Pollroom {
     id: number;
     name: string;
+    identifier: string;
     status: string;
     questions: Question[] = [];
     nb_participants: number;
@@ -13,5 +14,6 @@ export class Pollroom {
         this.status = "open";
         this.nb_participants = 1;
         this.creator = "";
+        this.identifier = "No identifier";
     }
 }
