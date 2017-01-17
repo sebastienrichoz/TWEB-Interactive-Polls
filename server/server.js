@@ -8,6 +8,8 @@ var express = require('express'),
     answers = require('./pollrooms/controllers/answers');
 
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 
 app.set('port', (process.env.PORT || 3000));
 
@@ -36,11 +38,25 @@ db.once('open', function() {
         res.sendFile(path.join(__dirname,'/../dist/index.html'));
     });
 
-
     // init express.js listening
     app.listen(app.get('port'), function() {
         console.log('Application listening on port ' + app.get('port'));
     });
+
+    // init socket io listening
+    server.listen((process.env.PORT_SOCKET || 3001));
+    io.on('connection', function(socket){
+
+        socket.on('join', function(data) {
+            console.log(data);
+            socket.join(data.room);
+        });
+
+        socket.on('disconnect', function() {
+            console.log("disconnected");
+        })
+    });
+
 });
 
 module.exports = app;
