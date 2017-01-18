@@ -5,8 +5,7 @@ import {
     state,
     style,
     transition,
-    animate,
-    ViewContainerRef
+    animate
 } from '@angular/core';
 
 import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms';
@@ -104,7 +103,17 @@ export class HomeComponent implements OnInit {
                     this.toastr.success("Pollroom '" + pollroom.identifier + "'created");
 
                     // Navigate to pollroom
-                    this.router.navigate(['/pollroom', pollroom.identifier]);
+                    console.log("before navigate to pollroom/identifier");
+                    this.router.navigate(['/pollroom', pollroom.identifier]).then(
+                        res => {
+                            console.log("res");
+                            console.log(res);},
+                        error => {
+                            console.log("error");
+                            console.log(error);
+                        }
+                    );
+                    console.log("after navigate to pollroom/identifier");
                 },
                 error => this.toastr.error(error, "Error")
             );

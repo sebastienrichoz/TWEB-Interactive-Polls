@@ -22,7 +22,7 @@ app.use(function(req, res, next) {
     next();
 });
 
-//app.use('/', express.static(__dirname + '/../dist'));
+app.use('/', express.static(__dirname + '/../dist'));
 
 // init mongodb database
 mongoose.Promise = require('bluebird');

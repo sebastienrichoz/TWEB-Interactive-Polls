@@ -70,6 +70,7 @@ export class PollroomComponent implements OnInit {
         this.route.params
             .switchMap((params: Params) => this.homeService.getPollroom(params['identifier']))
             .subscribe(pollroom => {
+                console.log("ngOnInit subscribe");
                 this.pollroom = pollroom;
                 console.log(pollroom);
             },

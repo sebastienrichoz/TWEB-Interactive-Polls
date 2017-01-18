@@ -1,12 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {HttpModule, XSRFStrategy, Request} from '@angular/http';
-import { RouterModule } from '@angular/router';
+import { HttpModule, XSRFStrategy, Request } from '@angular/http';
 
 // External libraries
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
-import { UUID } from 'angular2-uuid';
 
 // Components
 import { AppComponent } from './app.component';
@@ -27,6 +25,7 @@ import { ResponseViewComponent } from './pollroom/question-view/response-view/re
 import { TimeAgoPipe } from './pipes/time-ago.pipe';
 import {UtilityService} from "./services/utility-service";
 import { NegativeSignPipe } from './pipes/negative-sign.pipe';
+import {AppRoutingModule} from "./app-routing.module";
 
 
 export class MyXSRFStrategy {
@@ -36,12 +35,6 @@ export class MyXSRFStrategy {
     }
 }
 
-// roots
-const routing = RouterModule.forRoot([
-    { path: '',      component: HomeComponent },
-    { path: 'pollroom/:identifier', component: PollroomComponent }
-]);
-
 export function myFactory() {
     return new MyXSRFStrategy();
 }
@@ -50,14 +43,14 @@ export function myFactory() {
     declarations: [
         AppComponent,
         HomeComponent,
-        ThousandSeparatorPipe,
         PollroomComponent,
-        QuestionCreatorComponent,
-        QuestionViewComponent,
         PollroomStatsComponent,
+        QuestionViewComponent,
         ResponseViewComponent,
+        QuestionCreatorComponent,
         TimeAgoPipe,
-        NegativeSignPipe
+        NegativeSignPipe,
+        ThousandSeparatorPipe
     ],
     imports: [
         BrowserModule,
@@ -65,7 +58,7 @@ export function myFactory() {
         ReactiveFormsModule,
         HttpModule,
         ToastModule,
-        routing
+        AppRoutingModule
     ],
     providers: [
         HomeService,
