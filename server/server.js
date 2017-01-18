@@ -16,6 +16,8 @@ app.use(logger('dev')); // log requests to the console
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+app.set('port', (process.env.PORT || 3000));
+
 // injections
 app.use(function(req, res, next) {
     res.io = io;
@@ -127,7 +129,7 @@ db.once('open', function() {
     });
 
     // init express.js listening
-    app.listen(process.env.PORT || 3000, function() {
+    app.listen(app.get('port'), function() {
         console.log('Application listening on port ' + app.get('port'));
     });
 
