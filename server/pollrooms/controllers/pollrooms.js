@@ -54,9 +54,9 @@ router.post('/', function(req, res) {
         });
 });
 
-router.get('/:pollroom_id/', function(req, res) {
+router.get('/:pollroom_identifier/', function(req, res) {
     Pollroom
-        .findById(req.params.pollroom_id)
+        .findOne({ 'identifier': req.params.pollroom_identifier })
         .populate({ path: 'questions', model: 'Question', populate: { path: 'answers', model: 'Answer' }})
         .exec()
         .then(function(pollroom) {
