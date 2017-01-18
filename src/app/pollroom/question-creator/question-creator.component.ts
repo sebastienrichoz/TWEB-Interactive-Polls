@@ -4,11 +4,12 @@ import {
 } from '@angular/core';
 
 import { Question, Answer } from '../../models/question';
-import {ToastsManager} from "ng2-toastr";
+
 import {PollroomService} from "../../services/pollroom.service";
 import {QuestionCreationDTO} from "../../models/question-creation-dto";
 
 @Component({
+    moduleId: module.id,
     selector: 'question-creator',
     templateUrl: 'question-creator.component.html',
     styleUrls: ['question-creator.component.css'],
@@ -59,8 +60,7 @@ export class QuestionCreatorComponent implements OnInit {
     private MIN_ANSWER = 2;
     private MAX_ANSWER = 10;
 
-    constructor(public toastr: ToastsManager,
-                private pollroomService: PollroomService) { }
+    constructor(private pollroomService: PollroomService) { }
 
     ngOnInit() {
         this.initQuestion();
@@ -71,20 +71,19 @@ export class QuestionCreatorComponent implements OnInit {
         let verifications = this.questionVerifications();
 
         if (verifications.error_message) {
-            this.toastr.error(verifications.error_message);
+            console.log(verifications.error_message);
         } else {
             let questionCreationDTO = new QuestionCreationDTO(this.pollroomId,
                 this.question.title.trim(), verifications.answers);
 
             this.pollroomService.addQuestion(this.pollroomId, questionCreationDTO).then(
                 question => {
+                    console.log(question);
                     this.socket.emit('newQuestion', { room: this.pollroomIdentifier, question: question});
-
-                    this.toastr.success("Question published");
                     this.hideFullQuestion();
                     this.initQuestion();
                 },
-                error => this.toastr.error(error, "Error")
+                error => console.log(error, "Error")
             );
         }
     }
@@ -93,7 +92,7 @@ export class QuestionCreatorComponent implements OnInit {
         let verifications = this.questionVerifications();
 
         if (verifications.error_message) {
-            this.toastr.error(verifications.error_message);
+            console.log(verifications.error_message);
         } else {
             let updatedQuestion = {
                 title: this.question.title.trim(),
@@ -104,11 +103,11 @@ export class QuestionCreatorComponent implements OnInit {
                 question => {
                     this.socket.emit('updateQuestion', { room: this.pollroomIdentifier, question: question});
 
-                    this.toastr.success("Question updated");
+                    console.log("Question updated");
                     this.initQuestion();
                     this.hideFullQuestion();
                 },
-                error => this.toastr.error(error, "Error")
+                error => console.log(error, "Error")
             );
         }
     }
@@ -143,14 +142,14 @@ export class QuestionCreatorComponent implements OnInit {
         if (size < this.MAX_ANSWER)
             this.question.addAnswer(new Answer(size+1, ''));
         else
-            this.toastr.error("Max. " + this.MAX_ANSWER + " answers");
+            console.log("Max. " + this.MAX_ANSWER + " answers");
     }
 
     removeAnswer(answer: Answer) {
         if (this.question.answers.length > 2)
             this.question.removeAnswer(answer);
         else
-            this.toastr.error("Min. " + this.MIN_ANSWER + " answers");
+            console.log("Min. " + this.MIN_ANSWER + " answers");
     }
 
     displayFullQuestion() {

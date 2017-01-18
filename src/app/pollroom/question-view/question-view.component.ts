@@ -5,9 +5,10 @@ import {
 import {Question} from "../../models/question";
 import {TimeAgoPipe} from "../../pipes/time-ago.pipe";
 import {PollroomService} from "../../services/pollroom.service";
-import {ToastsManager} from "ng2-toastr";
+
 
 @Component({
+    moduleId: module.id,
     selector: 'question-view',
     templateUrl: 'question-view.component.html',
     styleUrls: ['question-view.component.css'],
@@ -43,8 +44,7 @@ export class QuestionViewComponent implements OnInit, OnChanges {
     isVoteDown = false;
     isEditing = false;
 
-    constructor(private pollroomService: PollroomService,
-                public toastr: ToastsManager) { }
+    constructor(private pollroomService: PollroomService) { }
 
     ngOnInit() {
     }
@@ -77,7 +77,7 @@ export class QuestionViewComponent implements OnInit, OnChanges {
                     this.socket.emit('answerChecked', {room: this.pollroomIdentifier, answer_id: answerId});
                     // console.log(res);
                 },
-                error => this.toastr.error(error)
+                error => console.log(error)
             );
         else
             this.pollroomService.uncheckAnswer(answerId).then(
@@ -85,7 +85,7 @@ export class QuestionViewComponent implements OnInit, OnChanges {
                     this.socket.emit('answerUnchecked', {room: this.pollroomIdentifier, answer_id: answerId});
                     // console.log(res)
                 },
-                error => this.toastr.error(error)
+                error => console.log(error)
             );
     }
 
@@ -99,7 +99,7 @@ export class QuestionViewComponent implements OnInit, OnChanges {
 
     editQuestion(question: Question) {
         if (this.question.status === 'closed')
-            this.toastr.warning("You are editing a closed question", "Be careful");
+            console.log("You are editing a closed question", "Be careful");
 
         this.question.status = 'pending';
         this.onQuestionEdit.emit(question);

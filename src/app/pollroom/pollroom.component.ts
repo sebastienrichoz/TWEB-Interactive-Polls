@@ -2,20 +2,18 @@ import {
     Component, OnInit, ChangeDetectionStrategy
 } from '@angular/core';
 import {Question, Answer} from "../models/question";
-// import {Subscription} from "rxjs";
 import {HomeService} from "../services/home.service";
 import {Pollroom} from "../models/pollroom";
-import {Router, ActivatedRoute, Params} from "@angular/router";
-import { Location }                 from '@angular/common';
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import 'rxjs/add/operator/switchMap';
 import * as io from "socket.io-client";
-import {ToastsManager} from "ng2-toastr";
+
 
 @Component({
+    moduleId: module.id,
     selector: 'app-pollroom',
     templateUrl: './pollroom.component.html',
-    styleUrls: ['./pollroom.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['./pollroom.component.css']
 })
 export class PollroomComponent implements OnInit {
 
@@ -27,13 +25,9 @@ export class PollroomComponent implements OnInit {
 
     // private subscription = new Subscription();
 
-
     constructor(private homeService: HomeService,
-                // private router: Router
-                private route: ActivatedRoute,
-                private location: Location,
-                public toastr: ToastsManager) {
-
+                private router: Router,
+                private route: ActivatedRoute) {
         /*
         let r11 = new Answer(1, 'A framework');
         let r12 = new Answer(2, 'A node package');
@@ -58,42 +52,25 @@ export class PollroomComponent implements OnInit {
 
         this.manageSocket();
 
-
         this.nbAnswers = 0;
         this.nbTotalAnswers = 0;
     }
 
+
     ngOnInit() {
-        // if (localStorage.getItem("pollak_sessionid") === null)
-        //     this.router.navigate(['./']);
+        if (localStorage.getItem("pollak_sessionid") === null)
+            this.router.navigate(['./']);
 
         this.route.params
             .switchMap((params: Params) => this.homeService.getPollroom(params['identifier']))
             .subscribe(pollroom => {
-                console.log("ngOnInit subscribe");
                 this.pollroom = pollroom;
-                console.log(pollroom);
+                this.socket.emit('connection');
+                this.socket.on('hello', () => {
+                    this.socket.emit('join', { room: this.pollroom.identifier });
+                });
             },
-            error => this.toastr.error(error));
-
-        // // Listen for pollroom join
-        // this.subscription = this.homeService.pollroomSelected$.subscribe(
-        //     pollroom => {
-        //         console.log(pollroom);
-        //         this.pollroom = pollroom;
-        //         this.nbTotalAnswers = this.pollroom.questions.length;
-        //
-        //         // TODO : changes are not detected in the view
-        //
-        //         this.socket.emit('connection');
-        //
-        //         this.socket.on('hello', () => {
-        //             this.socket.emit('join', { room: this.pollroom.identifier });
-        //         });
-        //
-        //     },
-        //     error => console.log(error)
-        // );
+            error => console.log(error));
     }
 
     manageSocket() {

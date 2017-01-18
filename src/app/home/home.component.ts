@@ -12,11 +12,11 @@ import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms
 import { UUID } from 'angular2-uuid';
 
 import { HomeService } from '../services/home.service';
-import {ToastsManager} from "ng2-toastr";
 import {Router} from "@angular/router";
 import {PollroomCreationDTO} from "../models/pollroom-creation-dto";
 
 @Component({
+    moduleId: module.id,
     selector: 'app-home',
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.css'],
@@ -56,7 +56,6 @@ export class HomeComponent implements OnInit {
     private pollRoomNumber = new FormControl("", Validators.required);
 
     constructor(private homeService: HomeService,
-                public toastr: ToastsManager,
                 private formBuilder: FormBuilder,
                 private router: Router) { }
 
@@ -81,15 +80,15 @@ export class HomeComponent implements OnInit {
         if (pollroomId) {
             this.homeService.joinPollroom(pollroomId).then(
                 pollroom => {
-                    this.toastr.success("Pollroom '" + pollroom.identifier + "' joined");
+                    console.log("Pollroom '" + pollroom.identifier + "' joined");
 
                     // Navigate to pollroom
                     this.router.navigate(['/pollroom', pollroom.identifier]);
                 },
-                error => this.toastr.error(error)
+                error => console.log(error)
             );
         } else {
-            this.toastr.error("Blank pollroom identifier");
+            console.log("Blank pollroom identifier");
         }
     }
 
@@ -100,7 +99,7 @@ export class HomeComponent implements OnInit {
             console.log(pollroomCreationDTO);
             this.homeService.createPollroom(pollroomCreationDTO).then(
                 pollroom => {
-                    this.toastr.success("Pollroom '" + pollroom.identifier + "'created");
+                    console.log("Pollroom '" + pollroom.identifier + "'created");
 
                     // Navigate to pollroom
                     console.log("before navigate to pollroom/identifier");
@@ -115,10 +114,10 @@ export class HomeComponent implements OnInit {
                     );
                     console.log("after navigate to pollroom/identifier");
                 },
-                error => this.toastr.error(error, "Error")
+                error => console.log(error, "Error")
             );
         } else {
-            this.toastr.error("Blank pollroom name");
+            console.log("Blank pollroom name");
         }
     }
 

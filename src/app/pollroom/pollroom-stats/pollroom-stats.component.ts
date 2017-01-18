@@ -2,9 +2,10 @@ import {Component, OnInit, Output, Input} from '@angular/core';
 import {Pollroom} from "../../models/pollroom";
 import {PollroomService} from "../../services/pollroom.service";
 import {HomeService} from "../../services/home.service";
-import {ToastsManager} from "ng2-toastr";
+
 
 @Component({
+    moduleId: module.id,
     selector: 'pollroom-stats',
     templateUrl: 'pollroom-stats.component.html',
     styleUrls: ['pollroom-stats.component.css']
@@ -21,8 +22,7 @@ export class PollroomStatsComponent implements OnInit {
     @Input() socket;
 
     constructor(private pollroomService: PollroomService,
-                private homeService: HomeService,
-                public toastr: ToastsManager) { }
+                private homeService: HomeService) { }
 
     ngOnInit() {
         this.nbAnswers = 0;
@@ -43,9 +43,9 @@ export class PollroomStatsComponent implements OnInit {
                 this.displayCloseRoomInfo = status !== "closed";
                 this.displayOpenRoomInfo = !this.displayCloseRoomInfo;
                 this.homeService.selectPollroom(pollroom);
-                this.toastr.success("pollroom " + pollroom.status);
+                console.log("pollroom " + pollroom.status);
             },
-            error => this.toastr.error(error, "Error")
+            error => console.log(error, "Error")
         );
     }
 

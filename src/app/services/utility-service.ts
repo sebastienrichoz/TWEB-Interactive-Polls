@@ -1,4 +1,7 @@
 import {Response} from "@angular/http";
+import {Injectable} from "@angular/core";
+
+@Injectable()
 export class UtilityService {
     public extractData(res: Response) {
         let body = res.json();

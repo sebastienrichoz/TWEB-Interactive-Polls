@@ -2,6 +2,7 @@ import {Component, OnInit, Output, Input} from '@angular/core';
 import {Question} from "../../../models/question";
 
 @Component({
+    moduleId: module.id,
     selector: 'response-view',
     templateUrl: 'response-view.component.html',
     styleUrls: ['response-view.component.css']
