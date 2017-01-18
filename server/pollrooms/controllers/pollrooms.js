@@ -63,6 +63,7 @@ router.get('/:pollroom_identifier/', function(req, res) {
             if (pollroom == null) {
                 return res.status(404).send();
             }
+            res.io.to(pollroom.identifier).emit('updatePollroom', pollroom);
             return res.json(pollroom);
         })
         .catch(function(err) {

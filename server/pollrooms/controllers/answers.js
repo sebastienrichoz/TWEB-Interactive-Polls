@@ -39,6 +39,10 @@ router.post('/:answer_id/check/', function(req, res) {
             return Answer.updateResponsesCount(data.answer);
         })
         .then(function() {
+            return Question.findById(data.question).exec();
+        })
+        .then(function(question) {
+            res.io.to(question.pollroom.identifier).emit('updateQuestion', question);
             return res.send();
         })
         .catch(function(err) {
@@ -82,6 +86,10 @@ router.post('/:answer_id/uncheck/', function(req, res) {
             return Answer.updateResponsesCount(data.answer);
         })
         .then(function() {
+            return Question.findById(data.question).exec();
+        })
+        .then(function(question) {
+            res.io.to(question.pollroom.identifier).emit('updateQuestion', question);
             return res.send();
         })
         .catch(function(err) {
