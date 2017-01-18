@@ -7,7 +7,7 @@ import {Pollroom} from "../models/pollroom";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import 'rxjs/add/operator/switchMap';
 import * as io from "socket.io-client";
-
+import { environment } from '../../environments/environment';
 
 @Component({
     moduleId: module.id,
@@ -48,7 +48,7 @@ export class PollroomComponent implements OnInit, OnDestroy {
         this.pollroom.questions.push(q2);
         this.pollroom.questions.push(q3);
         */
-        this.socket = io("http://localhost:" + (process.env.PORT || 3000) + "/");
+        this.socket = io(environment.SOCKETIO_URL);
 
         this.manageSocket();
 

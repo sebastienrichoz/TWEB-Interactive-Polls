@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  SOCKETIO_URL: "http://pollak.herokuapp.com/"
 };
