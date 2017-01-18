@@ -48,7 +48,7 @@ export class PollroomComponent implements OnInit, OnDestroy {
         this.pollroom.questions.push(q2);
         this.pollroom.questions.push(q3);
         */
-        this.socket = io("http://localhost:3001/");
+        this.socket = io("http://localhost:" + (process.env.PORT || 3000) + "/");
 
         this.manageSocket();
 

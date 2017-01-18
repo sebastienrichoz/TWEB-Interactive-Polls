@@ -10,21 +10,13 @@ var express = require('express'),
     Pollroom = require('./pollrooms/models/Pollroom');
 
 var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var socketio = require('socket.io');
 
 app.use(logger('dev')); // log requests to the console
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.set('port', (process.env.PORT || 3000));
-
-// injections
-app.use(function(req, res, next) {
-    res.io = io;
-    next();
-});
-
+// serve static files
 app.use('/', express.static(__dirname + '/../dist'));
 
 // init mongodb database
@@ -33,6 +25,16 @@ var db = mongoose.connect(process.env.MONGODB_URI).connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function() {
     console.log('Connected to MongoDB');
+
+    // init listening
+    var server = app.listen(process.env.PORT || 3000);
+    var io = socketio.listen(server);
+
+    // injections
+    app.use(function(req, res, next) {
+        res.io = io;
+        next();
+    });
 
     // rest api
     app.use('/api/v1/pollrooms/', pollrooms);
@@ -135,14 +137,6 @@ db.once('open', function() {
             console.log('disconnected');
         });
     });
-
-    // init express.js listening
-    app.listen(app.get('port'), function() {
-        console.log('Application listening on port ' + app.get('port'));
-    });
-
-    // init socket.io listening
-    server.listen(process.env.PORT_SOCKET || 3001);
 });
 
 module.exports = app;
