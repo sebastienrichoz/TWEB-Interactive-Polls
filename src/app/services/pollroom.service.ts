@@ -16,7 +16,7 @@ export class PollroomService {
     private headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' });
     private options = new RequestOptions({ headers: this.headers });
 
-    patchRoom(pollroom_id: number, status: string) {
+    patchRoom(pollroom_id: number, status: any) {
         return this.http.patch(this.base + "pollrooms/" + pollroom_id + "/", JSON.stringify(status), this.options)
             .toPromise()
             .then(this.utility.extractData)
@@ -31,7 +31,7 @@ export class PollroomService {
     }
 
     patchQuestion(question: any): Promise<Question> {
-        return this.http.patch(this.base + "questions/" + question.id, JSON.stringify(question), this.options)
+        return this.http.patch(this.base + "questions/" + question.id + "/", JSON.stringify(question), this.options)
             .toPromise()
             .then(this.utility.extractData)
             .catch(this.utility.handleError);
@@ -56,7 +56,7 @@ export class PollroomService {
     }
 
     voteDown(question_id: number): Promise<any> {
-        return this.http.post(this.base + "answers/" + question_id + "/votedown/", {}, this.options)
+        return this.http.post(this.base + "questions/" + question_id + "/votedown/", {}, this.options)
             .toPromise()
             .catch(this.utility.handleError);
     }

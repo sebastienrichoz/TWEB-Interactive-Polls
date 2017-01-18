@@ -52,6 +52,7 @@ export class QuestionCreatorComponent implements OnInit {
     @Input() pollroomId;
     @Input() socket;
     @Input() pollroomIdentifier;
+    @Input() pollroom;
 
     private published: boolean = false;
     private isFocus = false;

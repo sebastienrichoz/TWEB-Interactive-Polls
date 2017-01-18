@@ -22,9 +22,11 @@ export class HomeService {
         this.pollroomSelectedSource.next(pollroom);
     }
 
-    getStats() {
-        // TODO
-        return this.http.get('/stats').map(res => res.json());
+    getStats(): Promise<any> {
+        return this.http.get('/api/v1/statistics/')
+            .toPromise()
+            .then(this.utility.extractData)
+            .catch(this.utility.handleError);
     }
 
     createPollroom(pollCreationDTO: PollroomCreationDTO): Promise<Pollroom> {
@@ -43,6 +45,13 @@ export class HomeService {
 
     getPollroom(pollroomIdentifier: string): Promise<Pollroom> {
         return this.http.get('/api/v1/pollrooms/' + pollroomIdentifier)
+            .toPromise()
+            .then(this.utility.extractData)
+            .catch(this.utility.handleError);
+    }
+
+    getPollrooms(): Promise<any> {
+        return this.http.get('/api/v1/pollrooms/')
             .toPromise()
             .then(this.utility.extractData)
             .catch(this.utility.handleError);

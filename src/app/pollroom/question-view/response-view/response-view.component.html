@@ -12,8 +12,8 @@
                aria-valuenow="30"
                aria-valuemin="0"
                aria-valuemax="100"
-               [ngStyle]="{'width': (answer.nb_responses < question.nb_responses ? answer.nb_responses : question.nb_responses) / question.nb_responses * 100 + '%'}">
-            {{answer.nb_responses / question.nb_responses * 100 | number:'.0-0' }}%
+               [ngStyle]="{'width': (answer.nb_responses < question.nb_participants ? answer.nb_responses : question.nb_participants) / question.nb_participants * 100 + '%'}">
+            {{answer.nb_responses / question.nb_participants * 100 | number:'.0-0' }}%
           </div>
         </div>
       </div>

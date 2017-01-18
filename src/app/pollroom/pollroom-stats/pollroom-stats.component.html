@@ -1,16 +1,17 @@
 <div class="text-center">
-    <h4><i class="fa fa-key fa-fw"></i> Room <b>{{ pollroom.identifier }}</b></h4>
+    <h4><i class="fa fa-key fa-fw"></i> Room <b style="font-size: 2em;">{{ pollroom.identifier }}</b></h4>
 
-    <a *ngIf="pollroom.status === 'open'" (click)="patchRoom('closed')" class="btn btn-danger pollroom-status"
-        (mouseover)="displayCloseRoomInfo = true" (mouseout)="displayCloseRoomInfo = false">
-        <i class="fa fa-lock fa-fw"></i> Close the room
-    </a>
-    <button *ngIf="pollroom.status === 'closed'" class="btn bdtn-default pollroom-status" disabled
-       (mouseover)="displayOpenRoomInfo = true" (mouseout)="displayOpenRoomInfo = false">
-        <i class="fa fa-unlock fa-fw"></i> Closed
-    </button>
-    <p *ngIf="displayCloseRoomInfo" class="small" style="margin-top: 10px;">Opened questions will close,<br> new questions couldn't be created anymore.<br>Room can still be joined.</p>
-    <p *ngIf="displayOpenRoomInfo" class="small" style="margin-top: 10px;">new questions could be created</p>
+    <span *ngIf="pollroom.creator === user">
+        <a *ngIf="pollroom.status === 'open'" (click)="patchRoom('closed')" class="btn btn-danger pollroom-status"
+            (mouseover)="displayCloseRoomInfo = true" (mouseout)="displayCloseRoomInfo = false">
+            <i class="fa fa-lock fa-fw"></i> Close the room
+        </a>
+        <button *ngIf="pollroom.status === 'closed'" class="btn bdtn-default pollroom-status" disabled
+           (mouseover)="displayCloseRoomInfo = true" (mouseout)="displayCloseRoomInfo = false">
+            <i class="fa fa-unlock fa-fw"></i> Closed
+        </button>
+        <p *ngIf="displayCloseRoomInfo" class="small" style="margin-top: 10px;">When room is closed, all results are displayed.<br>Room can't be reopened.</p>
+    </span>
     <hr class="small">
 </div>
 
@@ -24,7 +25,7 @@
     </div>
 
     <div class="col-xs-4 room-stats">
-        <h4>{{ pollroomTotalAnswers }} <i class="fa fa-lightbulb-o fa-fw"></i> answer{{ pollroomTotalAnswers > 1 ? 's' : '' }}</h4>
+        <h4>{{ totalAllUsersAnswer }} <i class="fa fa-lightbulb-o fa-fw"></i> answer{{ totalAllUsersAnswer > 1 ? 's' : '' }}</h4>
     </div>
 </div>
 

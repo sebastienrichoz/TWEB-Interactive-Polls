@@ -30,11 +30,12 @@ export class QuestionViewComponent implements OnInit, OnChanges {
     @Input() question: Question;
     @Input() nbParticipants: number;
     @Input() socket;
-    @Input() pollroomIdentifier;
+    @Input() pollroom;
+    @Input() totalAllUsersAnswer;
     @Output() onChecked = new EventEmitter();
     @Output() onQuestionEdit = new EventEmitter();
     @Output() onQuestionEditForm = new EventEmitter();
-
+    @Input() user;
 
     questionCreationDate: Date = new Date;
     questionIsClosed = false;
@@ -47,6 +48,7 @@ export class QuestionViewComponent implements OnInit, OnChanges {
     constructor(private pollroomService: PollroomService) { }
 
     ngOnInit() {
+
     }
 
     ngOnChanges() {
@@ -60,12 +62,6 @@ export class QuestionViewComponent implements OnInit, OnChanges {
         this.questionIsClosed = this.question.status === "closed";
     }
 
-    answerGiven(question, answer) {
-        console.log("answerGiven()");
-        console.log(question);
-        console.log(answer);
-    }
-
     check(e, questionId, answerId) {
         let newEvent = {_event: e, question_id: questionId, answer_id: answerId};
         console.log(newEvent);
@@ -74,7 +70,6 @@ export class QuestionViewComponent implements OnInit, OnChanges {
         if (e.target.checked)
             this.pollroomService.checkAnswer(answerId).then(
                 res => {
-                    this.socket.emit('answerChecked', {room: this.pollroomIdentifier, answer_id: answerId});
                     // console.log(res);
                 },
                 error => console.log(error)
@@ -82,7 +77,6 @@ export class QuestionViewComponent implements OnInit, OnChanges {
         else
             this.pollroomService.uncheckAnswer(answerId).then(
                 res => {
-                    this.socket.emit('answerUnchecked', {room: this.pollroomIdentifier, answer_id: answerId});
                     // console.log(res)
                 },
                 error => console.log(error)
@@ -93,24 +87,31 @@ export class QuestionViewComponent implements OnInit, OnChanges {
         return String.fromCharCode(c.charCodeAt(0) + 1);
     }
 
-    clickP() {
-        console.log("clickeddd");
-    }
-
-    editQuestion(question: Question) {
-        if (this.question.status === 'closed')
-            console.log("You are editing a closed question", "Be careful");
-
+    editQuestion() {
+        let previousStatus = this.question.status;
         this.question.status = 'pending';
-        this.onQuestionEdit.emit(question);
-        this.onQuestionEditForm.emit(question);
+        this.pollroomService.patchQuestion(this.question).then(
+            res => {
+                this.socket.emit('editingQuestion', {room: this.pollroom.identifier, question_id: this.question.id});
+                this.onQuestionEdit.emit(this.question);
+                this.onQuestionEditForm.emit(this.question);
+            },
+            error => this.question.status = previousStatus
+        );
     }
 
     voteUp() {
         if (!this.isVoteUp) {
-            this.socket.emit('voteUp', { room: this.pollroomIdentifier, question_id: this.question.id });
-            this.isVoteUp = true;
-            this.isVoteDown = false;
+            this.pollroomService.voteUp(this.question.id).then(
+                res => {
+                    this.socket.emit('voteUp', { room: this.pollroom.identifier, question_id: this.question.id });
+                    if (this.isVoteDown)
+                        this.socket.emit('cancelVoteDown', { room: this.pollroom.identifier, question_id: this.question.id });
+                    this.isVoteUp = true;
+                    this.isVoteDown = false;
+                },
+                error => console.log(error)
+            )
         }
     }
 
@@ -123,9 +124,16 @@ export class QuestionViewComponent implements OnInit, OnChanges {
 
     voteDown() {
         if (!this.isVoteDown) {
-            this.socket.emit('voteDown', { room: this.pollroomIdentifier, question_id: this.question.id });
-            this.isVoteUp = false;
-            this.isVoteDown = true;
+            this.pollroomService.voteDown(this.question.id).then(
+                res => {
+                    this.socket.emit('voteDown', { room: this.pollroom.identifier, question_id: this.question.id });
+                    if (this.isVoteUp)
+                        this.socket.emit('cancelVoteUp', { room: this.pollroom.identifier, question_id: this.question.id });
+                    this.isVoteUp = false;
+                    this.isVoteDown = true;
+                },
+                error => console.log(error)
+            );
         }
     }
 
@@ -137,16 +145,25 @@ export class QuestionViewComponent implements OnInit, OnChanges {
     }
 
     openQuestion() {
-        this.socket.emit('openQuestion', { room: this.pollroomIdentifier, question_id: this.question.id });
         this.question.status = 'open';
+        this.pollroomService.patchQuestion(this.question).then(
+            res => this.socket.emit('openQuestion', { room: this.pollroom.identifier, question_id: this.question.id }),
+            error => console.log(error)
+        );
         this.questionIsClosed = false;
         this.displayOpenHint = false;
     }
 
     closeQuestion() {
-        this.socket.emit('closeQuestion', { room: this.pollroomIdentifier, question_id: this.question.id });
+        let previousStatus = this.question.status;
         this.question.status = 'closed';
-        this.questionIsClosed = true;
-        this.displayCloseHint = false;
+        this.pollroomService.patchQuestion(this.question).then(
+            res => {
+                this.socket.emit('closeQuestion', { room: this.pollroom.identifier, question_id: this.question.id });
+                this.questionIsClosed = true;
+                this.displayCloseHint = false;
+            },
+            error => this.question.status = previousStatus
+        );
     }
 }

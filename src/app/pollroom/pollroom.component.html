@@ -3,7 +3,7 @@
     <nav class="navbar navbar-default" id="navigation">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a (click)="leavePollroom()" class="navbar-brand" routerLink="/">
+                <a class="navbar-brand" routerLink="/">
                     <i class="fa fa-sign-out fa-fw rotate-icon-180"></i>
                 </a>
             </div>
@@ -18,8 +18,10 @@
                 <pollroom-stats
                         [socket]="socket"
                         [pollroom]="pollroom"
+                        [totalAllUsersAnswer]="nbAnswers"
+                        [user]="user"
                         #pollroomStats
-                        [nbTotalAnswers]="nbTotalAnswers">
+                        [nbTotalAnswers]="pollroom.questions.length">
                 </pollroom-stats>
             </div>
 
@@ -31,8 +33,10 @@
                         <question-view
                                 [socket]="socket"
                                 [question]="question"
-                                [pollroomIdentifier]="pollroom.identifier"
+                                [pollroom]="pollroom"
                                 [nbParticipants]="pollroom.nb_participants"
+                                [totalAllUsersAnswer]="nbAnswers"
+                                [user]="user"
                                 (onChecked)="pollroomStats.onChecked($event)"
                                 (onQuestionEdit)="editQuestion($event)"
                                 (onQuestionEditForm)="questionCreator.editQuestion($event)">
@@ -45,6 +49,7 @@
                     <div class="footer">
                         <question-creator
                                 #questionCreator
+                                [pollroom]="pollroom"
                                 [pollroomId]="pollroom.id"
                                 [pollroomIdentifier]="pollroom.identifier"
                                 [socket]="socket"

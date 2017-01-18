@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, Input} from '@angular/core';
+import {Component, OnInit, Output, Input, OnChanges} from '@angular/core';
 import {Question} from "../../../models/question";
 
 @Component({
@@ -7,11 +7,14 @@ import {Question} from "../../../models/question";
     templateUrl: 'response-view.component.html',
     styleUrls: ['response-view.component.css']
 })
-export class ResponseViewComponent implements OnInit {
+export class ResponseViewComponent implements OnInit, OnChanges {
 
     @Input() question: Question;
     constructor() { }
 
     ngOnInit() {
+    }
+
+    ngOnChanges() {
     }
 }

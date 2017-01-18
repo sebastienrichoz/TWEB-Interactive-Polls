@@ -14,6 +14,7 @@ import { UUID } from 'angular2-uuid';
 import { HomeService } from '../services/home.service';
 import {Router} from "@angular/router";
 import {PollroomCreationDTO} from "../models/pollroom-creation-dto";
+import {Pollroom} from "../models/pollroom";
 
 @Component({
     moduleId: module.id,
@@ -43,10 +44,14 @@ export class HomeComponent implements OnInit {
 
     public brandName = "Pollak";
 
-    // TODO : get these 3 stats from DB
-    private nbRoomCreated = 2031;
-    private nbQuestionAsked = 56378;
-    private nbAnswer = 212986;
+    private nbRoomCreated = 0;
+    private nbQuestionAsked = 0;
+    private nbAnswer = 0;
+
+    private pollroomsCreated: Pollroom[] = [];
+    private pollroomsJoined: Pollroom[] = [];
+    private selectedJoinedPoll;
+    private selectedCreatedPoll;
 
     // forms
     private newPollForm: FormGroup;
@@ -64,7 +69,11 @@ export class HomeComponent implements OnInit {
             let uuid = UUID.UUID();
             localStorage.setItem("pollak_sessionid", uuid);
         }
-        // this.getStats();
+
+        this.getStats();
+
+        this.getPollrooms();
+
         this.newPollForm = this.formBuilder.group({
             pollName: this.pollName
         });
@@ -74,11 +83,10 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    joinPollroom() {
-        let pollroomId = this.pollRoomNumber.value.trim();
-
-        if (pollroomId) {
-            this.homeService.joinPollroom(pollroomId).then(
+    joinPollroom(pollroomIdentifier) {
+        console.log("join pollroom " + pollroomIdentifier);
+        if (pollroomIdentifier) {
+            this.homeService.joinPollroom(pollroomIdentifier).then(
                 pollroom => {
                     console.log("Pollroom '" + pollroom.identifier + "' joined");
 
@@ -89,6 +97,18 @@ export class HomeComponent implements OnInit {
             );
         } else {
             console.log("Blank pollroom identifier");
+        }
+    }
+
+    joinJoinedPoll() {
+        if (this.selectedJoinedPoll !== '-1') {
+            this.joinPollroom(this.selectedJoinedPoll);
+        }
+    }
+
+    joinCreatedPoll() {
+        if (this.selectedCreatedPoll !== '-1') {
+            this.joinPollroom(this.selectedCreatedPoll);
         }
     }
 
@@ -121,11 +141,30 @@ export class HomeComponent implements OnInit {
         }
     }
 
-    // getStats() {
-    //     this.homeService.getStats().subscribe(
-    //         data => this.cats = data,
-    //         error => console.log(error),
-    //         () => this.isLoading = false
-    //     );
-    // }
+    getPollrooms() {
+        if (localStorage.getItem("pollak_sessionid") !== null) {
+            this.homeService.getPollrooms().then(
+                pollrooms => {
+                    this.pollroomsCreated = pollrooms.pollrooms_created;
+                    this.pollroomsJoined = pollrooms.pollrooms_joined;
+                },
+                error => {
+                    // bad x-session-id, generate a new session id
+                    let uuid = UUID.UUID();
+                    localStorage.setItem("pollak_sessionid", uuid);
+                }
+            );
+        }
+    }
+
+    getStats() {
+        this.homeService.getStats().then(
+            stats => {
+                this.nbRoomCreated = stats.nb_pollrooms;
+                this.nbQuestionAsked = stats.nb_questions;
+                this.nbAnswer = stats.nb_answers;
+            },
+            error => console.log(error)
+        );
+    }
 }

@@ -1,6 +1,7 @@
+
 <div class="row">
     <div class="col-xs-12">
-        <div class="input-group input-group-lg">
+        <div class="input-group input-group-lg" *ngIf="pollroom.status !== 'closed'">
             <span class="input-group-btn">
                 <button  class="btn btn-success" type="button" style="border: none; background-color: #7e2a39;" (click)="displayOrHideFullQuestion()">
                     <i *ngIf="!isFocus" [@comeInOut] class="fa fa-question fa-fw" style="color: #ffffff;"></i>
@@ -15,10 +16,16 @@
                 <button *ngIf="question.status === 'pending'" (click)="update()" tabindex="-1" class="btn btn-success" type="button" [disabled]="published" style="border: none; background-color: #7e2a39;"><i class="fa fa-floppy-o fa-fw"></i></button>
             </span>
         </div>
+
+        <div class="input-group input-group-lg" *ngIf="pollroom.status === 'closed'">
+            <span class="input-group-btn">
+                <h3 class="text-center" style="color: white; margin-top: 10px;">This room is closed.</h3>
+            </span>
+        </div>
     </div>
 </div>
 
-<div class="col-xs-12" [hidden]="!isFocus" style="margin-bottom: 20px;">
+<div class="col-xs-12" [hidden]="!isFocus || pollroom.status === 'closed'" style="margin-bottom: 20px;">
     <div *ngFor="let answer of question.answers" [@flyInOut] class="input-group answer">
         <span class="input-group-addon minus" style="background-color: #7e2a39">
             <button (click)="removeAnswer(answer)" class="btn btn-danger btn-sm my-button-remove" tabindex="-1"><i class="fa fa-minus"></i></button>

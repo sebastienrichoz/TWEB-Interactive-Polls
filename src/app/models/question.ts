@@ -20,9 +20,10 @@ export class Question {
     answers: Answer[] = [];
     nb_positives_votes: number;
     nb_negatives_votes: number;
-    nb_responses: number;
+    nb_participants: number;
     status: string;
     created_at: string;
+    creator: string;
 
     constructor(id: number, title: string, ...answers: Answer[]) {
         this.id = id;
@@ -32,9 +33,10 @@ export class Question {
         answers.forEach(a => this.answers.push(a));
         this.nb_positives_votes = 0;
         this.nb_negatives_votes = 0;
-        this.nb_responses = 0;
+        this.nb_participants = 0;
         this.created_at = (new Date()).toISOString();
         this.status = 'open';
+        this.creator = "";
     }
 
     addAnswer(answer: Answer) {
@@ -58,7 +60,7 @@ export class Question {
             a.letter = ans.letter;
             this.answers.push(a);
         });
-        this.nb_responses = q.nb_responses;
+        this.nb_participants = q.nb_participants;
         this.nb_positives_votes = q.nb_positives_votes;
         this.nb_negatives_votes = q.nb_negatives_votes;
         this.status = q.status;

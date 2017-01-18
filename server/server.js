@@ -55,53 +55,70 @@ db.once('open', function() {
         socket.on('join', function(data) {
             console.log(data);
             socket.join(data.room);
+            // TODO : augmenter le nombre de participant du pollroom dans la BD de +1
             io.to(data.room).emit('participantArrived');
         });
 
-        // socket.on('newQuestion', function(data) {
-        //     console.log('newQuestion');
-        //     io.to(data.room).emit('newQuestion', { question: data.question });
-        // });
-        //
-        // socket.on('editingQuestion', function(data) {
-        //     console.log('editingQuestion');
-        //     io.to(data.room).emit('editingQuestion', { question_id: data.question_id });
-        // });
-        //
-        // socket.on('updateQuestion', function(data) {
-        //     console.log('updateQuestion');
-        //     io.to(data.room).emit('updateQuestion', { question: data.question });
-        // });
-        //
-        //
-        // socket.on('closeQuestion', function(data) {
-        //     console.log('closeQuestion');
-        //     io.to(data.room).emit('closeQuestion', { question_id: data.question_id });
-        // });
-        //
-        // socket.on('voteUp', function(data) {
-        //     console.log('voteUp');
-        //     io.to(data.room).emit('voteUp', { question_id: data.question_id });
-        // });
-        //
-        // socket.on('voteDown', function(data) {
-        //     console.log('voteDown');
-        //     io.to(data.room).emit('voteDown', { question_id: data.question_id });
-        // });
-        //
-        // socket.on('answerChecked', function(data) {
-        //     io.to(data.room).emit('answerChecked', { answer_id: data.answer_id });
-        // });
-        //
-        // socket.on('answerUnchecked', function(data) {
-        //     console.log('answerUnchecked');
-        //     io.to(data.room).emit('answerUnchecked', { answer_id: data.answer_id });
-        // });
-        //
-        // socket.on('bye', function(data){
-        //    console.log('bye');
-        //    io.to(data.room).emit('participantLeft');
-        // });
+        socket.on('newQuestion', function(data) {
+            console.log('newQuestion');
+            io.to(data.room).emit('newQuestion', { question: data.question });
+        });
+
+        socket.on('editingQuestion', function(data) {
+            console.log('editingQuestion');
+            io.to(data.room).emit('editingQuestion', { question_id: data.question_id });
+        });
+
+        socket.on('updateQuestion', function(data) {
+            console.log('updateQuestion');
+            io.to(data.room).emit('updateQuestion', { question: data.question });
+        });
+
+
+        socket.on('closeQuestion', function(data) {
+            console.log('closeQuestion');
+            io.to(data.room).emit('closeQuestion', { question_id: data.question_id });
+        });
+
+        socket.on('closePollroom', function(data) {
+            console.log('closePollroom');
+            io.to(data.room).emit('closePollroom');
+        });
+
+        socket.on('voteUp', function(data) {
+            console.log('voteUp');
+            io.to(data.room).emit('voteUp', { question_id: data.question_id });
+        });
+
+        socket.on('cancelVoteUp', function(data) {
+            console.log('cancelVoteUp');
+            io.to(data.room).emit('cancelVoteUp', { question_id: data.question_id });
+        });
+
+        socket.on('voteDown', function(data) {
+            console.log('voteDown');
+            io.to(data.room).emit('voteDown', { question_id: data.question_id });
+        });
+
+        socket.on('cancelVoteDown', function(data) {
+            console.log('cancelVoteDown');
+            io.to(data.room).emit('cancelVoteDown', { question_id: data.question_id });
+        });
+
+        socket.on('answerChecked', function(data) {
+            io.to(data.room).emit('answerChecked', { answer_id: data.answer_id });
+        });
+
+        socket.on('answerUnchecked', function(data) {
+            console.log('answerUnchecked');
+            io.to(data.room).emit('answerUnchecked', { answer_id: data.answer_id });
+        });
+
+        socket.on('bye', function(data){
+           console.log('bye');
+            // TODO : diminuer le nombre de participant du pollroom dans la BD de 1
+           io.to(data.room).emit('participantLeft');
+        });
 
 
         socket.on('disconnect', function() {

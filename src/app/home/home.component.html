@@ -19,7 +19,7 @@
                 <div class="col-sm-6" id="pollak-join">
                     <h3>Join</h3>
 
-                    <form [formGroup]="joinPollForm" (ngSubmit)="joinPollroom()">
+                    <form [formGroup]="joinPollForm" (ngSubmit)="joinPollroom(pollRoomNumber.value.trim())">
                         <div class="input-group input-group-lg">
                             <span class="input-group-btn">
                                 <button class="btn btn-dark" type="submit" [disabled]="!joinPollForm.valid"><i class="fa fa-sign-in fa-fw"></i></button>
@@ -32,12 +32,9 @@
 
                     <h5>Joined polls</h5>
                     <form id="joinPoll">
-                        <select name="carlist" form="joinPoll" class="btn">
+                        <select [(ngModel)]="selectedJoinedPoll" (ngModelChange)="joinJoinedPoll()" name="joinedPolls" form="joinPoll" class="btn">
                             <option value="Choose to join..." selected="selected">Choose to join...</option>
-                            <option value="volvo">Volvo</option>
-                            <option value="saab">Saab</option>
-                            <option value="opel">Opel</option>
-                            <option value="audi">Audi</option>
+                            <option *ngFor="let jp of pollroomsJoined" [value]="jp.identifier">{{ jp.name }} - {{ jp.identifier }}</option>
                         </select>
                     </form>
 
@@ -57,12 +54,9 @@
 
                     <h5>Created polls</h5>
                     <form id="joinCreatedPoll">
-                        <select name="carlist" form="joinCreatedPoll" class="btn">
-                            <option value="Choose to join..." selected="selected">Choose to join...</option>
-                            <option value="volvo">Volvo</option>
-                            <option value="saab">Saab</option>
-                            <option value="opel">Opel</option>
-                            <option value="audi">Audi</option>
+                        <select [(ngModel)]="selectedCreatedPoll" (ngModelChange)="joinCreatedPoll()" name="createdPolls" form="joinCreatedPoll" class="btn">
+                            <option value="-1" selected="selected">Choose to join...</option>
+                            <option *ngFor="let cp of pollroomsCreated" [value]="cp.identifier">{{ cp.name }} - {{ cp.identifier }}</option>
                         </select>
                     </form>
                 </div>

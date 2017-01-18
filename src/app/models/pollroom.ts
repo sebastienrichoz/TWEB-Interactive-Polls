@@ -7,6 +7,7 @@ export class Pollroom {
     questions: Question[] = [];
     nb_participants: number;
     creator: string;
+    created_at: string;
 
     constructor() {
         this.id = 0;
@@ -15,5 +16,6 @@ export class Pollroom {
         this.nb_participants = 0;
         this.creator = "";
         this.identifier = "No identifier";
+        this.created_at = "";
     }
 }

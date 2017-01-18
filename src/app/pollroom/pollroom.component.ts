@@ -1,5 +1,5 @@
 import {
-    Component, OnInit, ChangeDetectionStrategy
+    Component, OnInit, ChangeDetectionStrategy, OnDestroy
 } from '@angular/core';
 import {Question, Answer} from "../models/question";
 import {HomeService} from "../services/home.service";
@@ -15,13 +15,13 @@ import * as io from "socket.io-client";
     templateUrl: './pollroom.component.html',
     styleUrls: ['./pollroom.component.css']
 })
-export class PollroomComponent implements OnInit {
+export class PollroomComponent implements OnInit, OnDestroy {
 
     private nbAnswers: number;
-    private nbTotalAnswers: number;
     private pollroom: Pollroom = new Pollroom;
     private editingQuestion: Question;
     private socket: any = undefined;
+    private user: any;
 
     // private subscription = new Subscription();
 
@@ -53,7 +53,6 @@ export class PollroomComponent implements OnInit {
         this.manageSocket();
 
         this.nbAnswers = 0;
-        this.nbTotalAnswers = 0;
     }
 
 
@@ -65,10 +64,18 @@ export class PollroomComponent implements OnInit {
             .switchMap((params: Params) => this.homeService.getPollroom(params['identifier']))
             .subscribe(pollroom => {
                 this.pollroom = pollroom;
+
+                console.log(pollroom);
+
+                this.user = localStorage.getItem("pollak_sessionid");
+
                 this.socket.emit('connection');
                 this.socket.on('hello', () => {
                     this.socket.emit('join', { room: this.pollroom.identifier });
                 });
+
+                this.nbAnswers = 0;
+                this.pollroom.questions.forEach(q => this.nbAnswers += q.nb_participants);
             },
             error => console.log(error));
     }
@@ -84,13 +91,7 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('newQuestion', (data) => {
-            console.log("newQuestion");
-            console.log(data);
-            let questions = [];
-            questions.push(data.question);
-            this.pollroom.questions.forEach(q => questions.push(q));
-
-            this.pollroom.questions = questions;
+            this.pollroom.questions.push(data.question);
             console.log(this.pollroom);
         });
 
@@ -136,9 +137,6 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('voteUp', (data) => {
-            console.log("voteUp");
-            console.log(data);
-            // TODO
             for (let q of this.pollroom.questions)
                 if (q.id === data.question_id) {
                     q.nb_positives_votes++;
@@ -146,10 +144,17 @@ export class PollroomComponent implements OnInit {
                 }
         });
 
+        this.socket.on('cancelVoteUp', (data) => {
+            for (let q of this.pollroom.questions)
+                if (q.id === data.question_id) {
+                    q.nb_positives_votes--;
+                    break;
+                }
+        });
+
         this.socket.on('voteDown', (data) => {
             console.log("voteDown");
             console.log(data);
-            // TODO
             for (let q of this.pollroom.questions)
                 if (q.id === data.question_id) {
                     q.nb_negatives_votes++;
@@ -157,14 +162,22 @@ export class PollroomComponent implements OnInit {
                 }
         });
 
+        this.socket.on('cancelVoteDown', (data) => {
+            for (let q of this.pollroom.questions)
+                if (q.id === data.question_id) {
+                    q.nb_negatives_votes--;
+                    break;
+                }
+        });
+
         this.socket.on('answerChecked', (data) => {
-            console.log("answerChecked");
-            console.log(data);
+            this.nbAnswers++;
             let leave = false;
             for (let q of this.pollroom.questions) {
                 for (let a of q.answers) {
                     if (a.id === data.answer_id) {
                         a.nb_responses++;
+                        q.nb_participants++;
                         leave = true;
                         break;
                     }
@@ -174,13 +187,13 @@ export class PollroomComponent implements OnInit {
         });
 
         this.socket.on('answerUnchecked', (data) => {
-            console.log("answerUnchecked");
-            console.log(data);
+            this.nbAnswers--;
             let leave = false;
             for (let q of this.pollroom.questions) {
                 for (let a of q.answers) {
                     if (a.id === data.answer_id) {
                         a.nb_responses++;
+                        q.nb_participants--;
                         leave = true;
                         break;
                     }
@@ -188,12 +201,12 @@ export class PollroomComponent implements OnInit {
                 if (leave) break;
             }
         });
-    }
 
-    leavePollroom() {
-        console.log("leave pollroom");
-        this.socket.emit('bye', {room: this.pollroom.identifier});
-        this.socket.disconnect();
+        this.socket.on('closePollroom', () => {
+            console.log("closePollroom");
+            this.pollroom.status = 'closed';
+            this.pollroom.questions.forEach(q => q.status = 'closed');
+        });
     }
 
     answerGiven(question: Question, answer: Answer) {
@@ -207,8 +220,11 @@ export class PollroomComponent implements OnInit {
 
     editQuestion(question: Question) {
         for (let q of this.pollroom.questions)
-            if (q.id !== question.id && q.status === 'pending')
-                q.status = 'opened';
+            if (q.status === 'pending' && q.id !== question.id) {
+                q.status = 'open';
+                this.socket.emit('updateQuestion', {room: this.pollroom.identifier, question: q});
+                break;
+            }
 
         this.editingQuestion = question;
     }
@@ -223,5 +239,11 @@ export class PollroomComponent implements OnInit {
         for (let q of this.pollroom.questions)
             if (question.id === q.id)
                 q.status = 'open';
+    }
+
+    ngOnDestroy() {
+        console.log("destroy");
+        this.socket.emit('bye', {room: this.pollroom.identifier});
+        this.socket.disconnect();
     }
 }

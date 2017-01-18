@@ -84,8 +84,10 @@ router.patch('/:question_id/', function(req, res) {
         data.title = req.body.title;
     }
     if (req.body.answers != undefined) {
-        data.answers = req.body.status;
+        data.answers = req.body.answers; // TODO (modif de sebri) avant c'était : data.answers = req.body.status
     }
+
+    console.log(data); // TODO sebri a mis ça
 
     Question
         .findByIdAndUpdate(req.params.question_id, { $set: data }, { new: true })

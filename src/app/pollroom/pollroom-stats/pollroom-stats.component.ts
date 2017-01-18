@@ -14,34 +14,36 @@ export class PollroomStatsComponent implements OnInit {
 
     private questionsChecked: Map<number, number> = new Map();
     private nbAnswers: number;
-    private pollroomTotalAnswers: number;
     displayCloseRoomInfo = false;
-    displayOpenRoomInfo = false;
     @Input() private nbTotalAnswers: number;
     @Input() private pollroom: Pollroom;
     @Input() socket;
+    @Input() totalAllUsersAnswer;
+    @Input() user;
 
     constructor(private pollroomService: PollroomService,
                 private homeService: HomeService) { }
 
     ngOnInit() {
         this.nbAnswers = 0;
-        this.pollroomTotalAnswers = 0;
     }
 
     ngOnChanges() {
         console.log("pollroom changes detected in PollroomStatsComponent");
-
-        for (let question of this.pollroom.questions)
-            this.pollroomTotalAnswers += question.nb_responses;
     }
 
     patchRoom(status: string) {
-        this.pollroomService.patchRoom(this.pollroom.id, status).then(
+        this.pollroomService.patchRoom(this.pollroom.id, {status: status}).then(
             pollroom => {
-                this.socket.emit('closePollroom', { room: this.pollroom.identifier, pollroom_id: this.pollroom.id });
-                this.displayCloseRoomInfo = status !== "closed";
-                this.displayOpenRoomInfo = !this.displayCloseRoomInfo;
+                this.socket.emit('closePollroom', { room: this.pollroom.identifier });
+
+                // close all questions
+                this.pollroom.questions.forEach(q => {
+                    q.status = 'closed';
+                    this.pollroomService.patchQuestion(q);
+                });
+
+                this.displayCloseRoomInfo = true;
                 this.homeService.selectPollroom(pollroom);
                 console.log("pollroom " + pollroom.status);
             },
@@ -59,6 +61,7 @@ export class PollroomStatsComponent implements OnInit {
         if(e.target.checked) {
             if (nbAnswers === undefined || nbAnswers === 0) {
                 this.nbAnswers++;
+                this.socket.emit('answerChecked', {room: this.pollroom.identifier, answer_id: answerId});
                 this.questionsChecked.set(questionId, 1);
             } else {
                 this.questionsChecked.set(questionId, nbAnswers + 1);
@@ -67,6 +70,7 @@ export class PollroomStatsComponent implements OnInit {
             if (nbAnswers === 1) {
                 this.questionsChecked.set(questionId, 0);
                 this.nbAnswers--;
+                this.socket.emit('answerUnchecked', {room: this.pollroom.identifier, answer_id: answerId});
             } else {
                 this.questionsChecked.set(questionId, nbAnswers - 1);
             }
