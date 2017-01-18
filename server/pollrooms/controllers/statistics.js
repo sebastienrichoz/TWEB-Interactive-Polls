@@ -3,14 +3,14 @@ var express = require('express'),
     Promise = require('bluebird'),
     Pollroom = require('../models/Pollroom'),
     Question = require('../models/Question'),
-    Answer = require('../models/Answer');
+    Choice = require('../models/Answer');
 
 router.get('/', function(req, res) {
     Promise
         .all([
             Pollroom.count().exec(),
             Question.count().exec(),
-            Answer.count().exec()
+            Choice.count().exec()
         ])
         .then(function(values) {
             return res.json({

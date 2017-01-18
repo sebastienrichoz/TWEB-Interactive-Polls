@@ -46,6 +46,7 @@ router.post('/', function(req, res) {
                 .exec();
         })
         .then(function(question) {
+            res.io.to(question.pollroom.identifier).emit('newQuestion', question);
             return res.status(201).json(question);
         })
         .catch(function(err) {
