@@ -2,6 +2,7 @@ import {Component, OnInit, Output, Input} from '@angular/core';
 import {Pollroom} from "../../models/pollroom";
 import {PollroomService} from "../../services/pollroom.service";
 import {HomeService} from "../../services/home.service";
+import {QuestionUpdateStatusDTO} from "../../models/question-update-status-dto";
 
 
 @Component({
@@ -40,7 +41,8 @@ export class PollroomStatsComponent implements OnInit {
                 // close all questions
                 this.pollroom.questions.forEach(q => {
                     q.status = 'closed';
-                    this.pollroomService.patchQuestion(q);
+                    let dto = new QuestionUpdateStatusDTO(q.id, q.status);
+                    this.pollroomService.patchQuestion(dto);
                 });
 
                 this.displayCloseRoomInfo = true;

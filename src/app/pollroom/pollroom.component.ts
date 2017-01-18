@@ -111,7 +111,28 @@ export class PollroomComponent implements OnInit, OnDestroy {
             console.log(data);
             for (let q of this.pollroom.questions)
                 if (q.id === data.question.id) {
-                    q.clone(data.question);
+                    q.id = data.question.id;
+                    q.title = data.question.title;
+                    q.answers = [];
+                    data.question.answers.forEach(ans => {
+                        let a = new Answer(ans.id, ans.label);
+                        a.is_answered = ans.is_answered;
+                        a.nb_responses = ans.nb_responses;
+                        a.letter = ans.letter;
+                        q.answers.push(a);
+                    });
+                    q.nb_participants = data.question.nb_participants;
+                    q.nb_positives_votes = data.question.nb_positives_votes;
+                    q.nb_negatives_votes = data.question.nb_negatives_votes;
+                    q.status = 'open';
+                    q.created_at = data.question.created_at;
+
+                    let c = 'A';
+                    for (let answer of q.answers) {
+                        answer.letter = c;
+                        c = this.nextChar(c);
+                    }
+
                     break;
                 }
         });
@@ -207,6 +228,10 @@ export class PollroomComponent implements OnInit, OnDestroy {
             this.pollroom.status = 'closed';
             this.pollroom.questions.forEach(q => q.status = 'closed');
         });
+    }
+
+    nextChar(c) {
+        return String.fromCharCode(c.charCodeAt(0) + 1);
     }
 
     answerGiven(question: Question, answer: Answer) {

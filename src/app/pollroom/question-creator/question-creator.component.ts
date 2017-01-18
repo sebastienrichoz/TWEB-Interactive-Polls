@@ -97,11 +97,9 @@ export class QuestionCreatorComponent implements OnInit {
             console.log(verifications.error_message);
         } else {
 
-            let answers = [];
-            for (let a in verifications.answers) {
-                console.log("====>",a);
-            }
-            let dto = new QuestionUpdateInfosDTO(this.question.id, this.question.status, this.question.title.trim(), verifications.answers);
+            let answers: string[] = [];
+            this.question.answers.forEach(a => answers.push(a.label));
+            let dto = new QuestionUpdateInfosDTO(this.question.id, this.question.status, this.question.title.trim(), answers);
 
             this.pollroomService.patchQuestion(dto).then(
                 question => {
@@ -135,6 +133,7 @@ export class QuestionCreatorComponent implements OnInit {
 
     editQuestion(question: Question) {
         this.socket.emit('editingQuestion', { room: this.pollroomIdentifier, question_id: question.id});
+        this.originalQuestion = new Question(question.id, question.title);
         this.originalQuestion.clone(question);
         this.question = question;
         this.displayFullQuestion();
@@ -167,9 +166,26 @@ export class QuestionCreatorComponent implements OnInit {
     displayOrHideFullQuestion() {
         this.isFocus = !this.isFocus;
         if (this.question.status === 'pending') {
+            this.question.id = this.originalQuestion.id;
+            this.question.title = this.originalQuestion.title;
+            this.question.answers = [];
+            this.originalQuestion.answers.forEach(ans => {
+                let a = new Answer(ans.id, ans.label);
+                a.is_answered = ans.is_answered;
+                a.nb_responses = ans.nb_responses;
+                a.letter = ans.letter;
+                this.question.answers.push(a);
+            });
+            this.question.nb_participants = this.originalQuestion.nb_participants;
+            this.question.nb_positives_votes = this.originalQuestion.nb_positives_votes;
+            this.question.nb_negatives_votes = this.originalQuestion.nb_negatives_votes;
+
+            this.question.status = this.originalQuestion.status;
+            this.question.created_at = this.originalQuestion.created_at;
+
             this.socket.emit('abortEditingQuestion', { room: this.pollroomIdentifier, question_id: this.question.id });
-            this.originalQuestion.status = 'open';
-            this.onUpdateCanceled.emit(this.originalQuestion);
+            this.question.status = 'open';
+            this.onUpdateCanceled.emit(this.question);
             this.initQuestion();
         }
     }

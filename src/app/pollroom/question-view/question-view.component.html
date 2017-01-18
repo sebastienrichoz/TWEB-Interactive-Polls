@@ -17,7 +17,7 @@
 
     <h3 style="margin-top: 30px;">
         <span *ngIf="user === question.creator">
-            <button [disabled]="question.nb_participants > 0" (click)="editQuestion(question)" class="btn btn-sm btn-warning" style="padding: 2px 5px;"><i class="fa fa-pencil fa-fw" style="color: #ffffff;"></i></button>
+            <button [disabled]="question.nb_participants > 0" (click)="editQuestion()" class="btn btn-sm btn-warning" style="padding: 2px 5px;"><i class="fa fa-pencil fa-fw" style="color: #ffffff;"></i></button>
         </span>
         {{ question.title }}
     </h3>

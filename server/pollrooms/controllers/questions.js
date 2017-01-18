@@ -84,23 +84,57 @@ router.patch('/:question_id/', function(req, res) {
         data.title = req.body.title;
     }
     if (req.body.answers != undefined) {
-        data.answers = req.body.answers; // TODO (modif de sebri) avant c'était : data.answers = req.body.status
+        data.answers = [];
     }
 
     console.log(data); // TODO sebri a mis ça
-
     Question
-        .findByIdAndUpdate(req.params.question_id, { $set: data }, { new: true })
-        .populate({ path: 'answers', model: 'Answer' })
+        .findById(req.params.question_id)
         .exec()
         .then(function(question) {
+            console.log("================================ 1");
             if (question == null) {
-                return res.status(404).send();
+                throw new Error(404);
             }
+
+            return Answer
+                .remove({ 'question': question.id })
+                .exec();
+        })
+        .then(function() {
+            console.log("================================ 2");
+            var answers = [];
+            console.log(req.body.answers);
+            for (var k in req.body.answers) {
+                var answer = new Answer({
+                    label: req.body.answers[k],
+                    question: req.params.question_id
+                });
+                answers.push(answer);
+                data.answers.push(answer);
+            }
+            return Promise
+                .each(answers, function(answer) {
+                    return answer.save();
+                });
+        })
+        .then(function() {
+            console.log("================================ 3");
+            return Question
+                .findByIdAndUpdate(req.params.question_id, {$set: data}, {new: true})
+                .populate({ path: 'answers', model: 'Answer' })
+                .exec();
+        })
+        .then(function(question) {
+            console.log("================================ 4");
             res.io.to(question.pollroom.identifier).emit('updateQuestion', question);
             return res.json(question);
         })
         .catch(function(err) {
+            console.log("================================ 5");
+            if (err.message != undefined && err.message == 404) {
+                return res.status(404).send();
+            }
             console.log(err);
             return res.status(400).send(err);
         });

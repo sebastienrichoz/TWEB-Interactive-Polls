@@ -49,7 +49,7 @@ export class Question {
             this.answers.splice(index, 1);
     }
 
-    clone(q: Question) {
+    public clone(q: Question) {
         this.id = q.id;
         this.title = q.title;
         this.answers = [];
