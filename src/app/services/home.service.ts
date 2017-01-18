@@ -13,9 +13,7 @@ export class HomeService {
     private pollroomSelectedSource = new Subject<Pollroom>();
     pollroomSelected$ = this.pollroomSelectedSource.asObservable();
 
-    constructor(private http: Http, private utility: UtilityService) {
-        console.log("HomerService constructor");
-    }
+    constructor(private http: Http, private utility: UtilityService) { }
 
     private headers = new Headers({ 'Content-Type': 'application/json', 'charset': 'UTF-8' });
     private options = new RequestOptions({ headers: this.headers });
@@ -38,6 +36,13 @@ export class HomeService {
 
     joinPollroom(pollroom_id: string): Promise<Pollroom> {
         return this.http.get("/api/v1/pollrooms/" + pollroom_id + "/")
+            .toPromise()
+            .then(this.utility.extractData)
+            .catch(this.utility.handleError);
+    }
+
+    getPollroom(pollroomId: string): Promise<Pollroom> {
+        return this.http.get('/api/v1/pollrooms/' + pollroomId)
             .toPromise()
             .then(this.utility.extractData)
             .catch(this.utility.handleError);

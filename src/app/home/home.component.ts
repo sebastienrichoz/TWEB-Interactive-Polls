@@ -17,7 +17,7 @@ import * as io from "socket.io-client";
 
 import { HomeService } from '../services/home.service';
 import {ToastsManager} from "ng2-toastr";
-import {Router} from "@angular/router";
+import {Router, ActivatedRoute} from "@angular/router";
 import {PollroomCreationDTO} from "../models/pollroom-creation-dto";
 import {Pollroom} from "../models/pollroom";
 
@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit {
                 overlay: Overlay,
                 vcRef: ViewContainerRef,
                 public modal: Modal,
-                private router: Router) {
+                private router: Router,) {
         overlay.defaultViewContainer = vcRef;
     }
 
@@ -91,18 +91,15 @@ export class HomeComponent implements OnInit {
         if (pollroomId) {
             this.homeService.joinPollroom(pollroomId).then(
                 pollroom => {
-                    let joinedPollroom: Pollroom = pollroom;
-                    this.toastr.success("Pollroom '" + joinedPollroom.id + "' joined");
+                    this.toastr.success("Pollroom '" + pollroom.id + "' joined");
 
                     // Navigate to pollroom
-                    this.router.navigate(['./pollroom']).then(
-                        res => this.homeService.selectPollroom(joinedPollroom)
-                    );
+                    this.router.navigate(['/pollroom', pollroom.id]);
                 },
                 error => this.toastr.error(error)
             );
         } else {
-            this.toastr.error("Blank pollroom number");
+            this.toastr.error("Blank pollroom identifier");
         }
     }
 
@@ -113,13 +110,10 @@ export class HomeComponent implements OnInit {
             console.log(pollroomCreationDTO);
             this.homeService.createPollroom(pollroomCreationDTO).then(
                 pollroom => {
-                    let currentPollroom: Pollroom = pollroom;
-                    this.toastr.success("Pollroom '" + currentPollroom.id + "'created");
+                    this.toastr.success("Pollroom '" + pollroom.id + "'created");
 
                     // Navigate to pollroom
-                    this.router.navigate(['./pollroom']).then(
-                        res => this.homeService.selectPollroom(currentPollroom)
-                    );
+                    this.router.navigate(['/pollroom', pollroom.id]);
                 },
                 error => this.toastr.error(error, "Error")
             );

@@ -13,7 +13,6 @@ import { UUID } from 'angular2-uuid';
 // Components
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { AboutComponent } from './about/about.component';
 import { PollroomComponent } from './pollroom/pollroom.component';
 import { QuestionCreatorComponent } from './pollroom/question-creator/question-creator.component';
 import { QuestionViewComponent } from './pollroom/question-view/question-view.component';
@@ -42,7 +41,7 @@ export class MyXSRFStrategy {
 // roots
 const routing = RouterModule.forRoot([
     { path: '',      component: HomeComponent },
-    { path: 'pollroom', component: PollroomComponent }
+    { path: 'pollroom/:id', component: PollroomComponent }
 ]);
 
 export function myFactory() {
@@ -53,7 +52,6 @@ export function myFactory() {
     declarations: [
         AppComponent,
         HomeComponent,
-        AboutComponent,
         ThousandSeparatorPipe,
         PollroomComponent,
         QuestionCreatorComponent,
