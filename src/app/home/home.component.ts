@@ -10,16 +10,12 @@ import {
 } from '@angular/core';
 
 import { FormGroup, FormControl, Validators, FormBuilder }  from '@angular/forms';
-import {Overlay} from 'angular2-modal';
-import {Modal} from 'angular2-modal/plugins/bootstrap';
 import { UUID } from 'angular2-uuid';
-import * as io from "socket.io-client";
 
 import { HomeService } from '../services/home.service';
 import {ToastsManager} from "ng2-toastr";
-import {Router, ActivatedRoute} from "@angular/router";
+import {Router} from "@angular/router";
 import {PollroomCreationDTO} from "../models/pollroom-creation-dto";
-import {Pollroom} from "../models/pollroom";
 
 @Component({
     selector: 'app-home',
@@ -63,12 +59,7 @@ export class HomeComponent implements OnInit {
     constructor(private homeService: HomeService,
                 public toastr: ToastsManager,
                 private formBuilder: FormBuilder,
-                overlay: Overlay,
-                vcRef: ViewContainerRef,
-                public modal: Modal,
-                private router: Router,) {
-        overlay.defaultViewContainer = vcRef;
-    }
+                private router: Router) { }
 
     ngOnInit() {
         if (localStorage.getItem("pollak_sessionid") === null) {
@@ -91,10 +82,10 @@ export class HomeComponent implements OnInit {
         if (pollroomId) {
             this.homeService.joinPollroom(pollroomId).then(
                 pollroom => {
-                    this.toastr.success("Pollroom '" + pollroom.id + "' joined");
+                    this.toastr.success("Pollroom '" + pollroom.identifier + "' joined");
 
                     // Navigate to pollroom
-                    this.router.navigate(['/pollroom', pollroom.id]);
+                    this.router.navigate(['/pollroom', pollroom.identifier]);
                 },
                 error => this.toastr.error(error)
             );
@@ -110,10 +101,10 @@ export class HomeComponent implements OnInit {
             console.log(pollroomCreationDTO);
             this.homeService.createPollroom(pollroomCreationDTO).then(
                 pollroom => {
-                    this.toastr.success("Pollroom '" + pollroom.id + "'created");
+                    this.toastr.success("Pollroom '" + pollroom.identifier + "'created");
 
                     // Navigate to pollroom
-                    this.router.navigate(['/pollroom', pollroom.id]);
+                    this.router.navigate(['/pollroom', pollroom.identifier]);
                 },
                 error => this.toastr.error(error, "Error")
             );
@@ -129,36 +120,4 @@ export class HomeComponent implements OnInit {
     //         () => this.isLoading = false
     //     );
     // }
-
-    openPollroomModal() {
-        this.modal.alert()
-            .size('lg')
-            .showClose(true)
-            .body(require('./home.modal-pollroom.html'))
-            .open();
-    }
-
-    openQuestionsModal() {
-        this.modal.alert()
-            .size('lg')
-            .showClose(true)
-            .body(require('./home.modal-questions.html'))
-            .open();
-    }
-
-    openAnswersModal() {
-        this.modal.alert()
-            .size('lg')
-            .showClose(true)
-            .body(require('./home.modal-answers.html'))
-            .open();
-    }
-
-    openStatisticsModal() {
-        this.modal.alert()
-            .size('lg')
-            .showClose(true)
-            .body(require('./home.modal-statistics.html'))
-            .open();
-    }
 }

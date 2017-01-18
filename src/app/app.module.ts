@@ -5,8 +5,6 @@ import {HttpModule, XSRFStrategy, Request} from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 // External libraries
-import { ModalModule } from 'angular2-modal';
-import { BootstrapModalModule } from 'angular2-modal/plugins/bootstrap';
 import { ToastModule } from 'ng2-toastr/ng2-toastr';
 import { UUID } from 'angular2-uuid';
 
@@ -41,7 +39,7 @@ export class MyXSRFStrategy {
 // roots
 const routing = RouterModule.forRoot([
     { path: '',      component: HomeComponent },
-    { path: 'pollroom/:id', component: PollroomComponent }
+    { path: 'pollroom/:identifier', component: PollroomComponent }
 ]);
 
 export function myFactory() {
@@ -66,8 +64,6 @@ export function myFactory() {
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
-        ModalModule.forRoot(),
-        BootstrapModalModule,
         ToastModule,
         routing
     ],

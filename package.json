@@ -34,7 +34,6 @@
     "@types/node-uuid": "0.0.28",
     "@types/socket.io-client": "^1.4.29",
     "angular-cli": "1.0.0-beta.25.5",
-    "angular2-modal": "^2.0.2",
     "angular2-uuid": "^1.1.0",
     "bcryptjs": "^2.3.0",
     "bluebird": "^3.4.7",

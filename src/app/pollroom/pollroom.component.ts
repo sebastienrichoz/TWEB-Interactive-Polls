@@ -68,7 +68,7 @@ export class PollroomComponent implements OnInit {
         //     this.router.navigate(['./']);
 
         this.route.params
-            .switchMap((params: Params) => this.homeService.getPollroom(params['id']))
+            .switchMap((params: Params) => this.homeService.getPollroom(params['identifier']))
             .subscribe(pollroom => {
                 this.pollroom = pollroom;
                 console.log(pollroom);

@@ -41,8 +41,8 @@ export class HomeService {
             .catch(this.utility.handleError);
     }
 
-    getPollroom(pollroomId: string): Promise<Pollroom> {
-        return this.http.get('/api/v1/pollrooms/' + pollroomId)
+    getPollroom(pollroomIdentifier: string): Promise<Pollroom> {
+        return this.http.get('/api/v1/pollrooms/' + pollroomIdentifier)
             .toPromise()
             .then(this.utility.extractData)
             .catch(this.utility.handleError);
