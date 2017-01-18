@@ -5,6 +5,7 @@ import {
 import {Question} from "../../models/question";
 import {TimeAgoPipe} from "../../pipes/time-ago.pipe";
 import {PollroomService} from "../../services/pollroom.service";
+import {QuestionUpdateStatusDTO} from "../../models/question-update-status-dto";
 
 
 @Component({
@@ -90,7 +91,8 @@ export class QuestionViewComponent implements OnInit, OnChanges {
     editQuestion() {
         let previousStatus = this.question.status;
         this.question.status = 'pending';
-        this.pollroomService.patchQuestion(this.question).then(
+        let dto = new QuestionUpdateStatusDTO(this.question.id, this.question.status);
+        this.pollroomService.patchQuestion(dto).then(
             res => {
                 this.socket.emit('editingQuestion', {room: this.pollroom.identifier, question_id: this.question.id});
                 this.onQuestionEdit.emit(this.question);
@@ -146,7 +148,8 @@ export class QuestionViewComponent implements OnInit, OnChanges {
 
     openQuestion() {
         this.question.status = 'open';
-        this.pollroomService.patchQuestion(this.question).then(
+        let dto = new QuestionUpdateStatusDTO(this.question.id, this.question.status);
+        this.pollroomService.patchQuestion(dto).then(
             res => this.socket.emit('openQuestion', { room: this.pollroom.identifier, question_id: this.question.id }),
             error => console.log(error)
         );
@@ -157,7 +160,8 @@ export class QuestionViewComponent implements OnInit, OnChanges {
     closeQuestion() {
         let previousStatus = this.question.status;
         this.question.status = 'closed';
-        this.pollroomService.patchQuestion(this.question).then(
+        let dto = new QuestionUpdateStatusDTO(this.question.id, this.question.status);
+        this.pollroomService.patchQuestion(dto).then(
             res => {
                 this.socket.emit('closeQuestion', { room: this.pollroom.identifier, question_id: this.question.id });
                 this.questionIsClosed = true;

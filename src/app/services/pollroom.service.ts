@@ -5,6 +5,7 @@ import {PollroomCreationDTO} from "../models/pollroom-creation-dto";
 import {Pollroom} from "../models/pollroom";
 import {Question} from "../models/question";
 import {QuestionCreationDTO} from "../models/question-creation-dto";
+import {QuestionUpdateDTO} from "../models/question-update-dto";
 
 @Injectable()
 export class PollroomService {
@@ -30,7 +31,7 @@ export class PollroomService {
             .catch(this.utility.handleError);
     }
 
-    patchQuestion(question: any): Promise<Question> {
+    patchQuestion(question: QuestionUpdateDTO): Promise<Question> {
         return this.http.patch(this.base + "questions/" + question.id + "/", JSON.stringify(question), this.options)
             .toPromise()
             .then(this.utility.extractData)

@@ -7,6 +7,7 @@ import { Question, Answer } from '../../models/question';
 
 import {PollroomService} from "../../services/pollroom.service";
 import {QuestionCreationDTO} from "../../models/question-creation-dto";
+import {QuestionUpdateInfosDTO} from "../../models/question-update-infos-dto";
 
 @Component({
     moduleId: module.id,
@@ -95,12 +96,14 @@ export class QuestionCreatorComponent implements OnInit {
         if (verifications.error_message) {
             console.log(verifications.error_message);
         } else {
-            let updatedQuestion = {
-                title: this.question.title.trim(),
-                answers: verifications.answers
-            };
 
-            this.pollroomService.patchQuestion(updatedQuestion).then(
+            let answers = [];
+            for (let a in verifications.answers) {
+                console.log("====>",a);
+            }
+            let dto = new QuestionUpdateInfosDTO(this.question.id, this.question.status, this.question.title.trim(), verifications.answers);
+
+            this.pollroomService.patchQuestion(dto).then(
                 question => {
                     this.socket.emit('updateQuestion', { room: this.pollroomIdentifier, question: question});
 
