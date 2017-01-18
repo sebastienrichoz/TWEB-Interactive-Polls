@@ -6,7 +6,8 @@ var express = require('express'),
     pollrooms = require('./pollrooms/controllers/pollrooms'),
     questions = require('./pollrooms/controllers/questions'),
     answers = require('./pollrooms/controllers/answers'),
-    statistics = require('./pollrooms/controllers/statistics');
+    statistics = require('./pollrooms/controllers/statistics'),
+    Pollroom = require('./pollrooms/models/Pollroom');
 
 var app = express();
 var server = require('http').Server(app);
@@ -57,8 +58,12 @@ db.once('open', function() {
         socket.on('join', function(data) {
             console.log(data);
             socket.join(data.room);
-            // TODO : augmenter le nombre de participant du pollroom dans la BD de +1
-            io.to(data.room).emit('participantArrived');
+
+            Pollroom
+                .findOneAndUpdate({ 'identifier': data.room }, { '$inc': { 'nb_participants': 1 } })
+                .then(function() {
+                    io.to(data.room).emit('participantArrived');
+                });
         });
 
         socket.on('newQuestion', function(data) {
@@ -118,8 +123,11 @@ db.once('open', function() {
 
         socket.on('bye', function(data){
            console.log('bye');
-            // TODO : diminuer le nombre de participant du pollroom dans la BD de 1
-           io.to(data.room).emit('participantLeft');
+           Pollroom
+               .findOneAndUpdate({ 'identifier': data.room }, { '$inc': { 'nb_participants': -1 } })
+               .then(function() {
+                   io.to(data.room).emit('participantLeft');
+               });
         });
 
 

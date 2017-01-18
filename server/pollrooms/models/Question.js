@@ -44,13 +44,13 @@ QuestionSchema.statics.updateParticipantsCount = function(question_id) {
             return mongoose.model('Question')
                 .findByIdAndUpdate(question_id, { 'nb_participants': count })
                 .exec();
-        })
-        .then(function(question) {
-            if (question == null) {
-                return Promise.resolve();
-            }
-            return Pollroom.updateParticipantsCount(question.pollroom);
         });
+        // .then(function(question) {
+        //     if (question == null) {
+        //         return Promise.resolve();
+        //     }
+        //     return Pollroom.updateParticipantsCount(question.pollroom);
+        // });
 };
 
 QuestionSchema.statics._updateVotesCount = function(question_id, up) {
