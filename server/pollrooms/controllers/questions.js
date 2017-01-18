@@ -95,6 +95,7 @@ router.patch('/:question_id/', function(req, res) {
             if (question == null) {
                 return res.status(404).send();
             }
+            res.io.to(question.pollroom.identifier).emit('updateQuestion', question);
             return res.json(question);
         })
         .catch(function(err) {
@@ -125,12 +126,16 @@ function vote(question_id, user, up) {
         })
         .then(function() {
             return Question.updateVotesCount(data.question);
+        })
+        .then(function() {
+            return Question.findById(data.question).exec();
         });
 }
 
 router.post('/:question_id/voteup/', function(req, res) {
     return vote(req.params.question_id, req.get('X-Session-ID'), true)
-        .then(function() {
+        .then(function(question) {
+            res.io.to(question.pollroom.identifier).emit('updateQuestion', vote.question);
             return res.send();
         })
         .catch(function(err) {
@@ -144,7 +149,8 @@ router.post('/:question_id/voteup/', function(req, res) {
 
 router.post('/:question_id/votedown/', function(req, res) {
     return vote(req.params.question_id, req.get('X-Session-ID'), false)
-        .then(function() {
+        .then(function(question) {
+            res.io.to(question.pollroom.identifier).emit('updateQuestion', vote.question);
             return res.send();
         })
         .catch(function(err) {
