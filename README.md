@@ -1,7 +1,13 @@
-# TWEB project : Interactive polls with Pollak
+# AMT project - Gamified app : Interactive polls with Pollak
 
 Pollak is a web application which allows you to create and join polls.
 Everyone can ask and answer questions. The creator has the ability to close the room.
+
+**This project has been updated with gamification features**
+
+Server API for gamification: [https://github.com/moodah/AMT_Gamification](https://github.com/moodah/AMT_Gamification)
+
+*Original repo Interactive Polls: [https://github.com/damienrochat/TWEB-Interactive-Polls](https://github.com/damienrochat/TWEB-Interactive-Polls)*
 
 ## Preview
 
