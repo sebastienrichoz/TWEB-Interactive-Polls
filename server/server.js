@@ -137,6 +137,11 @@ db.once('open', function() {
             console.log('disconnected');
         });
     });
+
+    // Associate eventtypes id
+
+
+
 });
 
 module.exports = app;

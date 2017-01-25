@@ -60,6 +60,8 @@ export class HomeComponent implements OnInit {
     private joinPollForm: FormGroup;
     private pollRoomNumber = new FormControl("", Validators.required);
 
+    // Gamification
+
     constructor(private homeService: HomeService,
                 private formBuilder: FormBuilder,
                 private router: Router) { }

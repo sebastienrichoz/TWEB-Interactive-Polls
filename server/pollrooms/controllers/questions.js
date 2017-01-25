@@ -4,7 +4,9 @@ var express = require('express'),
     Pollroom = require('../models/Pollroom'),
     Question = require('../models/Question'),
     Answer = require('../models/Answer'),
-    Vote = require('../models/Vote');
+    Vote = require('../models/Vote'),
+    gamification = require('../../gamification/gamification-api'),
+    eventtypesMap = require('../../gamification/eventtypes');
 
 router.post('/', function(req, res) {
     var question = new Question({
@@ -21,6 +23,10 @@ router.post('/', function(req, res) {
         answers.push(answer);
         question.answers.push(answer);
     }
+    var event = {
+        id: eventtypesMap.get('ask a question'),
+        user: req.get('X-Session-ID')
+    };
 
     Promise
         .each(answers, function(answer) {
@@ -46,6 +52,7 @@ router.post('/', function(req, res) {
                 .exec();
         })
         .then(function(question) {
+            gamification.postEvent(event);
             res.io.to(question.pollroom.identifier).emit('newQuestion', question);
             return res.status(201).json(question);
         })

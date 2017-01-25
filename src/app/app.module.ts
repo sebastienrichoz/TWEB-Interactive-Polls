@@ -11,11 +11,14 @@ import { QuestionCreatorComponent } from './pollroom/question-creator/question-c
 import { QuestionViewComponent } from './pollroom/question-view/question-view.component';
 import { PollroomStatsComponent } from './pollroom/pollroom-stats/pollroom-stats.component';
 import { ResponseViewComponent } from './pollroom/question-view/response-view/response-view.component';
+import { GamificationUserComponent } from './home/gamification-user/gamification-user.component';
+import { GamificationLeaderboardComponent } from './home/gamification-leaderboard/gamification-leaderboard.component';
 
 // Services
 import {HomeService} from "./services/home.service";
 import {PollroomService} from "./services/pollroom.service";
 import { UtilityService } from "./services/utility-service";
+import { GamificationService } from "./services/gamification/gamification.service";
 
 
 // Pipes
@@ -25,6 +28,7 @@ import { NegativeSignPipe } from './pipes/negative-sign.pipe';
 
 // roots
 import { AppRoutingModule } from "./app-routing.module";
+
 
 
 export class MyXSRFStrategy {
@@ -49,7 +53,9 @@ export function myFactory() {
         QuestionCreatorComponent,
         TimeAgoPipe,
         NegativeSignPipe,
-        ThousandSeparatorPipe
+        ThousandSeparatorPipe,
+        GamificationUserComponent,
+        GamificationLeaderboardComponent
     ],
     imports: [
         BrowserModule,
@@ -62,6 +68,7 @@ export function myFactory() {
         HomeService,
         UtilityService,
         PollroomService,
+        GamificationService,
         { provide: XSRFStrategy, useFactory: myFactory }
     ],
     bootstrap: [AppComponent]

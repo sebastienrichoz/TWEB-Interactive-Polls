@@ -8,8 +8,7 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
-        "public/assets",
-        "public/data"
+        "public/assets"
       ],
       "index": "public/index.html",
       "main": "main.ts",
