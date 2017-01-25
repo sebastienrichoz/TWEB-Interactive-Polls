@@ -68,10 +68,11 @@
 </header>
 
 <!-- Gamification user -->
-<gamification-user></gamification-user>
+<gamification-user (emitUser)="gamificationLeadearbord.setUser($event)"></gamification-user>
 
 <!-- Gamification leaderboard -->
-<gamification-leaderboard></gamification-leaderboard>
+<gamification-leaderboard
+    #gamificationLeadearbord></gamification-leaderboard>
 
 <!-- About -->
 <section id="about" class="about">

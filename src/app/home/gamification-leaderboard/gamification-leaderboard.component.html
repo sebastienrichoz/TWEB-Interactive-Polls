@@ -4,7 +4,7 @@
       <div class="col-lg-10 col-lg-offset-1">
         <h2>Leaderboard</h2>
         <hr class="small">
-          <p class="lead">You are ranked #2</p>
+          <p class="lead">You are ranked #{{ rank }}</p>
         <div class="row">
           <div class="col-sm-12">
 
@@ -19,23 +19,12 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr style="background-color: #5cb85c">
-                      <th scope="row">1</th>
-                      <td>95e18022-6fc1-43f7-3ff8-471e8b62c8bd</td>
-                      <td>Expert</td>
-                      <td>1200 pts</td>
-                  </tr>
-                  <tr>
-                      <th scope="row">2</th>
-                      <td>95e18022-6fc1-43f7-3ff8-471e8b62c8bd</td>
-                      <td>Intermediate</td>
-                      <td>550 pts</td>
-                  </tr>
-                  <tr>
-                      <th scope="row">3</th>
-                      <td>95e18022-6fc1-43f7-3ff8-471e8b62c8bd</td>
-                      <td>Beginner</td>
-                      <td>55 pts</td>
+                  <tr [ngStyle]="{'background-color': user.user_id === leader.user_id ? '#5cb85c' : 'none'}"
+                    *ngFor="let leader of leaderboard; let index = index;">
+                      <th scope="row">{{ index + 1 }}</th>
+                      <td>{{ leader.user_id }}</td>
+                      <td>{{ leader.level.name }}</td>
+                      <td>{{ leader.points }} pts</td>
                   </tr>
                   </tbody>
               </table>

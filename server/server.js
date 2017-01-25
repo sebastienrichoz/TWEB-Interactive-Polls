@@ -7,6 +7,7 @@ var express = require('express'),
     questions = require('./pollrooms/controllers/questions'),
     answers = require('./pollrooms/controllers/answers'),
     statistics = require('./pollrooms/controllers/statistics'),
+    gamification = require('./gamification/controllers/gamification'),
     Pollroom = require('./pollrooms/models/Pollroom'),
     eventtypes = require('./gamification/eventtypes');
 
@@ -46,6 +47,7 @@ db.once('open', function() {
     app.use('/api/v1/questions/', questions);
     app.use('/api/v1/answers/', answers);
     app.use('/api/v1/statistics/', statistics);
+    app.use('/api/v1/gamification/', gamification);
     app.use('/api/*', function(req, res, next) {
         var err = new Error('Not Found');
         err.status = 404;
