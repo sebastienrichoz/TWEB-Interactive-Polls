@@ -1,0 +1,30 @@
+#user-progression-level {
+    background-color: #e2e2e2;
+    border: 1px solid #D0D0D0;
+}
+
+#user-progression-level div div {
+    background-color: #a02f41;
+    color: white;
+}
+
+.user-progression-badge {
+    background-color: #ffffff;
+    border: 1px solid #e2e2e2;
+}
+
+.user-progression-badge div div {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.badges {
+    background-color: #D0D0D0;
+    margin-bottom: 30px;
+}
+
+.earned {
+    float: right;
+    margin-right: -15px;
+    padding: 5px;
+}
