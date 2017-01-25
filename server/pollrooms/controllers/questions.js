@@ -6,7 +6,7 @@ var express = require('express'),
     Answer = require('../models/Answer'),
     Vote = require('../models/Vote'),
     gamification = require('../../gamification/gamification-api'),
-    eventtypesMap = require('../../gamification/eventtypes');
+    eventtypes = require('../../gamification/eventtypes');
 
 router.post('/', function(req, res) {
     var question = new Question({
@@ -23,6 +23,8 @@ router.post('/', function(req, res) {
         answers.push(answer);
         question.answers.push(answer);
     }
+
+    var eventtypesMap = eventtypes.getEventtypeMap();
     var event = {
         id: eventtypesMap.get('ask a question'),
         user: req.get('X-Session-ID')
@@ -178,6 +180,13 @@ function vote(question_id, user, up) {
 router.post('/:question_id/voteup/', function(req, res) {
     return vote(req.params.question_id, req.get('X-Session-ID'), true)
         .then(function(question) {
+            var eventtypesMap = eventtypes.getEventtypeMap();
+            var event = {
+                id: eventtypesMap.get('get a positive vote for his question'),
+                user: question.creator
+            };
+
+            gamification.postEvent(event);
             res.io.to(question.pollroom.identifier).emit('updateQuestion', vote.question);
             return res.send();
         })
@@ -193,6 +202,12 @@ router.post('/:question_id/voteup/', function(req, res) {
 router.post('/:question_id/votedown/', function(req, res) {
     return vote(req.params.question_id, req.get('X-Session-ID'), false)
         .then(function(question) {
+            var eventtypesMap = eventtypes.getEventtypeMap();
+            var event = {
+                id: eventtypesMap.get('get a negative vote for his question'),
+                user: question.creator
+            };
+            gamification.postEvent(event);
             res.io.to(question.pollroom.identifier).emit('updateQuestion', vote.question);
             return res.send();
         })

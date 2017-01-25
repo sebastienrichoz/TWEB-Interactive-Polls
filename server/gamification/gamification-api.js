@@ -2,11 +2,8 @@ var rp = require('request-promise'),
     Promise = require('bluebird'),
     eventtypesMap = require('./eventtypes');
 
-const GAMIFICATION_SERVER = process.env.GAMIFICATION_SERVER;
-const GAMIFICATION_PORT = process.env.GAMIFICATION_PORT;
-const GAMIFICATION_PATH = process.env.GAMIFICATION_PATH;
 const GAMIFICATION_TOKEN = process.env.GAMIFICATION_TOKEN;
-const GAMIFICATION_BASE_PATH = GAMIFICATION_SERVER + GAMIFICATION_PORT + GAMIFICATION_PATH;
+const GAMIFICATION_BASE_PATH = process.env.GAMIFICATION_URI;
 
 function getUser(user_id) {
     // convert user id which is an UUID into a unique integer
@@ -15,6 +12,7 @@ function getUser(user_id) {
     var options = {
         uri: GAMIFICATION_BASE_PATH + '/' + user_id,
         headers: {
+            'Content-Type': 'application/json',
             'Authorization': GAMIFICATION_TOKEN
         }
     };
@@ -32,6 +30,7 @@ function getLeaderboard() {
     var options = {
         uri: GAMIFICATION_BASE_PATH + '/lederboards/',
         headers: {
+            'Content-Type': 'application/json',
             'Authorization': GAMIFICATION_TOKEN
         }
     };
@@ -51,19 +50,20 @@ function postEvent(event) {
     var options = {
         method: 'POST',
         uri: GAMIFICATION_BASE_PATH + '/events/',
-        body: {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': GAMIFICATION_TOKEN
+        },
+        json: {
             user_id: user_id,
             eventtype_id: event.id
-        },
-        headers: {
-            'Authorization': GAMIFICATION_TOKEN
         },
         resolveWithFullResponse: true
     };
 
     return rp(options)
         .then(function(response){
-            return new Promise.is(response.statusCode);
+            return new Promise.is(response.statusCode.toString());
         })
         .catch(function(err){
             return new Promise.rejected(err);

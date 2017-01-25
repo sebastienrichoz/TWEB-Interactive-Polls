@@ -5,7 +5,9 @@ var express = require('express'),
     Question = require('../models/Question'),
     Answer = require('../models/Answer'),
     Choice = require('../models/Choice'),
-    Vote = require('../models/Vote');
+    Vote = require('../models/Vote'),
+    gamification = require('../../gamification/gamification-api'),
+    eventtypes = require('../../gamification/eventtypes');
 
 router.post('/:answer_id/check/', function(req, res) {
     var data = {
@@ -42,6 +44,12 @@ router.post('/:answer_id/check/', function(req, res) {
             return Question.findById(data.question).exec();
         })
         .then(function(question) {
+            var eventtypesMap = eventtypes.getEventtypeMap();
+            var event = {
+                id: eventtypesMap.get('answer a question'),
+                user: req.get('X-Session-ID')
+            };
+            gamification.postEvent(event);
             res.io.to(question.pollroom.identifier).emit('updateQuestion', question);
             return res.send();
         })

@@ -7,7 +7,8 @@ var express = require('express'),
     questions = require('./pollrooms/controllers/questions'),
     answers = require('./pollrooms/controllers/answers'),
     statistics = require('./pollrooms/controllers/statistics'),
-    Pollroom = require('./pollrooms/models/Pollroom');
+    Pollroom = require('./pollrooms/models/Pollroom'),
+    eventtypes = require('./gamification/eventtypes');
 
 var app = express();
 var socketio = require('socket.io');
@@ -19,11 +20,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // serve static files
 app.use('/', express.static(__dirname + '/../dist'));
 
+// Associate eventtypes id
+eventtypes.initEventtypes();
+
 // init mongodb database
 mongoose.Promise = require('bluebird');
 var db = mongoose.connect(process.env.MONGODB_URI).connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function() {
+
     console.log('Connected to MongoDB');
 
     // init listening
@@ -137,11 +142,6 @@ db.once('open', function() {
             console.log('disconnected');
         });
     });
-
-    // Associate eventtypes id
-
-
-
 });
 
 module.exports = app;

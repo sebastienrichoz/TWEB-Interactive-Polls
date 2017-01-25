@@ -2,7 +2,9 @@ var express = require('express'),
     router = express.Router(),
     mongoose = require('mongoose'),
     Pollroom = require('../models/Pollroom'),
-    Choice = require('../models/Choice');
+    Choice = require('../models/Choice'),
+    gamification = require('../../gamification/gamification-api'),
+    eventtypes = require('../../gamification/eventtypes');
 
 router.get('/', function(req, res) {
     Promise
@@ -46,6 +48,12 @@ router.post('/', function(req, res) {
     pollroom
         .save()
         .then(function(pollroom) {
+            var eventtypesMap = eventtypes.getEventtypeMap();
+            var event = {
+                id: eventtypesMap.get('create a room'),
+                user: req.get('X-Session-ID')
+            };
+            gamification.postEvent(event);
             return res.status(201).json(pollroom);
         })
         .catch(function(err) {
@@ -63,6 +71,12 @@ router.get('/:pollroom_identifier/', function(req, res) {
             if (pollroom == null) {
                 return res.status(404).send();
             }
+            var eventtypesMap = eventtypes.getEventtypeMap();
+            var event = {
+                id: eventtypesMap.get('join a room'),
+                user: req.get('X-Session-ID')
+            };
+            gamification.postEvent(event);
             res.io.to(pollroom.identifier).emit('updatePollroom', pollroom);
             return res.json(pollroom);
         })

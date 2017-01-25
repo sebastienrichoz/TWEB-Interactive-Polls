@@ -1,20 +1,18 @@
 var rp = require('request-promise');
 
-const GAMIFICATION_SERVER = process.env.GAMIFICATION_SERVER;
-const GAMIFICATION_PORT = process.env.GAMIFICATION_PORT;
-const GAMIFICATION_PATH = process.env.GAMIFICATION_PATH;
 const GAMIFICATION_TOKEN = process.env.GAMIFICATION_TOKEN;
-const GAMIFICATION_BASE_PATH = GAMIFICATION_SERVER + GAMIFICATION_PORT + GAMIFICATION_PATH;
+const GAMIFICATION_BASE_PATH = process.env.GAMIFICATION_URI;
 
 var eventtypesMap = new Map();
 
-function associateEventtypes() {
+function initEventtypes() {
 
     // Get eventtypes id
     var options = {
         method: 'GET',
         uri: GAMIFICATION_BASE_PATH + '/eventtypes/',
         headers: {
+            'Content-Type': 'application/json',
             'Authorization': GAMIFICATION_TOKEN
         }
     };
@@ -24,8 +22,9 @@ function associateEventtypes() {
             return eventtypes;
         })
         .then(function(eventtypes){
-            for (var eventtype in eventtypes) {
-                eventtypes.set(eventtype.name, eventtypes.id);
+            var types = JSON.parse(eventtypes);
+            for (var eventtype of types) {
+                eventtypesMap.set(eventtype.name, eventtype.id);
             }
         })
         .catch(function(err){
@@ -34,4 +33,11 @@ function associateEventtypes() {
         });
 }
 
-module.exports = eventtypesMap;
+module.exports = {
+    getEventtypeMap: function() {
+        return eventtypesMap;
+    },
+    initEventtypes: function() {
+        initEventtypes();
+    }
+};
