@@ -64,7 +64,11 @@ Create a `nodemon.json` file at the root project where you define your environme
 ```json
 {
   "env": {
-    "MONGODB_URI": "mongodb://192.168.99.100:27017/pollak"
+    "MONGODB_URI": "mongodb://localhost:27017/pollak",
+    "GAMIFICATION_URI": "http://localhost:8080/gamification",
+    "GAMIFICATION_APPLICATION_NAME": "<omplete>",
+    "GAMIFICATION_APPLICATION_PASSWORD": "<omplete>",
+    "GAMIFICATION_TOKEN": "<complete>"
   }
 }
 ```
