@@ -6,6 +6,7 @@ Everyone can ask and answer questions. The creator has the ability to close the 
 **This project has been updated with gamification features**
 
 Server API for gamification: [https://github.com/moodah/AMT_Gamification](https://github.com/moodah/AMT_Gamification)
+First run this server API, then populate it with the postman script in `doc/`
 
 *Original repo Interactive Polls: [https://github.com/damienrochat/TWEB-Interactive-Polls](https://github.com/damienrochat/TWEB-Interactive-Polls)*
 
