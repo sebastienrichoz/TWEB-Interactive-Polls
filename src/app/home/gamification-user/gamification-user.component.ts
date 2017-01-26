@@ -62,25 +62,28 @@ export class GamificationUserComponent implements OnInit {
                 this.gamificationService.getEventtypes().then(
                     eventtypes => {
                         // Associate user progression to badges
-                        for (let i=1; i<= eventtypes.length; i++) {
 
-                            this.badges.map(badge => {
+                        for (let property in this.user.eventtypesIdAndCount) {
 
-                                let countAcquire = 0;
+                            if (this.user.eventtypesIdAndCount.hasOwnProperty(property)) {
+                                this.badges.map(badge => {
 
-                                badge.achievements.map(achievement => {
-                                    if (achievement.eventtype.id === i) {
-                                        achievement.user_count = this.user.eventtypesIdAndCount['' + i] > achievement.count ? achievement.count: this.user.eventtypesIdAndCount['' + i];
+                                    let countAcquire = 0;
 
-                                        if (achievement.user_count === achievement.count) {
-                                            countAcquire++;
+                                    badge.achievements.map(achievement => {
+                                        if (achievement.eventtype.id === +property) {
+                                            achievement.user_count = this.user.eventtypesIdAndCount[property] > achievement.count ? achievement.count : this.user.eventtypesIdAndCount[property];
+
+                                            if (achievement.user_count === achievement.count) {
+                                                countAcquire++;
+                                            }
                                         }
-                                    }
-                                });
+                                    });
 
-                                if (countAcquire === badge.achievements.length)
-                                    badge.acquired = true;
-                            });
+                                    if (countAcquire === badge.achievements.length)
+                                        badge.acquired = true;
+                                });
+                            }
                         }
                     },
                     err => console.log(err)
