@@ -62,15 +62,19 @@ export class GamificationUserComponent implements OnInit {
                 this.gamificationService.getEventtypes().then(
                     eventtypes => {
                         // Associate user progression to badges
+                        this.badges.forEach(badge => {
+                           badge.achievements.forEach(a => {
+                               a.user_count = 0;
+                           })
+                        });
 
                         for (let property in this.user.eventtypesIdAndCount) {
 
                             if (this.user.eventtypesIdAndCount.hasOwnProperty(property)) {
                                 this.badges.map(badge => {
-
                                     let countAcquire = 0;
 
-                                    badge.achievements.map(achievement => {
+                                    for (let achievement of badge.achievements) {
                                         if (achievement.eventtype.id === +property) {
                                             achievement.user_count = this.user.eventtypesIdAndCount[property] > achievement.count ? achievement.count : this.user.eventtypesIdAndCount[property];
 
@@ -78,7 +82,7 @@ export class GamificationUserComponent implements OnInit {
                                                 countAcquire++;
                                             }
                                         }
-                                    });
+                                    }
 
                                     if (countAcquire === badge.achievements.length)
                                         badge.acquired = true;

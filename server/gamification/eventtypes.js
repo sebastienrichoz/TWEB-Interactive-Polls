@@ -18,11 +18,9 @@ function initEventtypes() {
     };
 
     rp(options)
-        .then(function(eventtypes){
-            return eventtypes;
-        })
-        .then(function(eventtypes){
+        .then(function(eventtypes, b){
             var types = JSON.parse(eventtypes);
+            console.log(types);
             for (var eventtype of types) {
                 eventtypesMap.set(eventtype.name, eventtype.id);
             }
